@@ -10,5 +10,5 @@ import sgsits.cse.dis.academics.model.SemesterTimeTable;
 @Repository("semesterTimeTableRepository")
 public interface SemesterTimeTableRepository extends JpaRepository<SemesterTimeTable, Long> {
 	public List<SemesterTimeTable> findBySessionAndYearAndSemester(String session, String year, String semester);
-	public List<SemesterTimeTable> findByFaculty1
+	//public List<SemesterTimeTable> findByFaculty1
 }
