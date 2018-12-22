@@ -35,7 +35,9 @@ public class TimeTableController {
 	
 	public List<SemesterTimeTable> getFacultyTimeTable()
 	{
-		
-		return null;		
+		String faculty;
+		//List<SemesterTimeTable> facultytimetable = semesterTimeTableRepository.findBySessionAndYearAndSemester();
+		//return facultytimetable;
+		return null;
 	}
 }

@@ -64,7 +64,7 @@ public class AuthenticationController {
 				if (student.get().getPassword().equals(md5_pass)) {
 					// set session
 					// update last login
-					return "student home page";
+					return "forward:/student";
 				} else
 					return "You have entered incorrect password";
 			} else {
