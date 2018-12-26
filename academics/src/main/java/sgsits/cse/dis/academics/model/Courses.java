@@ -51,15 +51,8 @@ public class Courses {
 	@Column(name = "date_of_approval", nullable = false)
 	private Date dateOfApproval;
 
-	@ManyToOne
-	@JoinColumn(name = "approval_pdf")
-	private Downloads approvalPdf;
-	
-	@OneToMany(mappedBy = "courseId", cascade = CascadeType.ALL)
-	private List<Scheme> scheme;
-	
-	@OneToMany(mappedBy = "courseId", cascade = CascadeType.ALL)
-	private List<Syllabus> syllabus;
+	@Column(name = "approval_pdf")
+	private String approvalPdf;
 
 	public long getId() {
 		return id;
@@ -141,27 +134,11 @@ public class Courses {
 		this.dateOfApproval = dateOfApproval;
 	}
 
-	public Downloads getApprovalPdf() {
+	public String getApprovalPdf() {
 		return approvalPdf;
 	}
 
-	public void setApprovalPdf(Downloads approvalPdf) {
+	public void setApprovalPdf(String approvalPdf) {
 		this.approvalPdf = approvalPdf;
-	}
-
-	public List<Scheme> getScheme() {
-		return scheme;
-	}
-
-	public void setScheme(List<Scheme> scheme) {
-		this.scheme = scheme;
-	}
-
-	public List<Syllabus> getSyllabus() {
-		return syllabus;
-	}
-
-	public void setSyllabus(List<Syllabus> syllabus) {
-		this.syllabus = syllabus;
-	}
+	}	
 }

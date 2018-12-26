@@ -35,10 +35,13 @@ public class Scheme {
 	@Column(name = "modified_date")
 	private Instant modifiedDate;
 	
-	@ManyToOne
-	@JoinColumn(name = "course_id", nullable = false)
-	private Courses courseId;
+	//@ManyToOne
+	//@JoinColumn(name = "course_id", nullable = false)
+	//private Courses courseId;
 	
+	@Column(name = "course_id", nullable = false)
+	private String courseId;
+
 	@Column(name = "session", nullable = false)
 	private String session;
 	
@@ -52,10 +55,10 @@ public class Scheme {
 	private String subjectCode;
 	
 	@Column(name = "subject_name", nullable = false, unique = true)
-	private String subject_name;
+	private String subjectName;
 	
 	@Column(name = "subject_acronym", nullable = false, unique = true)
-	private String subject_acronym;
+	private String subjectAcronym;
 	
 	@Column(name = "no_of_lecture_periods", nullable = false)
 	private int noOfLecturePeriods;
@@ -90,13 +93,32 @@ public class Scheme {
 	@Column(name = "max_total", nullable = false)
 	private int maxTotal;
 	
-	@ManyToOne
-	@JoinColumn(name = "pdf_id")	
-	private Downloads pdfId;
+	@Column(name = "syllabus_pdf", nullable = false)
+	private String syllabusPdf;
 	
-	@OneToMany(mappedBy = "subjectCode", cascade = CascadeType.ALL)
-	private List<Syllabus> syllabus;
+	//@ManyToOne
+	//@JoinColumn(name = "pdf_id")	
+	//private Downloads pdfId;
+	
+	//@OneToMany(mappedBy = "subjectCode", cascade = CascadeType.ALL)
+	//private List<Syllabus> syllabus;
 
+	public String getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
+	}
+
+	public String getSyllabusPdf() {
+		return syllabusPdf;
+	}
+
+	public void setPdfId(String syllabusPdf) {
+		this.syllabusPdf = syllabusPdf;
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -137,14 +159,6 @@ public class Scheme {
 		this.modifiedDate = modifiedDate;
 	}
 
-	public Courses getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(Courses courseId) {
-		this.courseId = courseId;
-	}
-
 	public String getSession() {
 		return session;
 	}
@@ -177,20 +191,20 @@ public class Scheme {
 		this.subjectCode = subjectCode;
 	}
 
-	public String getSubject_name() {
-		return subject_name;
+	public String getSubjectName() {
+		return subjectName;
 	}
 
-	public void setSubject_name(String subject_name) {
-		this.subject_name = subject_name;
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
 
-	public String getSubject_acronym() {
-		return subject_acronym;
+	public String getSubjectAcronym() {
+		return subjectAcronym;
 	}
 
-	public void setSubject_acronym(String subject_acronym) {
-		this.subject_acronym = subject_acronym;
+	public void setSubjectAcronym(String subjectAcronym) {
+		this.subjectAcronym = subjectAcronym;
 	}
 
 	public int getNoOfLecturePeriods() {
@@ -279,21 +293,5 @@ public class Scheme {
 
 	public void setMaxTotal(int maxTotal) {
 		this.maxTotal = maxTotal;
-	}
-
-	public Downloads getPdfId() {
-		return pdfId;
-	}
-
-	public void setPdfId(Downloads pdfId) {
-		this.pdfId = pdfId;
-	}
-
-	public List<Syllabus> getSyllabus() {
-		return syllabus;
-	}
-
-	public void setSyllabus(List<Syllabus> syllabus) {
-		this.syllabus = syllabus;
 	}
 }

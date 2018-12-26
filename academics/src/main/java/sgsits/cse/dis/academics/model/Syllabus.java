@@ -64,9 +64,9 @@ public class Syllabus {
 	@Column(name = "course_outcome")
 	private String courseOutcome;
 	
-	@ManyToOne
-	@JoinColumn(name = "pdf_id", nullable = false)
-	private Downloads pdfId;
+	//@ManyToOne
+	//@JoinColumn(name = "pdf_id", nullable = false)
+	private String pdfId;
 
 	public long getId() {
 		return id;
@@ -188,11 +188,11 @@ public class Syllabus {
 		this.courseOutcome = courseOutcome;
 	}
 
-	public Downloads getPdfId() {
+	public String getPdfId() {
 		return pdfId;
 	}
 
-	public void setPdfId(Downloads pdfId) {
+	public void setPdfId(String pdfId) {
 		this.pdfId = pdfId;
 	}
 }

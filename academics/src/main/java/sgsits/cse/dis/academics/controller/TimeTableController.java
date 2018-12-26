@@ -27,7 +27,7 @@ public class TimeTableController {
 	public List<SemesterTimeTable> getStudentTimeTable()
 	{
 		String session = "July 2018 - Dec 2018";
-		String year = "II";
+		String year = "III";
 		String semester = "A";
 		List<SemesterTimeTable> semtimetable = semesterTimeTableRepository.findBySessionAndYearAndSemester(session,year,semester);		
 		return semtimetable;
