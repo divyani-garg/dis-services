@@ -13,40 +13,35 @@ import io.swagger.annotations.ApiOperation;
 import sgsits.cse.dis.academics.model.Scheme;
 import sgsits.cse.dis.academics.repo.SchemeRepository;
 
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/student")
 @Api(value = "Subject Resource")
 public class SubjectController {
-	
-	@Autowired 
+
+	// @Autowired
+	// private DiscoveryClient discoveryClient;
+
+	@Autowired
 	SchemeRepository schemeRepository;
 
 	@ApiOperation(value = "subjectList", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/subjectList", method = RequestMethod.GET)
-	public List<Scheme> getSubjectList()
-	{
+	public List<Scheme> getSubjectList() {
 		String session = "2017-2018";
 		String year = "III";
 		String semester = "A";
-		List<Scheme> subjectList = schemeRepository.findBySessionAndYearAndSemester(session,year,semester);
-		/*if(subjectList!=null)
-		try 
-		{
-			for(Scheme subject : subjectList)
-			{		
-				if(subject!=null)
-				System.out.println(subject.getSyllabusPdf());
-				if(subject.getSyllabusPdf().equals(null))
-				{
-					subjectList.remove(subject);
+		List<Scheme> subjectList = schemeRepository.findBySessionAndYearAndSemester(session, year, semester);
+		try {
+			for (int i = 0; i < subjectList.size(); i++) {
+				if (subjectList.get(i).getSyllabusPdf() == null) {
+					subjectList.remove(i);
+					i--;
 				}
 			}
-		}
-		catch(NullPointerException e)
-		{
+		} catch (NullPointerException e) {
 			e.printStackTrace();
-		}*/
-		return subjectList; 		
+		}
+		return subjectList;
 	}
 }
