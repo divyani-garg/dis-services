@@ -47,16 +47,23 @@ public class AuthenticationController {
 
 	@ApiOperation(value = "login", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(@RequestBody Authentication auth) {
+	public ResponseEntity<String> login(@RequestBody Authentication auth) {
+		System.out.println(auth.getUsername());
 		Optional<StaffProfile> staff = staffRepo.findByEmail(auth.getUsername());
 		if (staff.isPresent()) {
+			System.out.println(staff.get().getEmail());
 			String md5_pass = MD5.getHash(auth.getPassword());
 			if (staff.get().getPassword().equals(md5_pass)) {
 				// set session
 				// update last login
-				return "staff home page";
+				if(staff.get().getCurrentDesignation().equals("HOD"))
+					return new ResponseEntity<>("hod", HttpStatus.OK);
+				else if(staff.get().getClasss().equals("II")||staff.get().getClasss().equals("I"))
+						return new ResponseEntity<>("faculty", HttpStatus.OK);
+					else
+						return new ResponseEntity<>("staff", HttpStatus.OK);
 			} else
-				return "You have entered incorrect password";
+				return new ResponseEntity<>("You have entered incorrect password", HttpStatus.OK);
 		} else {
 			Optional<StudentProfile> student = studRepo.findByEnrollmentId(auth.getUsername());
 			if (student.isPresent()) {
@@ -64,11 +71,11 @@ public class AuthenticationController {
 				if (student.get().getPassword().equals(md5_pass)) {
 					// set session
 					// update last login
-					return "forward:/student";
+					return new ResponseEntity<>("student", HttpStatus.OK);
 				} else
-					return "You have entered incorrect password";
+					return new ResponseEntity<>("You have entered incorrect password", HttpStatus.OK);
 			} else {
-				return "You are not registered with the system. Please signup first";
+				return new ResponseEntity<>("You are not registered with the system. Please signup first", HttpStatus.OK);
 			}
 		}
 	}
