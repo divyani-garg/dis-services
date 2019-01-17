@@ -74,6 +74,9 @@ public class SemesterTimeTable {
 	@Column(name = "faculty_3")
 	private String faculty3;
 	
+	@Column(name = "lab_technician")
+	private String labTechnician;
+	
 	@Column(name = "ta")
 	private String ta;
 	
@@ -226,6 +229,14 @@ public class SemesterTimeTable {
 
 	public void setFaculty3(String faculty3) {
 		this.faculty3 = faculty3;
+	}
+
+	public String getLabTechnician() {
+		return labTechnician;
+	}
+
+	public void setLabTechnician(String labTechnician) {
+		this.labTechnician = labTechnician;
 	}
 
 	public String getTa() {
