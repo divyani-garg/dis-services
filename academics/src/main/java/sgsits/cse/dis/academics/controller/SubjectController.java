@@ -19,9 +19,6 @@ import sgsits.cse.dis.academics.repo.SchemeRepository;
 @Api(value = "Subject Resource")
 public class SubjectController {
 
-	// @Autowired
-	// private DiscoveryClient discoveryClient;
-
 	@Autowired
 	SchemeRepository schemeRepository;
 

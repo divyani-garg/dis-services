@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import sgsits.cse.dis.user.feign.AcademicsClient;
+import sgsits.cse.dis.user.model.Scheme;
 import sgsits.cse.dis.user.model.StudentAttendance;
 import sgsits.cse.dis.user.model.StudentAttendancePercentage;
 import sgsits.cse.dis.user.repo.StudentAttendanceRepository;
@@ -24,6 +26,9 @@ public class AttendanceController {
 	
 	@Autowired
 	StudentAttendanceRepository studentAttendanceRepository;
+	
+	@Autowired
+	AcademicsClient academicsClient;
 
 	@ApiOperation(value = "studentAttendancePercentage", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/studentPercentage", method = RequestMethod.GET)
@@ -34,13 +39,15 @@ public class AttendanceController {
 
 		List<StudentAttendancePercentage> percentList = new ArrayList<StudentAttendancePercentage>();
 		
-		
 		//get subject list from academics service
+		List<Scheme> subjects = academicsClient.getSubjectList();
+		
 		ArrayList<String> subjectList = new ArrayList<String>();
-		subjectList.add("CO 34002");
-		subjectList.add("CO 34005");
-		subjectList.add("CO 34007");
-		subjectList.add("CO 34008");
+	
+		for(Scheme sub : subjects)
+		{
+			subjectList.add(sub.getSubjectCode());
+		}
 		
 		for(int i = 0; i < subjectList.size() ; i++)
 		{
@@ -48,12 +55,6 @@ public class AttendanceController {
 			sap.setEnrollmentId(enrollment);
 			sap.setSubjectCode(subjectList.get(i));
 			percentList.add(sap);
-		}
-		
-		for(StudentAttendancePercentage spa : percentList)
-		{
-			System.out.println(spa.getEnrollmentId());
-			System.out.println(spa.getSubjectCode());
 		}
 
 		for(int i = 0 ; i < percentList.size() ; i++)
