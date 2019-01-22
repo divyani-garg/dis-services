@@ -20,7 +20,7 @@ import sgsits.cse.dis.user.repo.StudentAttendanceRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/dis/attendance")
 @Api(value = "Student Attendance Resource")
 public class AttendanceController {
 	

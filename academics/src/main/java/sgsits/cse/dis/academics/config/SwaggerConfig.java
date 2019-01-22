@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("sgsits.cse.dis.academics"))         //packgs to scan
-                .paths(regex("/student/*"))                 //rest points
+                .paths(regex("/dis.*"))                 //rest points
                 .build()
                 .apiInfo(metaInfo());
     }

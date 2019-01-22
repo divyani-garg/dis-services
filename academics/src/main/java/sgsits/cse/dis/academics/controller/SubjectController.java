@@ -15,7 +15,7 @@ import sgsits.cse.dis.academics.repo.SchemeRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/student")
+@RequestMapping("dis/subject")
 @Api(value = "Subject Resource")
 public class SubjectController {
 

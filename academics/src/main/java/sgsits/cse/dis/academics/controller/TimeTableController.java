@@ -16,7 +16,7 @@ import sgsits.cse.dis.academics.repo.SemesterTimeTableRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/timetable")
+@RequestMapping("/dis/timetable")
 @Api(value = "Time Table Resource")
 public class TimeTableController {
 	
@@ -54,8 +54,8 @@ public class TimeTableController {
 		return stafftimetable;
 	}
 	
-	@ApiOperation(value = "venueTimeTable", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/venue/{location}", method = RequestMethod.GET)
+	@ApiOperation(value = "locationTimeTable", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/{location}", method = RequestMethod.GET)
 	public List<SemesterTimeTable> getLabTimeTable(@PathVariable("location") String location)
 	{
 		String session = "July 2018 - Dec 2018";
