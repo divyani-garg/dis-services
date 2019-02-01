@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -36,6 +37,13 @@ public class StaffProfile {
 	@Column(name = "name")
 	private String name;
 	
+	@Column(name = "name_acronym",unique = true)
+	private String nameAcronym;
+	
+	@Lob
+	@Column(name = "profile_picture")
+	private byte[] profilePicture;
+	
 	@Column(name = "current_designation")
 	private String currentDesignation;
 	
@@ -55,7 +63,7 @@ public class StaffProfile {
 	private String panNumber;
 	
 	@Column(name = "aadhar_number")
-	private long aadharNumber;
+	private String aadharNumber;
 	
 	@Column(name = "blood_group")
 	private String bloodGroup;
@@ -197,11 +205,11 @@ public class StaffProfile {
 		this.panNumber = panNumber;
 	}
 
-	public long getAadharNumber() {
+	public String getAadharNumber() {
 		return aadharNumber;
 	}
 
-	public void setAadharNumber(long aadharNumber) {
+	public void setAadharNumber(String aadharNumber) {
 		this.aadharNumber = aadharNumber;
 	}
 
@@ -299,5 +307,21 @@ public class StaffProfile {
 
 	public void setResetTokenExpiry(Date resetTokenExpiry) {
 		this.resetTokenExpiry = resetTokenExpiry;
+	}
+
+	public String getNameAcronym() {
+		return nameAcronym;
+	}
+
+	public void setNameAcronym(String nameAcronym) {
+		this.nameAcronym = nameAcronym;
+	}
+
+	public byte[] getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
 	}
 }
