@@ -89,18 +89,6 @@ public class StaffProfile {
 	@Column(name = "area_of_specialization")
 	private String areaOfSpecialization;
 	
-	@Column(name = "password")
-	private String password;
-	
-	@Column(name = "enabled")
-	private Boolean enabled;
-	
-	@Column(name = "reset_token")
-	private String resetToken;
-
-	@Column(name = "reset_token_expiry")
-	private Date resetTokenExpiry;
-
 	public long getId() {
 		return id;
 	}
@@ -275,38 +263,6 @@ public class StaffProfile {
 
 	public void setAreaOfSpecialization(String areaOfSpecialization) {
 		this.areaOfSpecialization = areaOfSpecialization;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public String getResetToken() {
-		return resetToken;
-	}
-
-	public void setResetToken(String resetToken) {
-		this.resetToken = resetToken;
-	}
-
-	public Date getResetTokenExpiry() {
-		return resetTokenExpiry;
-	}
-
-	public void setResetTokenExpiry(Date resetTokenExpiry) {
-		this.resetTokenExpiry = resetTokenExpiry;
 	}
 
 	public String getNameAcronym() {

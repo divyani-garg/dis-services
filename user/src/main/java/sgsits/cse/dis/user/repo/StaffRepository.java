@@ -12,7 +12,6 @@ import sgsits.cse.dis.user.model.StaffProfile;
 @Repository("staffRepository")
 public interface StaffRepository extends JpaRepository<StaffProfile, Long>{
 	Optional<StaffProfile> findByEmail(String email);
-	Optional<StaffProfile> findByResetToken(String resetToken);
 	Optional<StaffProfile> findByEmployeeId(String employeeId);
 	
 	//@Query(value="SELECT s.name, s.email from staff_basic_profile s where class = 'I' or class = 'II' order by current_designation", nativeQuery=true)

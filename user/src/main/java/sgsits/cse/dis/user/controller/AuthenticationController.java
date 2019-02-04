@@ -1,4 +1,4 @@
-package sgsits.cse.dis.user.controller;
+/*package sgsits.cse.dis.user.controller;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -53,7 +53,7 @@ public class AuthenticationController {
 		if (staff.isPresent()) {
 			System.out.println(staff.get().getEmail());
 			String md5_pass = MD5.getHash(auth.getPassword());
-			if (staff.get().getPassword().equals(md5_pass)) {
+			//if (staff.get().getPassword().equals(md5_pass)) {
 				// set session
 				// update last login
 				if(staff.get().getCurrentDesignation().equals("HOD"))
@@ -62,8 +62,8 @@ public class AuthenticationController {
 						return new ResponseEntity<>("faculty", HttpStatus.OK);
 					else
 						return new ResponseEntity<>("staff", HttpStatus.OK);
-			} else
-				return new ResponseEntity<>("You have entered incorrect password", HttpStatus.OK);
+			//} else
+				//return new ResponseEntity<>("You have entered incorrect password", HttpStatus.OK);
 		} else {
 			Optional<StudentProfile> student = studRepo.findByEnrollmentId(auth.getUsername());
 			if (student.isPresent()) {
@@ -121,9 +121,9 @@ public class AuthenticationController {
 		Optional<StaffProfile> staff = staffRepo.findByEmail(staffPro.getEmail());
 		if(!staff.isPresent())
 		{
-			String md5_passwd = MD5.getHash(staffPro.getPassword());
-			staffPro.setPassword(md5_passwd);
-			staffPro.setEnabled(true);
+			//String md5_passwd = MD5.getHash(staffPro.getPassword());
+			//staffPro.setPassword(md5_passwd);
+			//staffPro.setEnabled(true);
 			staffRepo.save(staffPro);
 		}
 		else
@@ -194,4 +194,4 @@ public class AuthenticationController {
 			return "";
 		}
 	}
-}
+}*/
