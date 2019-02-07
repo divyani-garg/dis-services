@@ -1,11 +1,16 @@
 package sgsits.cse.dis.administration.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +41,7 @@ import sgsits.cse.dis.administration.repo.TelephoneComplaintRepository;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/dis/complaint") 
+@RequestMapping("/complaint") 
 @Api(value = "Complaints Resource")
 public class ComplaintsController {
 	
@@ -59,6 +64,72 @@ public class ComplaintsController {
 	@Autowired
 	TelephoneComplaintRepository telephoneComplaintRepository;
 	
+	//Get Complaints
+	
+	@ApiOperation(value = "Get My Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getMyComplaints", method = RequestMethod.GET)
+	public <T, U> Object[]  getMyComplaints(Authentication authentication, HttpServletRequest request )
+	{
+		System.out.println(request.getHeader("Authorization"));
+		String username = authentication.getName();
+		
+		//System.out.println(username);
+		
+		String user_type = "student";
+		
+		List<Object> complaints = new ArrayList<>();
+		
+		if(user_type.equals("student"))
+		{
+			Collections.addAll(complaints, cleanlinessComplaintRepository.findByCreatedBy(username));
+			Collections.addAll(complaints, leComplaintRepository.findByCreatedBy(username));
+			Collections.addAll(complaints, facultyComplaintRepository.findByCreatedBy(username));
+			Collections.addAll(complaints, otherComplaintRepository.findByCreatedBy(username));
+		}
+		
+		if(user_type.equals("staff"))
+		{
+			
+		}
+				
+		return complaints.toArray();
+	}
+	
+	@ApiOperation(value = "Get Remaining Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingComplaints", method = RequestMethod.GET)
+	public <T, U> Object[]  getRemainingComplaints()
+	{
+		
+		return null;
+	}
+	
+	@ApiOperation(value = "Get Resolved Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedComplaints", method = RequestMethod.GET)
+	public <T, U> Object[]  getResolvedComplaints()
+	{
+		String username = "poojasindel@gmail.com";
+		
+		String user_type = "staff";
+		
+		
+				
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//Add Complaints
+	
 	@ApiOperation(value = "Add Cleanliness Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addCleanliness", method = RequestMethod.POST)
 	public ResponseEntity<String> addCleanlinessComplaint(@RequestBody CleanlinessComplaints cleanlinessComplaints)
@@ -66,13 +137,6 @@ public class ComplaintsController {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		cleanlinessComplaints.setCreatedBy(simpleDateFormat.format(new Date()));
 		cleanlinessComplaintRepository.save(cleanlinessComplaints);
-		return null;
-	}
-	
-	@ApiOperation(value = "Get Cleanliness Complaint", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getCleanliness", method = RequestMethod.GET)
-	public List<CleanlinessComplaints> getCleanlinessComplaint()
-	{
 		return null;
 	}
 	
@@ -84,25 +148,11 @@ public class ComplaintsController {
 		return null;
 	}
 	
-	@ApiOperation(value = "Get CWN Maintenance Complaint", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getCWN", method = RequestMethod.GET)
-	public List<CWNComplaints> getCWNComplaint()
-	{
-		return null;
-	}
-	
 	@ApiOperation(value = "Add Engineering Cell / Central Workshop Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addECCW", method = RequestMethod.POST)
 	public ResponseEntity<String> addECCWComplaint(@RequestBody ECCWComplaints eccwComplaints)
 	{
 		eccwComplaintRepository.save(eccwComplaints);
-		return null;
-	}
-	
-	@ApiOperation(value = "Get Engineering Cell / Central Workshop Complaint", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getECCW", method = RequestMethod.GET)
-	public List<ECCWComplaints> getECCWComplaint()
-	{
 		return null;
 	}
 	
@@ -114,25 +164,11 @@ public class ComplaintsController {
 		return null;
 	}
 	
-	@ApiOperation(value = "Get Electrical Maintenance and Repairs Section Complaint", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getEMRS", method = RequestMethod.GET)
-	public List<EMRSComplaints> getEMRSComplaint()
-	{
-		return null;
-	}
-	
 	@ApiOperation(value = "Add Faculty Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addFaculty", method = RequestMethod.POST)
 	public ResponseEntity<String> addFacultyComplaint(@RequestBody FacultyComplaints facultyComplaints)
 	{
 		facultyComplaintRepository.save(facultyComplaints);
-		return null;
-	}
-	
-	@ApiOperation(value = "Get Faculty Complaint", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getFaculty", method = RequestMethod.GET)
-	public List<FacultyComplaints> getFacultyComplaint()
-	{
 		return null;
 	}
 	
@@ -144,25 +180,11 @@ public class ComplaintsController {
 		return null;
 	}
 	
-	@ApiOperation(value = "Get Lab Equipment Complaint", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getLE", method = RequestMethod.GET)
-	public List<LEComplaints> getLEComplaint()
-	{
-		return null;
-	}
-	
 	@ApiOperation(value = "Add Other Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addOther", method = RequestMethod.POST)
 	public ResponseEntity<String> addOtherComplaint(@RequestBody OtherComplaints otherComplaints)
 	{
 		otherComplaintRepository.save(otherComplaints);
-		return null;
-	}
-	
-	@ApiOperation(value = "Get Other Complaint", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getOther", method = RequestMethod.GET)
-	public List<OtherComplaints> getOtherComplaint()
-	{
 		return null;
 	}
 	
@@ -174,13 +196,6 @@ public class ComplaintsController {
 		return null;
 	}
 
-	@ApiOperation(value = "Get Student Complaint", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getStudent", method = RequestMethod.GET)
-	public List<StudentComplaints> getStudentComplaint()
-	{
-		return null;
-	}
-	
 	@ApiOperation(value = "Add Telephone Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addTelephone", method = RequestMethod.POST)
 	public ResponseEntity<String> addTelephoneComplaint(@RequestBody TelephoneComplaints telephoneComplaints)
@@ -188,11 +203,5 @@ public class ComplaintsController {
 		telephoneComplaintRepository.save(telephoneComplaints);
 		return null;
 	}
-	
-	@ApiOperation(value = "Get Telephone Complaint", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getTelephone", method = RequestMethod.GET)
-	public List<TelephoneComplaints> getTelephoneComplaint()
-	{
-		return null;
-	}
+
 }

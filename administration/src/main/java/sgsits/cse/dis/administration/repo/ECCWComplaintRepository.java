@@ -1,5 +1,7 @@
 package sgsits.cse.dis.administration.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +11,5 @@ import sgsits.cse.dis.administration.model.ECCWComplaints;
 
 @Repository("")
 public interface ECCWComplaintRepository extends JpaRepository<ECCWComplaints, Long> {
-
+	List<ECCWComplaints> findByLocationAndStatus(String location, String status);
 }

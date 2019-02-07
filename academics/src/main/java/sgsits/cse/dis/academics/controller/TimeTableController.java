@@ -24,9 +24,9 @@ import sgsits.cse.dis.academics.repo.ExtraClassTimeTableRepository;
 import sgsits.cse.dis.academics.repo.SemesterTimeTableRepository;
 import sgsits.cse.dis.academics.services.DateService;
 
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/dis/timetable")
+@RequestMapping("/timetable")
 @Api(value = "Time Table Resource")
 public class TimeTableController {
 

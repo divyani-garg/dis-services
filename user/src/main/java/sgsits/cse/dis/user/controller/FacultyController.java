@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import sgsits.cse.dis.user.message.response.FacultyBriefData;
 import sgsits.cse.dis.user.model.StaffProfile;
-import sgsits.cse.dis.user.model.presentation.FacultyBriefData;
 import sgsits.cse.dis.user.repo.StaffRepository;
 
 @CrossOrigin(origins = "*")
