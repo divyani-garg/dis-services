@@ -20,13 +20,13 @@ public class OtherComplaints {
 	private long id;
 
 	@Column(name = "created_by", nullable = false)
-	private String createdBy;
+	private Long createdBy;
 
 	@Column(name = "created_date", nullable = false)
 	private Instant createdDate;
 
 	@Column(name = "modified_by")
-	private String modifiedBy;
+	private Long modifiedBy;
 
 	@Column(name = "modified_date")
 	private Instant modifiedDate;
@@ -41,7 +41,7 @@ public class OtherComplaints {
 	private Date dateOfResolution;
 
 	@Column(name = "assigned_to")
-	private String assignedTo;
+	private Long assignedTo;
 
 	@Column(name = "remarks")
 	private String remarks;
@@ -54,12 +54,20 @@ public class OtherComplaints {
 		this.id = id;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public Long getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Long modifiedBy) {
+		this.modifiedBy = modifiedBy;
 	}
 
 	public Instant getCreatedDate() {
@@ -68,14 +76,6 @@ public class OtherComplaints {
 
 	public void setCreatedDate(Instant createdDate) {
 		this.createdDate = createdDate;
-	}
-
-	public String getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(String modifiedBy) {
-		this.modifiedBy = modifiedBy;
 	}
 
 	public Instant getModifiedDate() {
@@ -110,11 +110,11 @@ public class OtherComplaints {
 		this.dateOfResolution = dateOfResolution;
 	}
 
-	public String getAssignedTo() {
+	public Long getAssignedTo() {
 		return assignedTo;
 	}
 
-	public void setAssignedTo(String assignedTo) {
+	public void setAssignedTo(Long assignedTo) {
 		this.assignedTo = assignedTo;
 	}
 

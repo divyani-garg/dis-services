@@ -11,7 +11,7 @@ import sgsits.cse.dis.user.model.Scheme;
 @FeignClient(name = "academics")
 public interface AcademicsClient {
 
-	@RequestMapping(value = "/dis/subject/subjectList", method = RequestMethod.GET)
+	@RequestMapping(value = "/subject/subjectList", method = RequestMethod.GET)
 	List<Scheme> getSubjectList();
 	
 }

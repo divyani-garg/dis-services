@@ -1,5 +1,6 @@
 package sgsits.cse.dis.infrastructure.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
@@ -21,7 +23,7 @@ import sgsits.cse.dis.infrastructure.service.InfrastructureService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/dis") 
+@RequestMapping("/infra") 
 @Api(value = "Infrastructure Resource")
 public class InfrastructureController {
 	
@@ -76,4 +78,15 @@ public class InfrastructureController {
 		return infrastructureService.findByName(name);
 	}
 
+	@ApiOperation(value = "findIncharge", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/findIncharge", method = RequestMethod.GET)
+	public List<String> findInchargeOf(@RequestParam("id") long id)
+	{
+		List<Infrastructure> infrastructure = infrastructureRepository.findByInchargeOrAssociateInchargeOrStaff(id,id,id);
+		List<String> incharge = new ArrayList<String>();
+		for(Infrastructure infra : infrastructure)
+			incharge.add(infra.getName());
+		return incharge;
+	}
+	
 }

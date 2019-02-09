@@ -11,5 +11,8 @@ import sgsits.cse.dis.administration.model.ECCWComplaints;
 
 @Repository("")
 public interface ECCWComplaintRepository extends JpaRepository<ECCWComplaints, Long> {
+	List<ECCWComplaints> findByCreatedBy(Long id);
 	List<ECCWComplaints> findByLocationAndStatus(String location, String status);
+	List<ECCWComplaints> findByLocation(String loc);
+	List<ECCWComplaints> findByLocationAndStatusNot(String loc, String string);
 }

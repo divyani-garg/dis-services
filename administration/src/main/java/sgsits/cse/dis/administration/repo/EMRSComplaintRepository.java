@@ -12,4 +12,7 @@ import sgsits.cse.dis.administration.model.EMRSComplaints;
 @Repository("")
 public interface EMRSComplaintRepository extends JpaRepository<EMRSComplaints, Long> {
 	List<EMRSComplaints> findByLocationAndStatus(String location, String status);
+	List<EMRSComplaints> findByCreatedBy(Long id);
+	List<EMRSComplaints> findByLocation(String loc);
+	List<EMRSComplaints> findByLocationAndStatusNot(String loc, String string);
 }

@@ -63,8 +63,8 @@ public class UserPrinciple implements UserDetails {
         );
     }
 
-    public Long getId() {
-        return id;
+    public String getId() {
+        return id.toString();
     }
 
     public String getEmail() {

@@ -11,6 +11,10 @@ import sgsits.cse.dis.administration.model.OtherComplaints;
 
 @Repository("")
 public interface OtherComplaintRepository extends JpaRepository<OtherComplaints, Long>{
-	List<OtherComplaints> findByCreatedBy(String username);
-	List<OtherComplaints> findByAssignedTo(String name);
+	List<OtherComplaints> findByCreatedBy(Long id);
+	List<OtherComplaints> findByAssignedToAndStatus(long id, String status);
+	List<OtherComplaints> findByStatus(String status);
+	List<OtherComplaints> findByAssignedTo(Long id);
+	List<OtherComplaints> findByStatusNot(String string);
+	List<OtherComplaints> findByAssignedToAndStatusNot(Long id, String string);
 }

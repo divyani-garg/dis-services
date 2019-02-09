@@ -11,6 +11,9 @@ import sgsits.cse.dis.administration.model.CleanlinessComplaints;
 
 @Repository("")
 public interface CleanlinessComplaintRepository extends JpaRepository<CleanlinessComplaints, Long> {
-	List<CleanlinessComplaints> findByCreatedBy(String username);
+	List<CleanlinessComplaints> findByCreatedBy(Long id);
 	List<CleanlinessComplaints> findByLocationAndStatus(String location, String status);
+	List<CleanlinessComplaints> findByLocation(String loc);
+	List<CleanlinessComplaints> findByLocationAndStatusNot(String loc, String string);
+	boolean existsByCreatedByAndLocationAndStatusNot(long id, String location, String status);
 }

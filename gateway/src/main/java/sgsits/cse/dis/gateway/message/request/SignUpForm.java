@@ -15,11 +15,11 @@ public class SignUpForm {
     @Email
     private String email;
     
-    //@NotBlank
+    @NotBlank
     private Date dob;
     
-    //@NotBlank
-    //@Size(max = 10)
+    @NotBlank
+    @Size(max = 10)
     private long mobileNo;
       
     @NotBlank

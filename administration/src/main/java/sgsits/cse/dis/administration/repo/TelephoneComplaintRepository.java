@@ -12,4 +12,7 @@ import sgsits.cse.dis.administration.model.TelephoneComplaints;
 @Repository("")
 public interface TelephoneComplaintRepository extends JpaRepository<TelephoneComplaints, Long> {
 	List<TelephoneComplaints> findByLocationAndStatus(String location, String status);
+	List<TelephoneComplaints> findByCreatedBy(Long id);
+	List<TelephoneComplaints> findByLocation(String loc);
+	List<TelephoneComplaints> findByLocationAndStatusNot(String loc, String string);
 }

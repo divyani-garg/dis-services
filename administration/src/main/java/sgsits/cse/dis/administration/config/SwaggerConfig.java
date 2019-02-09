@@ -19,7 +19,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("sgsits.cse.dis.administration"))  //packgs to scan
-                .paths(regex("/dis.*"))                 //rest points
+                .paths(regex("/.*"))                 //rest points
                 .build()
                 .apiInfo(metaInfo());
     }
@@ -27,13 +27,14 @@ public class SwaggerConfig {
     private ApiInfo metaInfo() {
 
         ApiInfo apiInfo = new ApiInfo(
-                "Title of API",                                                
-                "Description of API",              
-                "Version",   
+        		"Administration Service",                                                
+                "A service of Departmetal Information System ",              
+                "1.0",   
                 "Terms of Services Url",  
-                new Contact("name", "url", "email"),  
+                new Contact("Divyani Garg", "url", "divyanigarg09@gmail.com"),  
                 "License Information",  
-                "License URL" 
+                "License URL"
+
         );
 
         return apiInfo;

@@ -66,49 +66,28 @@ public class AuthRestAPIs {
 			return new ResponseEntity<>(new ResponseMessage("Fail -> Username is already taken!"),
 					HttpStatus.BAD_REQUEST);
 		}
-
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
 			return new ResponseEntity<>(new ResponseMessage("Fail -> Email is already in use!"),
 					HttpStatus.BAD_REQUEST);
 		}
-		
 		if (userRepository.existsByMobileNo(signUpRequest.getMobileNo())) {
 			return new ResponseEntity<>(new ResponseMessage("Fail -> Mobile Number is already in use!"),
 					HttpStatus.BAD_REQUEST);
 		}
-
+		
+		//if(){
+			
+		//}
+		
+		
 		// Creating user's account
 		User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),signUpRequest.getDob(),signUpRequest.getMobileNo(),
 				encoder.encode(signUpRequest.getPassword()));
 
-		//user.setCreatedBy(signUpRequest.getUsername());
+		user.setCreatedBy(signUpRequest.getUsername());
 		//user.setCreatedDate();
 		//user.setUserType("student");
-		/*Set<String> strRoles = signUpRequest.getTask();
-		Set<Role> roles = new HashSet<>();
-
-		strRoles.forEach(role -> {
-			switch (role) {
-			case "admin":
-				Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
-						.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-				roles.add(adminRole);
-
-				break;
-			case "pm":
-				Role pmRole = roleRepository.findByName(RoleName.ROLE_PM)
-						.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-				roles.add(pmRole);
-
-				break;
-			default:
-				Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-						.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-				roles.add(userRole);
-			}
-		});
-
-		user.setRoles(roles);*/
+		
 		userRepository.save(user);
 
 		return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);

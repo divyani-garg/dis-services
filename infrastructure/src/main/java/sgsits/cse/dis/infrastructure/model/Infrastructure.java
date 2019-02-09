@@ -18,22 +18,22 @@ public class Infrastructure {
 	private long id;
 	
 	@Column(name = "created_by")
-	private String createdBy;
+	private Long createdBy;
 	
 	@Column(name = "created_date")
 	private Instant createdDate;
 	
 	@Column(name = "modified_by")
-	private String modifiedBy;
+	private Long modifiedBy;
 	
 	@Column(name = "modified_date")
 	private Instant modifiedDate;
 	
-	@Column(name = "resource_id")
-	private String resourceId;
-	
 	@Column(name = "name")
 	private String name;
+	
+	@Column(name = "name_acronym")
+	private String nameAcronym;
 	
 	@Column(name = "type")
 	private String type;
@@ -44,14 +44,17 @@ public class Infrastructure {
 	@Column(name = "location")
 	private String location;
 	
-	@Column(name = "faculty_incharge")
-	private String facultyIncharge;
+	@Column(name = "incharge")
+	private Long incharge;
 	
-	@Column(name = "lab_technician_incharge")
-	private String labTechnicianIncharge;
+	@Column(name = "associate_incharge")
+	private Long associateIncharge;
+	
+	@Column(name = "staff")
+	private Long staff;
 	
 	@Column(name = "attendant")
-	private String attendant;
+	private Long attendant;
 	
 	@Column(name = "no_of_tables")
 	private int noofTables;
@@ -64,107 +67,149 @@ public class Infrastructure {
 	
 	@Column(name = "no_of_almirah")
 	private int noofAlmirah;
-	
+
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getCreatedBy() {
+
+	public Long getCreatedBy() {
 		return createdBy;
 	}
-	public void setCreatedBy(String createdBy) {
+
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
+
 	public Instant getCreatedDate() {
 		return createdDate;
 	}
+
 	public void setCreatedDate(Instant createdDate) {
 		this.createdDate = createdDate;
 	}
-	public String getModifiedBy() {
+
+	public Long getModifiedBy() {
 		return modifiedBy;
 	}
-	public void setModifiedBy(String modifiedBy) {
+
+	public void setModifiedBy(Long modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
+
 	public Instant getModifiedDate() {
 		return modifiedDate;
 	}
+
 	public void setModifiedDate(Instant modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
-	public String getResourceId() {
-		return resourceId;
-	}
-	public void setResourceId(String resourceId) {
-		this.resourceId = resourceId;
-	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public String getNameAcronym() {
+		return nameAcronym;
+	}
+
+	public void setNameAcronym(String nameAcronym) {
+		this.nameAcronym = nameAcronym;
+	}
+
 	public String getType() {
 		return type;
 	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
+
 	public String getArea() {
 		return area;
 	}
+
 	public void setArea(String area) {
 		this.area = area;
 	}
+
 	public String getLocation() {
 		return location;
 	}
+
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public String getFacultyIncharge() {
-		return facultyIncharge;
+
+	public Long getIncharge() {
+		return incharge;
 	}
-	public void setFacultyIncharge(String facultyIncharge) {
-		this.facultyIncharge = facultyIncharge;
+
+	public void setIncharge(Long incharge) {
+		this.incharge = incharge;
 	}
-	public String getLabTechnicianIncharge() {
-		return labTechnicianIncharge;
+
+	public Long getAssociateIncharge() {
+		return associateIncharge;
 	}
-	public void setLabTechnicianIncharge(String labTechnicianIncharge) {
-		this.labTechnicianIncharge = labTechnicianIncharge;
+
+	public void setAssociateIncharge(Long associateIncharge) {
+		this.associateIncharge = associateIncharge;
 	}
-	public String getAttendant() {
+
+	public Long getStaff() {
+		return staff;
+	}
+
+	public void setStaff(Long staff) {
+		this.staff = staff;
+	}
+
+	public Long getAttendant() {
 		return attendant;
 	}
-	public void setAttendant(String attendant) {
+
+	public void setAttendant(Long attendant) {
 		this.attendant = attendant;
 	}
+
 	public int getNoofTables() {
 		return noofTables;
 	}
+
 	public void setNoofTables(int noofTables) {
 		this.noofTables = noofTables;
 	}
+
 	public int getNoofComputerTables() {
 		return noofComputerTables;
 	}
+
 	public void setNoofComputerTables(int noofComputerTables) {
 		this.noofComputerTables = noofComputerTables;
 	}
+
 	public int getNoofChairs() {
 		return noofChairs;
 	}
+
 	public void setNoofChairs(int noofChairs) {
 		this.noofChairs = noofChairs;
 	}
+
 	public int getNoofAlmirah() {
 		return noofAlmirah;
 	}
+
 	public void setNoofAlmirah(int noofAlmirah) {
 		this.noofAlmirah = noofAlmirah;
 	}
+
 }
