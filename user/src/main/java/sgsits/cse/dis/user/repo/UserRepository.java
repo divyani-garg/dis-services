@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import sgsits.cse.dis.user.model.User;
 
-@Repository
+@Repository("userRepository")
 public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByUsername(String username);
     Boolean existsByUsername(String username);

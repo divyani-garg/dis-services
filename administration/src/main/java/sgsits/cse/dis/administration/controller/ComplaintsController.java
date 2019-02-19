@@ -1,8 +1,6 @@
 package sgsits.cse.dis.administration.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +21,6 @@ import io.swagger.annotations.ApiOperation;
 import sgsits.cse.dis.administration.feign.InfrastructureClient;
 import sgsits.cse.dis.administration.feign.UserClient;
 import sgsits.cse.dis.administration.jwt.JwtResolver;
-
 import sgsits.cse.dis.administration.model.CWNComplaints;
 import sgsits.cse.dis.administration.model.CleanlinessComplaints;
 import sgsits.cse.dis.administration.model.ECCWComplaints;
@@ -33,7 +30,6 @@ import sgsits.cse.dis.administration.model.LEComplaints;
 import sgsits.cse.dis.administration.model.OtherComplaints;
 import sgsits.cse.dis.administration.model.StudentComplaints;
 import sgsits.cse.dis.administration.model.TelephoneComplaints;
-
 import sgsits.cse.dis.administration.repo.CWNComplaintRepository;
 import sgsits.cse.dis.administration.repo.CleanlinessComplaintRepository;
 import sgsits.cse.dis.administration.repo.ECCWComplaintRepository;
@@ -48,7 +44,6 @@ import sgsits.cse.dis.administration.response.ResponseMessage;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/complaint")
 @Api(value = "Complaints Resource")
 public class ComplaintsController {
 
@@ -77,116 +72,394 @@ public class ComplaintsController {
 
 	JwtResolver jwtResolver = new JwtResolver();
 
-	// Get Complaints
+	// Get My Complaints
 
-	@ApiOperation(value = "Get My Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getMyComplaints", method = RequestMethod.GET)
-	public <T, U> Object[] getMyComplaints(HttpServletRequest request) {
+	@ApiOperation(value = "Get My Cleanliness Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getMyCleanlinessComplaints", method = RequestMethod.GET)	
+	public List<CleanlinessComplaints> getMyCleanlinessComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		return cleanlinessComplaintRepository.findByCreatedBy(id);
+	}
+	
+	@ApiOperation(value = "Get My Lab Equipment Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getMyLEComplaints", method = RequestMethod.GET)	
+	public List<LEComplaints> getMyLEComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization")); 
+		return leComplaintRepository.findByCreatedBy(id);
+	}
+	
+	@ApiOperation(value = "Get My Other Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getMyOtherComplaints", method = RequestMethod.GET)	
+	public List<OtherComplaints> getMyOtherComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		return otherComplaintRepository.findByCreatedBy(id);
+	}
+	
+	@ApiOperation(value = "Get My Faculty Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getMyFacultyComplaints", method = RequestMethod.GET)	
+	public List<FacultyComplaints> getMyFacultyComplaints(HttpServletRequest request)
+	{
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		String user_type = userClient.getUserType(id);
-		List<Object> complaints = new ArrayList<>();
-
-		Collections.addAll(complaints, cleanlinessComplaintRepository.findByCreatedBy(id));
-		Collections.addAll(complaints, leComplaintRepository.findByCreatedBy(id));
-		Collections.addAll(complaints, otherComplaintRepository.findByCreatedBy(id));
-
 		if (user_type.equals("student")) {
-			Collections.addAll(complaints, facultyComplaintRepository.findByCreatedBy(id));
+			return facultyComplaintRepository.findByCreatedBy(id);
 		}
-
+		return null;
+	}
+	
+	@ApiOperation(value = "Get My Student Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getMyStudentComplaints", method = RequestMethod.GET)	
+	public List<StudentComplaints> getMyStudentComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
 		if (user_type.equals("faculty")) {
-			Collections.addAll(complaints, studentComplaintRepository.findByCreatedBy(id));
+			return studentComplaintRepository.findByCreatedBy(id);
 		}
-
-		return complaints.toArray();
+		return null;
 	}
-
-	@ApiOperation(value = "Get Remaining Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getRemainingComplaints", method = RequestMethod.GET)
-	public <T, U> Object[] getRemainingComplaints(HttpServletRequest request) {
+	
+	//Get Remaining Complaints
+	
+	@ApiOperation(value = "Get Remaining Cleanliness Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingCleanlinessComplaints", method = RequestMethod.GET)
+	public List<CleanlinessComplaints> getRemainingCleanlinessComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return cleanlinessComplaintRepository.findByLocationInAndStatusNot(location, "Resolved");
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Remaining LE Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingLEComplaints", method = RequestMethod.GET)
+	public List<LEComplaints> getRemainingLEComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return leComplaintRepository.findByLabInAndStatusNot(location, "Resolved");
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Remaining Other Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingOtherComplaints", method = RequestMethod.GET)
+	public List<OtherComplaints> getRemainingOtherComplaints(HttpServletRequest request)
+	{
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		String user_type = userClient.getUserType(id);
-		List<Object> complaints = new ArrayList<>();
 		if (user_type.equals("head")) {
-			Collections.addAll(complaints, facultyComplaintRepository.findByStatusNot("Resolved"));
-			Collections.addAll(complaints, studentComplaintRepository.findByStatusNot("Resolved"));
-			Collections.addAll(complaints, otherComplaintRepository.findByStatusNot("Resolved"));
-		} else {
-			List<String> location = infrastructureClient.findInchargeOf(id);
-			for (String loc : location) {
-				Collections.addAll(complaints,
-						cleanlinessComplaintRepository.findByLocationAndStatusNot(loc, "Resolved"));
-				Collections.addAll(complaints, cwnComplaintRepository.findByLocationAndStatusNot(loc, "Resolved"));
-				Collections.addAll(complaints, eccwComplaintRepository.findByLocationAndStatusNot(loc, "Resolved"));
-				Collections.addAll(complaints, emrsComplaintRepository.findByLocationAndStatusNot(loc, "Resolved"));
-				Collections.addAll(complaints, leComplaintRepository.findByLabAndStatusNot(loc, "Resolved"));
-				Collections.addAll(complaints,
-						telephoneComplaintRepository.findByLocationAndStatusNot(loc, "Resolved"));
-				Collections.addAll(complaints, otherComplaintRepository.findByAssignedToAndStatusNot(id, "Resolved"));
-			}
+			return otherComplaintRepository.findByStatusNot("Resolved");
 		}
-		return complaints.toArray();
+		return otherComplaintRepository.findByAssignedToAndStatusNot(id, "Resolved");
 	}
-
-	@ApiOperation(value = "Get Resolved Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getResolvedComplaints", method = RequestMethod.GET)
-	public <T, U> Object[] getResolvedComplaints(HttpServletRequest request) {
+	
+	@ApiOperation(value = "Get Remaining Faculty Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingFacultyComplaints", method = RequestMethod.GET)
+	public List<FacultyComplaints> getRemainingFacultyComplaints(HttpServletRequest request)
+	{
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		String user_type = userClient.getUserType(id);
-		List<Object> complaints = new ArrayList<>();
 		if (user_type.equals("head")) {
-			Collections.addAll(complaints, facultyComplaintRepository.findByStatus("Resolved"));
-			Collections.addAll(complaints, studentComplaintRepository.findByStatus("Resolved"));
-			Collections.addAll(complaints, otherComplaintRepository.findByStatus("Resolved"));
-		} else {
-			List<String> location = infrastructureClient.findInchargeOf(id);
-			for (String loc : location) {
-				Collections.addAll(complaints, cleanlinessComplaintRepository.findByLocationAndStatus(loc, "Resolved"));
-				Collections.addAll(complaints, cwnComplaintRepository.findByLocationAndStatus(loc, "Resolved"));
-				Collections.addAll(complaints, eccwComplaintRepository.findByLocationAndStatus(loc, "Resolved"));
-				Collections.addAll(complaints, emrsComplaintRepository.findByLocationAndStatus(loc, "Resolved"));
-				Collections.addAll(complaints, leComplaintRepository.findByLabAndStatus(loc, "Resolved"));
-				Collections.addAll(complaints, telephoneComplaintRepository.findByLocationAndStatus(loc, "Resolved"));
-				Collections.addAll(complaints, otherComplaintRepository.findByAssignedToAndStatus(id, "Resolved"));
-			}
+			return facultyComplaintRepository.findByStatusNot("Resolved");
 		}
-		return complaints.toArray();
+		return null;
 	}
-
-	@ApiOperation(value = "Get Total Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getTotalComplaints", method = RequestMethod.GET)
-	public <T, U> Object[] getTotalComplaints(HttpServletRequest request) {
+	
+	@ApiOperation(value = "Get Remaining Student Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingStudentComplaints", method = RequestMethod.GET)
+	public List<StudentComplaints> getRemainingStudentComplaints(HttpServletRequest request)
+	{
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		String user_type = userClient.getUserType(id);
-		List<Object> complaints = new ArrayList<>();
 		if (user_type.equals("head")) {
-			Collections.addAll(complaints, facultyComplaintRepository.findAll());
-			Collections.addAll(complaints, studentComplaintRepository.findAll());
-			Collections.addAll(complaints, otherComplaintRepository.findAll());
-		} else {
-			List<String> location = infrastructureClient.findInchargeOf(id);
-			for (String loc : location) {
-				Collections.addAll(complaints, cleanlinessComplaintRepository.findByLocation(loc));
-				Collections.addAll(complaints, cwnComplaintRepository.findByLocation(loc));
-				Collections.addAll(complaints, eccwComplaintRepository.findByLocation(loc));
-				Collections.addAll(complaints, emrsComplaintRepository.findByLocation(loc));
-				Collections.addAll(complaints, leComplaintRepository.findByLab(loc));
-				Collections.addAll(complaints, telephoneComplaintRepository.findByLocation(loc));
-				Collections.addAll(complaints, otherComplaintRepository.findByAssignedTo(id));
-			}
+			return studentComplaintRepository.findByStatusNot("Resolved");
 		}
-		return complaints.toArray();
+		return null;
 	}
-
+	
+	@ApiOperation(value = "Get Remaining CWN Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingCWNComplaints", method = RequestMethod.GET)
+	public List<CWNComplaints> getRemainingCWNComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return cwnComplaintRepository.findByLocationInAndStatusNot(location, "Resolved");
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Remaining ECCW Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingECCWComplaints", method = RequestMethod.GET)
+	public List<ECCWComplaints> getRemainingECCWComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return eccwComplaintRepository.findByLocationInAndStatusNot(location, "Resolved");
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Remaining EMRS Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingEMRSComplaints", method = RequestMethod.GET)
+	public List<EMRSComplaints> getRemainingEMRSComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return emrsComplaintRepository.findByLocationInAndStatusNot(location, "Resolved");
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Remaining Telephone Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingTelephoneComplaints", method = RequestMethod.GET)
+	public List<TelephoneComplaints> getRemainingTelephoneComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return telephoneComplaintRepository.findByLocationInAndStatusNot(location, "Resolved");
+		else
+			return null;
+	}
+	
+	//Get Resolved Complaints
+	
+	@ApiOperation(value = "Get Resolved Cleanliness Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedCleanlinessComplaints", method = RequestMethod.GET)
+	public List<CleanlinessComplaints> getResolvedCleanlinessComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return cleanlinessComplaintRepository.findByLocationInAndStatus(location, "Resolved");
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Resolved LE Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedLEComplaints", method = RequestMethod.GET)
+	public List<LEComplaints> getResolvedLEComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return leComplaintRepository.findByLabInAndStatus(location, "Resolved");
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Resolved Other Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedOtherComplaints", method = RequestMethod.GET)
+	public List<OtherComplaints> getResolvedOtherComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
+		if (user_type.equals("head")) {
+			return otherComplaintRepository.findByStatus("Resolved");
+		}
+		return otherComplaintRepository.findByAssignedToAndStatus(id, "Resolved");
+	}
+	
+	@ApiOperation(value = "Get Resolved Faculty Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedFacultyComplaints", method = RequestMethod.GET)
+	public List<FacultyComplaints> getResolvedFacultyComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
+		if (user_type.equals("head")) {
+			return facultyComplaintRepository.findByStatus("Resolved");
+		}
+		return null;
+	}
+	
+	@ApiOperation(value = "Get Resolved Student Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedStudentComplaints", method = RequestMethod.GET)
+	public List<StudentComplaints> getResolvedStudentComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
+		if (user_type.equals("head")) {
+			return studentComplaintRepository.findByStatus("Resolved");
+		}
+		return null;
+	}
+	
+	@ApiOperation(value = "Get Resolved CWN Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedCWNComplaints", method = RequestMethod.GET)
+	public List<CWNComplaints> getResolvedCWNComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return cwnComplaintRepository.findByLocationInAndStatus(location, "Resolved");
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Resolved ECCW Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedECCWComplaints", method = RequestMethod.GET)
+	public List<ECCWComplaints> getResolvedECCWComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return eccwComplaintRepository.findByLocationInAndStatus(location, "Resolved");
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Resolved EMRS Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedEMRSComplaints", method = RequestMethod.GET)
+	public List<EMRSComplaints> getResolvedEMRSComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return emrsComplaintRepository.findByLocationInAndStatus(location, "Resolved");
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Resolved Telephone Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedTelephoneComplaints", method = RequestMethod.GET)
+	public List<TelephoneComplaints> getResolvedTelephoneComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return telephoneComplaintRepository.findByLocationInAndStatus(location, "Resolved");
+		else
+			return null;
+	}
+	
+	//Get Total Complaints
+	
+	@ApiOperation(value = "Get Total Cleanliness Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getTotalCleanlinessComplaints", method = RequestMethod.GET)
+	public List<CleanlinessComplaints> getTotalCleanlinessComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return cleanlinessComplaintRepository.findByLocationIn(location);
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Total LE Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getTotalLEComplaints", method = RequestMethod.GET)
+	public List<LEComplaints> getTotalLEComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return leComplaintRepository.findByLabIn(location);
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Total Other Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getTotalOtherComplaints", method = RequestMethod.GET)
+	public List<OtherComplaints> getTotalOtherComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
+		if (user_type.equals("head")) {
+			return otherComplaintRepository.findAll();
+		}
+		return otherComplaintRepository.findByAssignedTo(id);
+	}
+	
+	@ApiOperation(value = "Get Total Faculty Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getTotalFacultyComplaints", method = RequestMethod.GET)
+	public List<FacultyComplaints> getTotalFacultyComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
+		if (user_type.equals("head")) {
+			return facultyComplaintRepository.findAll();
+		}
+		return null;
+	}
+	
+	@ApiOperation(value = "Get Total Student Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getTotalStudentComplaints", method = RequestMethod.GET)
+	public List<StudentComplaints> getTotalStudentComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
+		if (user_type.equals("head")) {
+			return studentComplaintRepository.findAll();
+		}
+		return null;
+	}
+	
+	@ApiOperation(value = "Get Total CWN Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getTotalCWNComplaints", method = RequestMethod.GET)
+	public List<CWNComplaints> getTotalCWNComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return cwnComplaintRepository.findByLocationIn(location);
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Total ECCW Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getTotalECCWComplaints", method = RequestMethod.GET)
+	public List<ECCWComplaints> getTotalECCWComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return eccwComplaintRepository.findByLocationIn(location);
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Total EMRS Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getTotalEMRSComplaints", method = RequestMethod.GET)
+	public List<EMRSComplaints> getTotalEMRSComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return emrsComplaintRepository.findByLocationIn(location);
+		else
+			return null;
+	}
+	
+	@ApiOperation(value = "Get Total Telephone Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getTotalTelephoneComplaints", method = RequestMethod.GET)
+	public List<TelephoneComplaints> getTotalTelephoneComplaints(HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		List<String> location = infrastructureClient.findInchargeOf(id);
+		if(location != null)
+			return telephoneComplaintRepository.findByLocationIn(location);
+		else
+			return null;
+	}
+	
 	// Add Complaints //create notification for all
 
 	@ApiOperation(value = "Add Cleanliness Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addCleanliness", method = RequestMethod.POST)
+	@RequestMapping(value = "/addCleanlinessComplaint", method = RequestMethod.POST)
 	public ResponseEntity<?> addCleanlinessComplaint(@RequestBody CleanlinessComplaintForm cleanlinessComplaintForm,
 			HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
 		if (!cleanlinessComplaintRepository.existsByCreatedByAndLocationAndStatusNot(id, cleanlinessComplaintForm.getLocation(), "Resolved")) {
 			CleanlinessComplaints cleanlinessComplaints = new CleanlinessComplaints(cleanlinessComplaintForm.getDetails(), cleanlinessComplaintForm.getLevelOfDust(), cleanlinessComplaintForm.getLocation());
 			cleanlinessComplaints.setCreatedBy(id);

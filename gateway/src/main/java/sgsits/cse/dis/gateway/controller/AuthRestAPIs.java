@@ -74,12 +74,7 @@ public class AuthRestAPIs {
 			return new ResponseEntity<>(new ResponseMessage("Fail -> Mobile Number is already in use!"),
 					HttpStatus.BAD_REQUEST);
 		}
-		
-		//if(){
-			
-		//}
-		
-		
+
 		// Creating user's account
 		User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),signUpRequest.getDob(),signUpRequest.getMobileNo(),
 				encoder.encode(signUpRequest.getPassword()));

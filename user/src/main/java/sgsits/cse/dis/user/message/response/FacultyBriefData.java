@@ -4,7 +4,7 @@ public class FacultyBriefData {
 	
 	private String name;
 	private String nameAcronym;
-	private byte[] profilePicture;
+	private String profilePicture;
 	private String currentDesignation;
 	private String email;
 	
@@ -20,10 +20,10 @@ public class FacultyBriefData {
 	public void setNameAcronym(String nameAcronym) {
 		this.nameAcronym = nameAcronym;
 	}
-	public byte[] getProfilePicture() {
+	public String getProfilePicture() {
 		return profilePicture;
 	}
-	public void setProfilePicture(byte[] profilePicture) {
+	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
 	public String getCurrentDesignation() {

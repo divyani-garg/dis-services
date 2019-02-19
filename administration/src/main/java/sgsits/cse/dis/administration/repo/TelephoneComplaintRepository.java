@@ -15,4 +15,7 @@ public interface TelephoneComplaintRepository extends JpaRepository<TelephoneCom
 	List<TelephoneComplaints> findByCreatedBy(Long id);
 	List<TelephoneComplaints> findByLocation(String loc);
 	List<TelephoneComplaints> findByLocationAndStatusNot(String loc, String string);
+	List<TelephoneComplaints> findByLocationInAndStatus(List<String> location, String string);
+	List<TelephoneComplaints> findByLocationInAndStatusNot(List<String> location, String string);
+	List<TelephoneComplaints> findByLocationIn(List<String> location);
 }
