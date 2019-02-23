@@ -1,5 +1,7 @@
 package sgsits.cse.dis.gateway.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -82,7 +84,7 @@ public class AuthRestAPIs {
 				encoder.encode(signUpRequest.getPassword()));
 
 		user.setCreatedBy(signUpRequest.getUsername());
-		//user.setCreatedDate();
+		user.setCreatedDate(new Date());
 		//user.setUserType("student");
 		
 		userRepository.save(user);

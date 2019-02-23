@@ -11,4 +11,5 @@ import sgsits.cse.dis.infrastructure.model.Infrastructure;
 public interface InfrastructureRepository extends JpaRepository<Infrastructure, Long> {
 	List<Infrastructure> findByName(String name);
 	List<Infrastructure> findByInchargeOrAssociateInchargeOrStaff(long id1, long id2, long id3);
+	List<Infrastructure> findByType(String name);
 }

@@ -53,20 +53,20 @@ public class Infrastructure {
 	@Column(name = "staff")
 	private Long staff;
 	
-	@Column(name = "attendant")
-	private Long attendant;
+	@Column(name = "attendent")
+	private Long attendent;
 	
 	@Column(name = "no_of_tables")
-	private int noofTables;
+	private Integer noofTables;
 	
 	@Column(name = "no_of_computer_tables")
-	private int noofComputerTables;
+	private Integer noofComputerTables;
 	
 	@Column(name = "no_of_chairs")
-	private int noofChairs;
+	private Integer noofChairs;
 	
 	@Column(name = "no_of_almirah")
-	private int noofAlmirah;
+	private Integer noofAlmirah;
 
 	public long getId() {
 		return id;
@@ -172,44 +172,43 @@ public class Infrastructure {
 		this.staff = staff;
 	}
 
-	public Long getAttendant() {
-		return attendant;
+	public Long getAttendent() {
+		return attendent;
 	}
 
-	public void setAttendant(Long attendant) {
-		this.attendant = attendant;
+	public void setAttendent(Long attendent) {
+		this.attendent = attendent;
 	}
 
-	public int getNoofTables() {
+	public Integer getNoofTables() {
 		return noofTables;
 	}
 
-	public void setNoofTables(int noofTables) {
+	public void setNoofTables(Integer noofTables) {
 		this.noofTables = noofTables;
 	}
 
-	public int getNoofComputerTables() {
+	public Integer getNoofComputerTables() {
 		return noofComputerTables;
 	}
 
-	public void setNoofComputerTables(int noofComputerTables) {
+	public void setNoofComputerTables(Integer noofComputerTables) {
 		this.noofComputerTables = noofComputerTables;
 	}
 
-	public int getNoofChairs() {
+	public Integer getNoofChairs() {
 		return noofChairs;
 	}
 
-	public void setNoofChairs(int noofChairs) {
+	public void setNoofChairs(Integer noofChairs) {
 		this.noofChairs = noofChairs;
 	}
 
-	public int getNoofAlmirah() {
+	public Integer getNoofAlmirah() {
 		return noofAlmirah;
 	}
 
-	public void setNoofAlmirah(int noofAlmirah) {
+	public void setNoofAlmirah(Integer noofAlmirah) {
 		this.noofAlmirah = noofAlmirah;
 	}
-
 }
