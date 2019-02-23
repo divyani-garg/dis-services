@@ -21,15 +21,11 @@ import sgsits.cse.dis.infrastructure.feign.UserClient;
 import sgsits.cse.dis.infrastructure.model.Infrastructure;
 import sgsits.cse.dis.infrastructure.repo.InfrastructureRepository;
 import sgsits.cse.dis.infrastructure.response.InfrastructureBrief;
-import sgsits.cse.dis.infrastructure.service.InfrastructureService;
 
 @CrossOrigin(origins = "*")
 @RestController
 @Api(value = "Infrastructure Resource")
 public class InfrastructureController {
-
-	@Autowired
-	InfrastructureService infrastructureService;
 
 	@Autowired
 	InfrastructureRepository infrastructureRepository;
@@ -82,7 +78,7 @@ public class InfrastructureController {
 	@ApiOperation(value = "deleteInfrastructure", response = Object.class, httpMethod = "DELETE", produces = "application/json")
 	@RequestMapping(value = "/deleteInfrastructure/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteInfrastructure(@PathVariable long id) {
-		infrastructureService.delete(id);
+		infrastructureRepository.deleteById(id);
 		return new ResponseEntity<>("Infrastructure has been deleted!", HttpStatus.OK);
 	}
 
@@ -104,7 +100,7 @@ public class InfrastructureController {
 	@ApiOperation(value = "findInfrastructure", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/findInfrastructure/{name}", method = RequestMethod.GET)
 	public List<Infrastructure> findByName(@PathVariable String name) {
-		return infrastructureService.findByName(name);
+		return infrastructureRepository.findByName(name);
 	}
 
 	@ApiOperation(value = "findIncharge", response = Object.class, httpMethod = "GET", produces = "application/json")
