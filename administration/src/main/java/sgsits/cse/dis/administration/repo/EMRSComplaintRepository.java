@@ -15,4 +15,7 @@ public interface EMRSComplaintRepository extends JpaRepository<EMRSComplaints, L
 	List<EMRSComplaints> findByCreatedBy(Long id);
 	List<EMRSComplaints> findByLocation(String loc);
 	List<EMRSComplaints> findByLocationAndStatusNot(String loc, String string);
+	List<EMRSComplaints> findByLocationInAndStatus(List<String> location, String string);
+	List<EMRSComplaints> findByLocationInAndStatusNot(List<String> location, String string);
+	List<EMRSComplaints> findByLocationIn(List<String> location);
 }

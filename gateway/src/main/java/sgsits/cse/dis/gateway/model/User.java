@@ -84,7 +84,7 @@ public class User{
     
 	@Column(name = "user_type")
 	private String userType;
-        
+	
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_tasks", 
     	joinColumns = @JoinColumn(name = "user_id"), 

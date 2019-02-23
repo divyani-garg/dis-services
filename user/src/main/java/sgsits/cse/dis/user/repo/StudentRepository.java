@@ -9,6 +9,6 @@ import sgsits.cse.dis.user.model.StudentProfile;
 @Repository("studentRepository")
 public interface StudentRepository extends JpaRepository<StudentProfile, Long>{
 	Optional<StudentProfile> findByEmail(String email);
-	Optional<StudentProfile> findByResetToken(String resetToken);
 	Optional<StudentProfile> findByEnrollmentId(String enrollmentId);
+	Optional<StudentProfile> findByUserId(Long id);
 }

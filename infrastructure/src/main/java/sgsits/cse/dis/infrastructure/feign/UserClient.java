@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UserClient {
 	
 	@RequestMapping(value = "/getUserName", method = RequestMethod.GET)
-	String getUserName(@RequestParam("id") Long id);
+	String getUserName(@RequestParam("id") long id);
+	
+	@RequestMapping(value = "/getUserType", method = RequestMethod.GET)
+	String getUserType(@RequestParam("id") long id);
 
 }
 

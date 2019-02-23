@@ -29,6 +29,7 @@ public class JwtProvider {
         return Jwts.builder()
         		        .setId(userPrincipal.getId())
 		                .setSubject((userPrincipal.getUsername()))
+		                .setAudience(userPrincipal.getUserType())
 		                .setIssuedAt(new Date())
 		                .setExpiration(new Date((new Date()).getTime() + jwtExpiration*1000))
 		                .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -59,5 +60,12 @@ public class JwtProvider {
 			                .setSigningKey(jwtSecret)
 			                .parseClaimsJws(token)
 			                .getBody().getSubject();
+    }
+    
+    public String getUserTypeFromJwtToken(String token) {
+    	return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody().getAudience();
     }
 }

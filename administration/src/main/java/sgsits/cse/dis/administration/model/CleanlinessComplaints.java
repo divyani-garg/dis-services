@@ -1,7 +1,6 @@
 package sgsits.cse.dis.administration.model;
 
-import java.time.Instant;
-import java.util.Date;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +28,10 @@ public class CleanlinessComplaints {
 	private Long modifiedBy;
 
 	@Column(name = "modified_date")
-	private Instant modifiedDate;
+	private String modifiedDate;
+	
+	@Column(name = "type")
+	private String type;
 
 	@Column(name = "details", nullable = false)
 	private String details;
@@ -49,6 +51,9 @@ public class CleanlinessComplaints {
 	@Column(name = "remarks")
 	private String remarks;
 
+	public CleanlinessComplaints()
+	{}
+	
 	public CleanlinessComplaints(String details, int levelOfDust, String location) {
 		super();
 		this.details = details;
@@ -88,12 +93,20 @@ public class CleanlinessComplaints {
 		this.createdDate = createdDate;
 	}
 
-	public Instant getModifiedDate() {
+	public String getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Instant modifiedDate) {
+	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getDetails() {
