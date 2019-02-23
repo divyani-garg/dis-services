@@ -56,7 +56,9 @@ public class StaffController {
 	@RequestMapping(value = "/facultyBrief", method = RequestMethod.GET)
 	public List<FacultyBriefData> getFacultyBreifData() {
 		List<StaffProfile> facultyData = staffRepository.findByClasssOrClasssOrderByCurrentDesignation("I", "II");
+		
 		List<FacultyBriefData> facultyBriefData = new ArrayList<>();
+		
 		for (StaffProfile faculty : facultyData) {
 			FacultyBriefData fbd = new FacultyBriefData();
 			fbd.setName(faculty.getName());

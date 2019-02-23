@@ -27,8 +27,8 @@ import sgsits.cse.dis.infrastructure.service.InfrastructureService;
 @Api(value = "Infrastructure Resource")
 public class InfrastructureController {
 	
-	@Autowired
-	InfrastructureService infrastructureService;
+	//@Autowired
+	//InfrastructureService infrastructureService;
 	
 	@Autowired
 	InfrastructureRepository infrastructureRepository;
@@ -37,7 +37,7 @@ public class InfrastructureController {
 	@RequestMapping(value = "/listInfrastructure", method = RequestMethod.GET)
 	public List<Infrastructure> getAllInfrastructure()
 	{	
-		return infrastructureService.findAll();
+		return infrastructureRepository.findAll();
 	}
 	
 	@ApiOperation(value = "addInfrastructure", response = Object.class, httpMethod = "POST", produces = "application/json")
@@ -45,7 +45,7 @@ public class InfrastructureController {
 	public String addInfrastructure(@RequestBody Infrastructure infrastructure)
 	{
 		infrastructure.setCreatedDate(java.time.Clock.systemUTC().instant());
-		infrastructureService.save(infrastructure);
+		infrastructureRepository.save(infrastructure);
 		return "redirect:/addInfrastructure?success";
 	}
 
