@@ -37,6 +37,9 @@ public class StaffProfile {
 	@Column(name = "name")
 	private String name;
 	
+	@Column(name = "user_id")
+	private Long userId;
+	
 	@Column(name = "name_acronym",unique = true)
 	private String nameAcronym;
 	
@@ -119,6 +122,14 @@ public class StaffProfile {
 
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
+	}
+	
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public Date getModifiedDate() {

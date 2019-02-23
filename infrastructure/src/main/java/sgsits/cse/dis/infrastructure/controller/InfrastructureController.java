@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import sgsits.cse.dis.infrastructure.feign.UserClient;
 import sgsits.cse.dis.infrastructure.model.Infrastructure;
 import sgsits.cse.dis.infrastructure.repo.InfrastructureRepository;
+import sgsits.cse.dis.infrastructure.response.InfrastructureBrief;
 import sgsits.cse.dis.infrastructure.service.InfrastructureService;
 
 @CrossOrigin(origins = "*")
@@ -33,12 +35,28 @@ public class InfrastructureController {
 	@Autowired
 	InfrastructureRepository infrastructureRepository;
 	
+	@Autowired
+	UserClient userClient;
+	
 	@ApiOperation(value = "listInfrastructure", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/listInfrastructure", method = RequestMethod.GET)
-	public List<Infrastructure> getAllInfrastructure()
+	public List<InfrastructureBrief> getInfrastructure()
 	{	
-		return infrastructureService.findAll();
+		String type = "Laboratory";
+		List<Infrastructure> infra = infrastructureRepository.findByType(type);
+		List<InfrastructureBrief> infraBrief = new ArrayList<>();
+		for(Infrastructure inf: infra) {
+			InfrastructureBrief infB = new InfrastructureBrief();
+			infB.setArea(inf.getArea());
+			infB.setLocation(inf.getLocation());
+			infB.setNameAcronym(inf.getNameAcronym());
+			infB.setName(inf.getName());
+			infB.setIncharge(userClient.getUserName(inf.getIncharge()));
+			infraBrief.add(infB);
+			}
+		return infraBrief;
 	}
+	
 	
 	@ApiOperation(value = "addInfrastructure", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addInfrastructure", method = RequestMethod.POST)
