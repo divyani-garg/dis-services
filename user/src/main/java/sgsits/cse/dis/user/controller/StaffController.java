@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 
 import sgsits.cse.dis.user.jwt.JwtResolver;
 import sgsits.cse.dis.user.message.response.FacultyBriefData;
+import sgsits.cse.dis.user.message.response.FacultyData;
 import sgsits.cse.dis.user.message.response.StaffBasicProfileResponse;
 import sgsits.cse.dis.user.model.StaffProfile;
 import sgsits.cse.dis.user.model.UserAddress;
@@ -73,7 +74,6 @@ public class StaffController {
 	public List<FacultyBriefData> getStaffBriefData() {
 		List<StaffProfile> facultyData = staffRepository.findByClasssOrClasssOrderByCurrentDesignation("III", "IV");
 		List<FacultyBriefData> facultyBriefData = new ArrayList<>();
-
 		for (StaffProfile faculty : facultyData) {
 			FacultyBriefData fbd = new FacultyBriefData();
 			fbd.setName(faculty.getName());
@@ -84,6 +84,44 @@ public class StaffController {
 			facultyBriefData.add(fbd);
 		}
 		return facultyBriefData;
+	}
+	
+	@ApiOperation(value = "Faculty Data", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/facultyData", method = RequestMethod.GET)
+	public List<FacultyData> getFacultyData(){
+		List<StaffProfile> Data = staffRepository.findByClasssOrClasssOrderByCurrentDesignation("I", "II");
+		List<FacultyData> facultyData = new ArrayList<>();
+		for (StaffProfile faculty : Data) {
+			FacultyData fd = new FacultyData();
+			fd.setName(faculty.getName());
+			fd.setNameAcronym(faculty.getNameAcronym());
+			fd.setCurrentDesignation(faculty.getCurrentDesignation());
+			fd.setEmail(faculty.getEmail());
+			fd.setMobileNo(faculty.getMobileNo());
+			fd.setAlternateMobileNo(faculty.getAlternateMobileNo());
+			// fbd.setProfilePicture(faculty.getProfilePicture());			
+			facultyData.add(fd);
+		}
+		return facultyData;
+	}
+	
+	@ApiOperation(value = "Staff Data", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/staffData", method = RequestMethod.GET)
+	public List<FacultyData> getStaffData() {
+		List<StaffProfile> Data = staffRepository.findByClasssOrClasssOrderByCurrentDesignation("III", "IV");
+		List<FacultyData> staffData = new ArrayList<>();
+		for (StaffProfile faculty : Data) {
+			FacultyData fd = new FacultyData();
+			fd.setName(faculty.getName());
+			fd.setNameAcronym(faculty.getNameAcronym());
+			fd.setCurrentDesignation(faculty.getCurrentDesignation());
+			fd.setEmail(faculty.getEmail());
+			fd.setMobileNo(faculty.getMobileNo());
+			fd.setAlternateMobileNo(faculty.getAlternateMobileNo());
+			// fbd.setProfilePicture(faculty.getProfilePicture());
+			staffData.add(fd);
+		}
+		return staffData;
 	}
 
 	@ApiOperation(value = "User Qualification", response = Object.class, httpMethod = "GET", produces = "application/json")
