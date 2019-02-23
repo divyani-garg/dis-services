@@ -1,13 +1,12 @@
 package sgsits.cse.dis.user.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -20,16 +19,19 @@ public class StaffProfile {
 	private long id;
 
 	@Column(name = "created_by")
-	private String createdBy;
+	private Long createdBy;
 
 	@Column(name = "created_date")
 	private Date createdDate;
 
 	@Column(name = "modified_by")
-	private String modifiedBy;
+	private Long modifiedBy;
 
 	@Column(name = "modified_date")
 	private Date modifiedDate;
+	
+	@Column(name = "user_id")
+	private Long userId;
 	
 	@Column(name = "employee_id", unique = true)
 	private String employeeId;
@@ -39,10 +41,6 @@ public class StaffProfile {
 	
 	@Column(name = "name_acronym",unique = true)
 	private String nameAcronym;
-	
-	@Lob
-	@Column(name = "profile_picture")
-	private byte[] profilePicture;
 	
 	@Column(name = "current_designation")
 	private String currentDesignation;
@@ -78,17 +76,17 @@ public class StaffProfile {
 	private String fatherName;
 	
 	@Column(name = "mobile_no")
-	private long mobileNo;
+	private Long mobileNo;
 	
 	@Column(name = "alternate_mobile_no")
-	private long alternateMobileNo;
+	private Long alternateMobileNo;
 	
 	@Column(name = "joining_date")
 	private Date joiningDate;
 	
 	@Column(name = "area_of_specialization")
 	private String areaOfSpecialization;
-	
+
 	public long getId() {
 		return id;
 	}
@@ -97,11 +95,11 @@ public class StaffProfile {
 		this.id = id;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -113,11 +111,11 @@ public class StaffProfile {
 		this.createdDate = createdDate;
 	}
 
-	public String getModifiedBy() {
+	public Long getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
+	public void setModifiedBy(Long modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
@@ -127,6 +125,14 @@ public class StaffProfile {
 
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getEmployeeId() {
@@ -143,6 +149,14 @@ public class StaffProfile {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getNameAcronym() {
+		return nameAcronym;
+	}
+
+	public void setNameAcronym(String nameAcronym) {
+		this.nameAcronym = nameAcronym;
 	}
 
 	public String getCurrentDesignation() {
@@ -237,11 +251,11 @@ public class StaffProfile {
 		return mobileNo;
 	}
 
-	public void setMobileNo(long mobileNo) {
+	public void setMobileNo(Long mobileNo) {
 		this.mobileNo = mobileNo;
 	}
 
-	public long getAlternateMobileNo() {
+	public Long getAlternateMobileNo() {
 		return alternateMobileNo;
 	}
 
@@ -263,21 +277,5 @@ public class StaffProfile {
 
 	public void setAreaOfSpecialization(String areaOfSpecialization) {
 		this.areaOfSpecialization = areaOfSpecialization;
-	}
-
-	public String getNameAcronym() {
-		return nameAcronym;
-	}
-
-	public void setNameAcronym(String nameAcronym) {
-		this.nameAcronym = nameAcronym;
-	}
-
-	public byte[] getProfilePicture() {
-		return profilePicture;
-	}
-
-	public void setProfilePicture(byte[] profilePicture) {
-		this.profilePicture = profilePicture;
 	}
 }

@@ -100,9 +100,9 @@ public class AuthenticationController {
 								// activate account via email
 								return "You are successfully registered, activation link has been sent to your registered email account";
 							} else
-								return "You have enetered wrong DOB";
+								return "You have entered wrong DOB";
 						} else
-							return "You have enetered wrong mobile no";
+							return "You have entered wrong mobile no";
 					} else
 						return "You have entered wrong email id";
 				} else // what if activation link expire

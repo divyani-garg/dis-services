@@ -1,12 +1,12 @@
 package sgsits.cse.dis.academics.controller;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import sgsits.cse.dis.academics.feign.UserClient;
+import sgsits.cse.dis.academics.jwt.JwtResolver;
 import sgsits.cse.dis.academics.model.ExtraClassTimeTable;
 import sgsits.cse.dis.academics.model.SemesterTimeTable;
 import sgsits.cse.dis.academics.model.presentation.SemesterTimeTablePresentation;
@@ -24,7 +26,7 @@ import sgsits.cse.dis.academics.repo.ExtraClassTimeTableRepository;
 import sgsits.cse.dis.academics.repo.SemesterTimeTableRepository;
 import sgsits.cse.dis.academics.services.DateService;
 
-//@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/timetable")
 @Api(value = "Time Table Resource")
@@ -32,18 +34,53 @@ public class TimeTableController {
 
 	@Autowired
 	SemesterTimeTableRepository semesterTimeTableRepository;
-
 	@Autowired
 	ExtraClassTimeTableRepository extraClassTimeTableRepository;
+	@Autowired
+	UserClient userClient;
 
+	JwtResolver jwtResolver = new JwtResolver();
+	
 	@ApiOperation(value = "studentTimeTable", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/student", method = RequestMethod.GET)
-	public List<SemesterTimeTablePresentation> getStudentTimeTable() throws ParseException {
-		String session = "July 2018 - Dec 2018";
+	public List<SemesterTimeTablePresentation> getStudentTimeTable(HttpServletRequest request) throws ParseException {
+		String session = "2018 - 2019";
 		String year = "III";
 		String semester = "A";
-		List<SemesterTimeTable> semtimetable = semesterTimeTableRepository.findBySessionAndYearAndSemester(session,
-				year, semester);
+	/*	long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));	
+		int adYear = userClient.getAdmissionYear(id);
+		//get Current year and month
+		Calendar cal = Calendar.getInstance();
+		int curYear = cal.get(Calendar.YEAR);
+		int curMonth = (cal.get(Calendar.MONTH))+1;
+		//find out student studying in which session,year and semester
+		int syear = curYear - adYear;		
+		String semester = null,year = null,session = null;		
+		if(curMonth>=1&&curMonth<=6){
+			semester = "B";
+			session = (curYear-1) + "-" + curYear;
+			if(syear==1)
+				year = "I";
+			if(syear==2)
+				year = "II";
+			if(syear==3)
+				year = "III";
+			if(syear==4)
+				year = "IV";			
+		}
+		else if(curMonth>=7&&curMonth<=12){
+			semester = "A";
+			session = curYear + "-" + (curYear+1);
+			if(syear==0)
+				year = "I";
+			if(syear==1)
+				year = "II";
+			if(syear==2)
+				year = "III";
+			if(syear==3)
+				year = "IV";
+		}*/		
+		List<SemesterTimeTable> semtimetable = semesterTimeTableRepository.findBySessionAndYearAndSemester(session, year, semester);
 
 		// String string = "2019-01-16";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -77,8 +114,8 @@ public class TimeTableController {
 					.findBySessionAndYearAndSemesterAndDate(session, year, semester, simpleDateFormat.parse(date));
 
 			if(extraClassTimeTable!=null)
-			for (SemesterTimeTablePresentation semTT : result) {
-				for (ExtraClassTimeTable extraClass : extraClassTimeTable) {
+			for (ExtraClassTimeTable extraClass : extraClassTimeTable) {
+				for (SemesterTimeTablePresentation semTT : result) {
 					if (semTT.getTo().equals(extraClass.getTo()) && semTT.getFrom().equals(extraClass.getFrom())
 							&& semTT.getDay().equals(extraClass.getDay())) {
 						semTT.setSubjectCode(extraClass.getSubjectCode());
@@ -95,6 +132,24 @@ public class TimeTableController {
 						semTT.setLocation(extraClass.getLocation());
 						semTT.setColor("change");
 					}
+					else
+					{
+						SemesterTimeTablePresentation extra = new SemesterTimeTablePresentation();
+						extra.setSubjectCode(extraClass.getSubjectCode());
+						extra.setTo(extraClass.getTo());
+						extra.setFrom(extraClass.getFrom());
+						extra.setDay(extraClass.getDay());
+						extra.setType(extraClass.getType());
+						extra.setFaculty1(extraClass.getFaculty1());
+						extra.setFaculty2(extraClass.getFaculty2());
+						extra.setFaculty3(extraClass.getFaculty3());
+						extra.setLabTechnician(extraClass.getLabTechnician());
+						extra.setTa(extraClass.getTa());
+						extra.setBatch(extraClass.getBatch());
+						extra.setLocation(extraClass.getLocation());
+						extra.setColor("extra");
+						result.add(extra);
+					}
 				}
 			}
 		}
@@ -104,8 +159,8 @@ public class TimeTableController {
 	@ApiOperation(value = "facultyTimeTable", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/faculty", method = RequestMethod.GET)
 	public List<SemesterTimeTable> getFacultyTimeTable() {
-		String session = "July 2018 - Dec 2018";
-		String faculty = "SN";
+		String session = "2018 - 2019";
+		String faculty = "SS";
 		List<SemesterTimeTable> facultytimetable = semesterTimeTableRepository
 				.findByFaculty1OrFaculty2OrFaculty3AndSession(faculty, faculty, faculty, session);
 		return facultytimetable;
@@ -121,11 +176,10 @@ public class TimeTableController {
 	}
 
 	@ApiOperation(value = "locationTimeTable", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/{location}", method = RequestMethod.GET)
+	@RequestMapping(value = "/location/{location}", method = RequestMethod.GET)
 	public List<SemesterTimeTable> getLabTimeTable(@PathVariable("location") String location) {
 		String session = "July 2018 - Dec 2018";
-		List<SemesterTimeTable> venuetimetable = semesterTimeTableRepository.findByLocationAndSession(location,
-				session);
+		List<SemesterTimeTable> venuetimetable = semesterTimeTableRepository.findByLocationAndSession(location, session);
 		return venuetimetable;
 	}
 

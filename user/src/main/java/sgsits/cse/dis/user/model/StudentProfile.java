@@ -1,7 +1,6 @@
 package sgsits.cse.dis.user.model;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,38 +17,26 @@ public class StudentProfile {
 	@Column(name = "id", nullable = false, unique = true)
 	private long id;
 
-	@Column(name = "created_by")
-	private String createdBy;
+	@Column(name = "created_by", nullable = false)
+	private Long createdBy;
 
-	@Column(name = "created_date")
-	private Date createdDate;
+	@Column(name = "created_date", nullable = false)
+	private String createdDate;
 
 	@Column(name = "modified_by")
-	private String modifiedBy;
+	private Long modifiedBy;
 
 	@Column(name = "modified_date")
-	private Date modifiedDate;
+	private String modifiedDate;
+	
+	@Column(name = "user_id")
+	private Long userId;
 
 	@Column(name = "enrollment_id", nullable = false, unique = true)
 	private String enrollmentId;
-
-	@Column(name = "password", nullable = false)
-	private String password;
-
-	@Column(name = "enabled")
-	private boolean enabled;
-
-	@Column(name = "reset_token")
-	private String resetToken;
-
-	@Column(name = "reset_token_expiry")
-	private LocalDate resetTokenExpiry;
-
-	@Column(name = "activation_link")
-	private String activationlink;
-
-	@Column(name = "activation_link_expiry")
-	private LocalDate activationLinkExpiry;
+	
+	@Column(name = "profile_picture")
+	private String profilePicture;
 
 	@Column(name = "full_name")
 	private String fullName;
@@ -96,12 +83,6 @@ public class StudentProfile {
 	@Column(name = "blood_group")
 	private String bloodGroup;
 
-	@Column(name = "nationality")
-	private String nationality;
-
-	@Column(name = "last_login")
-	private Date lastLogin;
-
 	public long getId() {
 		return id;
 	}
@@ -110,36 +91,44 @@ public class StudentProfile {
 		this.id = id;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 
-	public String getModifiedBy() {
+	public Long getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
+	public void setModifiedBy(Long modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Date getModifiedDate() {
+	public String getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Date modifiedDate) {
+	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public String getEnrollmentId() {
@@ -148,30 +137,6 @@ public class StudentProfile {
 
 	public void setEnrollmentId(String enrollmentId) {
 		this.enrollmentId = enrollmentId;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public String getResetToken() {
-		return resetToken;
-	}
-
-	public void setResetToken(String resetToken) {
-		this.resetToken = resetToken;
 	}
 
 	public String getFullName() {
@@ -292,45 +257,5 @@ public class StudentProfile {
 
 	public void setBloodGroup(String bloodGroup) {
 		this.bloodGroup = bloodGroup;
-	}
-
-	public String getNationality() {
-		return nationality;
-	}
-
-	public void setNationality(String nationality) {
-		this.nationality = nationality;
-	}
-
-	public Date getLastLogin() {
-		return lastLogin;
-	}
-
-	public void setLastLogin(Date lastLogin) {
-		this.lastLogin = lastLogin;
-	}
-
-	public LocalDate getResetTokenExpiry() {
-		return resetTokenExpiry;
-	}
-
-	public void setResetTokenExpiry(LocalDate localDate) {
-		this.resetTokenExpiry = localDate;
-	}
-
-	public String getActivationlink() {
-		return activationlink;
-	}
-
-	public void setActivationlink(String activationlink) {
-		this.activationlink = activationlink;
-	}
-
-	public LocalDate getActivationLinkExpiry() {
-		return activationLinkExpiry;
-	}
-
-	public void setActivationLinkExpiry(LocalDate activationLinkExpiry) {
-		this.activationLinkExpiry = activationLinkExpiry;
 	}
 }

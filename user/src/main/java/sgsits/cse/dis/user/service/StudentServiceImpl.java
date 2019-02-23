@@ -20,7 +20,8 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public Optional<StudentProfile> findByResetToken(String resetToken) {
-		return studentRepository.findByResetToken(resetToken);
+		//return studentRepository.findByResetToken(resetToken);
+		return null;
 	}
 
 	@Override
