@@ -1,7 +1,5 @@
 package sgsits.cse.dis.user.model;
 
-import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,13 +20,13 @@ public class StaffProfile {
 	private Long createdBy;
 
 	@Column(name = "created_date")
-	private Date createdDate;
+	private String createdDate;
 
 	@Column(name = "modified_by")
 	private Long modifiedBy;
 
 	@Column(name = "modified_date")
-	private Date modifiedDate;
+	private String modifiedDate;
 	
 	@Column(name = "user_id")
 	private Long userId;
@@ -55,7 +53,7 @@ public class StaffProfile {
 	private String email;
 	
 	@Column(name = "dob")
-	private Date dob;
+	private String dob;
 	
 	@Column(name = "pan_number")
 	private String panNumber;
@@ -82,7 +80,7 @@ public class StaffProfile {
 	private Long alternateMobileNo;
 	
 	@Column(name = "joining_date")
-	private Date joiningDate;
+	private String joiningDate;
 	
 	@Column(name = "area_of_specialization")
 	private String areaOfSpecialization;
@@ -103,11 +101,11 @@ public class StaffProfile {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 
@@ -119,11 +117,11 @@ public class StaffProfile {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Date getModifiedDate() {
+	public String getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Date modifiedDate) {
+	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 
@@ -191,11 +189,11 @@ public class StaffProfile {
 		this.email = email;
 	}
 
-	public Date getDob() {
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
@@ -247,7 +245,7 @@ public class StaffProfile {
 		this.fatherName = fatherName;
 	}
 
-	public long getMobileNo() {
+	public Long getMobileNo() {
 		return mobileNo;
 	}
 
@@ -259,15 +257,15 @@ public class StaffProfile {
 		return alternateMobileNo;
 	}
 
-	public void setAlternateMobileNo(long alternateMobileNo) {
+	public void setAlternateMobileNo(Long alternateMobileNo) {
 		this.alternateMobileNo = alternateMobileNo;
 	}
 
-	public Date getJoiningDate() {
+	public String getJoiningDate() {
 		return joiningDate;
 	}
 
-	public void setJoiningDate(Date joiningDate) {
+	public void setJoiningDate(String joiningDate) {
 		this.joiningDate = joiningDate;
 	}
 

@@ -19,17 +19,17 @@ public class StudentAttendance {
 	@Column(name = "id", nullable = false, unique = true)
 	private long id;
 
-	@Column(name = "created_by")
-	private String createdBy;
+	@Column(name = "created_by", nullable = false)
+	private Long createdBy;
 
-	@Column(name = "created_date")
-	private Date createdDate;
+	@Column(name = "created_date", nullable = false)
+	private String createdDate;
 
 	@Column(name = "modified_by")
-	private String modifiedBy;
+	private Long modifiedBy;
 
 	@Column(name = "modified_date")
-	private Date modifiedDate;
+	private String modifiedDate;
 
 	@Column(name = "enrollment_id", nullable = false)
 	private String enrollmentId;
@@ -60,35 +60,35 @@ public class StudentAttendance {
 		this.id = id;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 
-	public String getModifiedBy() {
+	public Long getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
+	public void setModifiedBy(Long modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Date getModifiedDate() {
+	public String getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Date modifiedDate) {
+	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 

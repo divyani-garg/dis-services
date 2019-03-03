@@ -1,6 +1,5 @@
 package sgsits.cse.dis.user.model;
 
-import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,13 +53,13 @@ public class StudentProfile {
 	private String email;
 
 	@Column(name = "dob")
-	private Date dob;
+	private String dob;
 
 	@Column(name = "father_name")
 	private String fatherName;
 
 	@Column(name = "father_contact")
-	private long fatherContact;
+	private Long fatherContact;
 
 	@Column(name = "father_email")
 	private String fatherEmail;
@@ -69,7 +68,7 @@ public class StudentProfile {
 	private String motherName;
 
 	@Column(name = "mother_contact")
-	private long motherContact;
+	private Long motherContact;
 
 	@Column(name = "mother_email")
 	private String motherEmail;
@@ -179,11 +178,11 @@ public class StudentProfile {
 		this.email = email;
 	}
 
-	public Date getDob() {
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
@@ -195,11 +194,11 @@ public class StudentProfile {
 		this.fatherName = fatherName;
 	}
 
-	public long getFatherContact() {
+	public Long getFatherContact() {
 		return fatherContact;
 	}
 
-	public void setFatherContact(long fatherContact) {
+	public void setFatherContact(Long fatherContact) {
 		this.fatherContact = fatherContact;
 	}
 
@@ -219,11 +218,11 @@ public class StudentProfile {
 		this.motherName = motherName;
 	}
 
-	public long getMotherContact() {
+	public Long getMotherContact() {
 		return motherContact;
 	}
 
-	public void setMotherContact(long motherContact) {
+	public void setMotherContact(Long motherContact) {
 		this.motherContact = motherContact;
 	}
 

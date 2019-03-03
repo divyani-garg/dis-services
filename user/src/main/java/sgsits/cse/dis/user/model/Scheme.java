@@ -1,14 +1,12 @@
 package sgsits.cse.dis.user.model;
 
-import java.sql.Date;
-
 public class Scheme {
 	
 	private long id;
 	private String createdBy;
-	private Date createdDate;
+	private String createdDate;
 	private String modifiedBy;
-	private Date modifiedDate;
+	private String modifiedDate;
 	private String courseId;
 	private String session;
 	private String year;
@@ -40,10 +38,10 @@ public class Scheme {
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	public Date getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 	public String getModifiedBy() {
@@ -52,10 +50,10 @@ public class Scheme {
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
-	public Date getModifiedDate() {
+	public String getModifiedDate() {
 		return modifiedDate;
 	}
-	public void setModifiedDate(Date modifiedDate) {
+	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 	public String getCourseId() {

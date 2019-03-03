@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user_internship")
-public class UserIntenship {
+@Table(name = "user_cultural_activity_achievements")
+public class UserCulturalActivityAchievements {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,26 +31,20 @@ public class UserIntenship {
 	@Column(name = "user_id")
 	private Long userId;
 	
-	@Column(name = "area_subject_topic")
-	private String subject;
+	@Column(name = "type")
+	private String type;
 	
-	@Column(name = "company_name")
-	private String companyName;
+	@Column(name = "name_of_activity")
+	private String nameOfActivity; 
 	
-	@Column(name = "country")
-	private String country;
+	@Column(name = "achievement")
+	private String achievement;
 	
-	@Column(name = "state")
-	private String state;
+	@Column(name = "date")
+	private String date;
 	
-	@Column(name = "city")
-	private String city;
-	
-	@Column(name = "start_date")
-	private String startDate;
-	
-	@Column(name = "end_date")
-	private String endDate;
+	@Column(name = "place")
+	private String place;
 
 	public long getId() {
 		return id;
@@ -100,59 +94,43 @@ public class UserIntenship {
 		this.userId = userId;
 	}
 
-	public String getSubject() {
-		return subject;
+	public String getType() {
+		return type;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setType(String type) {
+		this.type = type;
 	}
 
-	public String getCompanyName() {
-		return companyName;
+	public String getNameOfActivity() {
+		return nameOfActivity;
 	}
 
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setNameOfActivity(String nameOfActivity) {
+		this.nameOfActivity = nameOfActivity;
 	}
 
-	public String getCountry() {
-		return country;
+	public String getAchievement() {
+		return achievement;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
+	public void setAchievement(String achievement) {
+		this.achievement = achievement;
 	}
 
-	public String getState() {
-		return state;
+	public String getDate() {
+		return date;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setDate(String date) {
+		this.date = date;
 	}
 
-	public String getCity() {
-		return city;
+	public String getPlace() {
+		return place;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
-
-	public String getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
+	public void setPlace(String place) {
+		this.place = place;
 	}
 }

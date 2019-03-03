@@ -1,7 +1,5 @@
 package sgsits.cse.dis.user.model;
 
-import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,13 +20,13 @@ public class UserWorkExperience {
 	private Long createdBy;
 
 	@Column(name = "created_date")
-	private Date createdDate;
+	private String createdDate;
 
 	@Column(name = "modified_by")
 	private Long modifiedBy;
 
 	@Column(name = "modified_date")
-	private Date modifiedDate;
+	private String modifiedDate;
 
 	@Column(name = "user_id")
 	private Long userId;
@@ -40,10 +38,10 @@ public class UserWorkExperience {
 	private String designation;
 	
 	@Column(name = "date_of_joining")
-	private Date dateOfJoining;
+	private String dateOfJoining;
 	
 	@Column(name = "date_of_leaving")
-	private Date dateOfLeaving;
+	private String dateOfLeaving;
 	
 	@Column(name = "payscale")
 	private Long payscale;
@@ -73,11 +71,11 @@ public class UserWorkExperience {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 
@@ -89,11 +87,11 @@ public class UserWorkExperience {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Date getModifiedDate() {
+	public String getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Date modifiedDate) {
+	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 
@@ -121,19 +119,19 @@ public class UserWorkExperience {
 		this.designation = designation;
 	}
 
-	public Date getDateOfJoining() {
+	public String getDateOfJoining() {
 		return dateOfJoining;
 	}
 
-	public void setDateOfJoining(Date dateOfJoining) {
+	public void setDateOfJoining(String dateOfJoining) {
 		this.dateOfJoining = dateOfJoining;
 	}
 
-	public Date getDateOfLeaving() {
+	public String getDateOfLeaving() {
 		return dateOfLeaving;
 	}
 
-	public void setDateOfLeaving(Date dateOfLeaving) {
+	public void setDateOfLeaving(String dateOfLeaving) {
 		this.dateOfLeaving = dateOfLeaving;
 	}
 

@@ -1,5 +1,6 @@
 package sgsits.cse.dis.gateway.controller;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,19 +38,15 @@ public class AuthRestAPIs {
 
 	@Autowired
 	AuthenticationManager authenticationManager;
-
 	@Autowired
 	UserRepository userRepository;
-
 	@Autowired
 	TaskRepository taskRepository;
-
 	@Autowired
 	PasswordEncoder encoder;
-
 	@Autowired
 	JwtProvider jwtProvider;
-
+	
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
 
@@ -61,11 +58,11 @@ public class AuthRestAPIs {
 		String jwt = jwtProvider.generateJwtToken(authentication);
 		//UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
-		return ResponseEntity.ok(new JwtResponse(jwt, userPrincipal.getUsername(), userPrincipal.getAuthorities()));
+		return ResponseEntity.ok(new JwtResponse(jwt, userPrincipal.getAuthorities()));
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
+	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpForm signUpRequest) throws SQLException {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 			return new ResponseEntity<>(new ResponseMessage("Fail -> Username is already taken!"),
 					HttpStatus.BAD_REQUEST);
@@ -79,7 +76,6 @@ public class AuthRestAPIs {
 					HttpStatus.BAD_REQUEST);
 		}
 
-		// Creating user's account
 		User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),signUpRequest.getDob(),signUpRequest.getMobileNo(),
 				encoder.encode(signUpRequest.getPassword()));
 
@@ -88,7 +84,6 @@ public class AuthRestAPIs {
 		//user.setUserType("student");
 		
 		userRepository.save(user);
-
 		return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);
 	}
 	

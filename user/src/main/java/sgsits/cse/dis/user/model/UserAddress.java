@@ -1,7 +1,5 @@
 package sgsits.cse.dis.user.model;
 
-import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,17 +16,17 @@ public class UserAddress {
 	@Column(name = "id", nullable = false)
 	private long id;
 
-	@Column(name = "created_by")
+	@Column(name = "created_by", nullable = false)
 	private Long createdBy;
 
-	@Column(name = "created_date")
-	private Date createdDate;
+	@Column(name = "created_date", nullable = false)
+	private String createdDate;
 
 	@Column(name = "modified_by")
 	private Long modifiedBy;
 
 	@Column(name = "modified_date")
-	private Date modifiedDate;
+	private String modifiedDate;
 	
 	@Column(name = "user_id")
 	private Long userId;
@@ -70,14 +68,6 @@ public class UserAddress {
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
 	public Long getModifiedBy() {
 		return modifiedBy;
 	}
@@ -86,11 +76,19 @@ public class UserAddress {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Date getModifiedDate() {
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Date modifiedDate) {
+	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 

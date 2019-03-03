@@ -1,25 +1,28 @@
 package sgsits.cse.dis.user.message.response;
 
-import java.util.Date;
-
 public class StaffBasicProfileResponse {
 	
+	private long userId;
 	private String employeeId;
 	private String name;
 	private String nameAcronym;
 	private String currentDesignation;
 	private String email;
-	private Date dob;
+	private String dob;
 	private String bloodGroup;
 	private String gender;
 	private String motherName;
 	private String fatherName;
-	private long mobileNo;
+	private Long mobileNo;
 	private Long alternateMobileNo;
 	private String areaOfSpecialization;
-	private String permanentAddress;
-	private String presentAddress;
 	
+	public long getUserId() {
+		return userId;
+	}
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 	public String getEmployeeId() {
 		return employeeId;
 	}
@@ -50,10 +53,10 @@ public class StaffBasicProfileResponse {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Date getDob() {
+	public String getDob() {
 		return dob;
 	}
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 	public String getBloodGroup() {
@@ -80,16 +83,16 @@ public class StaffBasicProfileResponse {
 	public void setFatherName(String fatherName) {
 		this.fatherName = fatherName;
 	}
-	public long getMobileNo() {
+	public Long getMobileNo() {
 		return mobileNo;
 	}
-	public void setMobileNo(long mobileNo) {
+	public void setMobileNo(Long mobileNo) {
 		this.mobileNo = mobileNo;
 	}
-	public long getAlternateMobileNo() {
+	public Long getAlternateMobileNo() {
 		return alternateMobileNo;
 	}
-	public void setAlternateMobileNo(long alternateMobileNo) {
+	public void setAlternateMobileNo(Long alternateMobileNo) {
 		this.alternateMobileNo = alternateMobileNo;
 	}
 	public String getAreaOfSpecialization() {
@@ -97,17 +100,5 @@ public class StaffBasicProfileResponse {
 	}
 	public void setAreaOfSpecialization(String areaOfSpecialization) {
 		this.areaOfSpecialization = areaOfSpecialization;
-	}
-	public String getPermanentAddress() {
-		return permanentAddress;
-	}
-	public void setPermanentAddress(String permanentAddress) {
-		this.permanentAddress = permanentAddress;
-	}
-	public String getPresentAddress() {
-		return presentAddress;
-	}
-	public void setPresentAddress(String presentAddress) {
-		this.presentAddress = presentAddress;
 	}
 }

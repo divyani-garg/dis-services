@@ -1,5 +1,7 @@
 package sgsits.cse.dis.user.model;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,9 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user_internship")
-public class UserIntenship {
-	
+@Table(name = "user_competitive_exams")
+public class UserCompetitiveExams {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
@@ -31,26 +32,20 @@ public class UserIntenship {
 	@Column(name = "user_id")
 	private Long userId;
 	
-	@Column(name = "area_subject_topic")
-	private String subject;
+	@Column(name = "name_of_exam")
+	private String nameOfExam;
 	
-	@Column(name = "company_name")
-	private String companyName;
+	@Column(name = "score")
+	private Double score;
 	
-	@Column(name = "country")
-	private String country;
+	@Column(name = "rank")
+	private Long rank;
 	
-	@Column(name = "state")
-	private String state;
+	@Column(name = "registration_no")
+	private String registrationNo;
 	
-	@Column(name = "city")
-	private String city;
-	
-	@Column(name = "start_date")
-	private String startDate;
-	
-	@Column(name = "end_date")
-	private String endDate;
+	@Column(name = "year")
+	private int year;
 
 	public long getId() {
 		return id;
@@ -100,59 +95,43 @@ public class UserIntenship {
 		this.userId = userId;
 	}
 
-	public String getSubject() {
-		return subject;
+	public String getNameOfExam() {
+		return nameOfExam;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setNameOfExam(String nameOfExam) {
+		this.nameOfExam = nameOfExam;
 	}
 
-	public String getCompanyName() {
-		return companyName;
+	public Double getScore() {
+		return score;
 	}
 
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setScore(Double score) {
+		this.score = score;
 	}
 
-	public String getCountry() {
-		return country;
+	public Long getRank() {
+		return rank;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
+	public void setRank(Long rank) {
+		this.rank = rank;
 	}
 
-	public String getState() {
-		return state;
+	public String getRegistrationNo() {
+		return registrationNo;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setRegistrationNo(String registrationNo) {
+		this.registrationNo = registrationNo;
 	}
 
-	public String getCity() {
-		return city;
+	public int getYear() {
+		return year;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
-
-	public String getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
+	public void setYear(int year) {
+		this.year = year;
 	}
 }

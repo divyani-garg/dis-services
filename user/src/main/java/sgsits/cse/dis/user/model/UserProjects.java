@@ -8,18 +8,18 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user_research_work")
-public class UserResearchWork {
+@Table(name = "user_projects")
+public class UserProjects {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private long id;
 
-	@Column(name = "created_by")
+	@Column(name = "created_by", nullable = false)
 	private Long createdBy;
 
-	@Column(name = "created_date")
+	@Column(name = "created_date", nullable = false)
 	private String createdDate;
 
 	@Column(name = "modified_by")
@@ -34,26 +34,23 @@ public class UserResearchWork {
 	@Column(name = "title")
 	private String title;
 	
-	@Column(name = "category")
-	private String category;
+	@Column(name = "from")
+	private String from;
 	
-	@Column(name = "subcategory")
-	private String subcategory;
+	@Column(name = "to")
+	private String to;
+
+	@Column(name = "description")
+	private String description;
 	
-	@Column(name = "journal_conference_name")
-	private String journalConferenceName;
+	@Column(name = "other_creators")
+	private String otherCreators;
 	
-	@Column(name = "publisher")
-	private String publisher;
+	@Column(name = "role")
+	private String role;
 	
-	@Column(name = "co_authors")
-	private String coAuthors;
-	
-	@Column(name = "guide_name")
-	private String guideName;
-	
-	@Column(name = "year_of_publication")
-	private int yearOfPublication;
+	@Column(name = "guide")
+	private String guide;
 
 	public long getId() {
 		return id;
@@ -111,59 +108,51 @@ public class UserResearchWork {
 		this.title = title;
 	}
 
-	public String getCategory() {
-		return category;
+	public String getFrom() {
+		return from;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setFrom(String from) {
+		this.from = from;
 	}
 
-	public String getSubcategory() {
-		return subcategory;
+	public String getTo() {
+		return to;
 	}
 
-	public void setSubcategory(String subcategory) {
-		this.subcategory = subcategory;
+	public void setTo(String to) {
+		this.to = to;
 	}
 
-	public String getJournalConferenceName() {
-		return journalConferenceName;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setJournalConferenceName(String journalConferenceName) {
-		this.journalConferenceName = journalConferenceName;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public String getPublisher() {
-		return publisher;
+	public String getOtherCreators() {
+		return otherCreators;
 	}
 
-	public void setPublisher(String publisher) {
-		this.publisher = publisher;
+	public void setOtherCreators(String otherCreators) {
+		this.otherCreators = otherCreators;
 	}
 
-	public String getCoAuthors() {
-		return coAuthors;
+	public String getRole() {
+		return role;
 	}
 
-	public void setCoAuthors(String coAuthors) {
-		this.coAuthors = coAuthors;
+	public void setRole(String role) {
+		this.role = role;
 	}
 
-	public String getGuideName() {
-		return guideName;
+	public String getGuide() {
+		return guide;
 	}
 
-	public void setGuideName(String guideName) {
-		this.guideName = guideName;
-	}
-
-	public int getYearOfPublication() {
-		return yearOfPublication;
-	}
-
-	public void setYearOfPublication(int yearOfPublication) {
-		this.yearOfPublication = yearOfPublication;
+	public void setGuide(String guide) {
+		this.guide = guide;
 	}
 }
