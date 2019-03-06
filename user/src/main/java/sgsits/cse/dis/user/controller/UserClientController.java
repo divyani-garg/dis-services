@@ -61,4 +61,22 @@ public class UserClientController {
 		String staffName = staffDetails.get().getName();
 		return staffName;
 	}
+	
+	@ApiOperation(value = "get Course", response = String.class, httpMethod = "GET", produces = "text/plain")
+	@RequestMapping(value = "/getCourse", method = RequestMethod.GET)
+	public String getCourse(@RequestParam("id") long id)
+	{
+		Optional<StudentProfile> stud = studentRepository.findByUserId(id);
+		String course = stud.get().getCourseId();
+		return course;
+	}
+	
+	@ApiOperation(value = "get Student Name", response = String.class, httpMethod = "GET", produces = "text/plain")
+	@RequestMapping(value = "/getStudentName", method = RequestMethod.GET)
+	public String getStudentName(@RequestParam("id") long id)
+	{
+		Optional<StudentProfile> stud = studentRepository.findByUserId(id);
+		String name = stud.get().getFirstName();
+		return name;
+	}
 }

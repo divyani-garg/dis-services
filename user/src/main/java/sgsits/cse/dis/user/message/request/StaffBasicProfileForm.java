@@ -7,8 +7,8 @@ public class StaffBasicProfileForm {
 	private String motherName;
 	private String fatherName;
 	private String bloodGroup;
-	private long mobileNo;
-	private long alternateMobileNo;
+	private Long mobileNo;
+	private Long alternateMobileNo;
 	private String areaOfSpecialization;
 
 	public long getUserId() {
@@ -26,10 +26,10 @@ public class StaffBasicProfileForm {
 	public String getBloodGroup() {
 		return bloodGroup;
 	}
-	public long getMobileNo() {
+	public Long getMobileNo() {
 		return mobileNo;
 	}
-	public long getAlternateMobileNo() {
+	public Long getAlternateMobileNo() {
 		return alternateMobileNo;
 	}
 	public String getAreaOfSpecialization() {

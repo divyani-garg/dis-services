@@ -38,17 +38,17 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-	@Column(name = "created_by")
+	@Column(name = "created_by", nullable = false)
 	private String createdBy;
 
-	@Column(name = "created_date")
-	private Date createdDate;
+	@Column(name = "created_date", nullable = false)
+	private String createdDate;
 
 	@Column(name = "modified_by")
-	private String modifiedBy;
+	private Long modifiedBy;
 
 	@Column(name = "modified_date")
-	private Date modifiedDate;
+	private String modifiedDate;
 	
     @NotBlank
     @Size(min=3, max = 50)
@@ -80,7 +80,16 @@ public class User{
     private String resetToken;
     
 	@Column(name = "reset_token_expiry")
-    private Date resetTokenExpiry;
+    private String resetTokenExpiry;
+	
+	@Column(name = "activation_link")
+    private String activationLink;
+    
+	@Column(name = "activation_link_expiry")
+    private String activationLinkExpiry;	
+	
+	@Column(name = "last_login")
+	private String lastLogin;
     
 	@Column(name = "user_type")
 	private String userType;
@@ -117,27 +126,27 @@ public class User{
 		this.createdBy = createdBy;
 	}
 
-	public Date getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 
-	public String getModifiedBy() {
+	public Long getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
+	public void setModifiedBy(Long modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Date getModifiedDate() {
+	public String getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Date modifiedDate) {
+	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 
@@ -197,12 +206,36 @@ public class User{
 		this.resetToken = resetToken;
 	}
 
-	public Date getResetTokenExpiry() {
+	public String getResetTokenExpiry() {
 		return resetTokenExpiry;
 	}
 
-	public void setResetTokenExpiry(Date resetTokenExpiry) {
-		this.resetTokenExpiry = resetTokenExpiry;
+	public void setResetTokenExpiry(String string) {
+		this.resetTokenExpiry = string;
+	}
+
+	public String getActivationLink() {
+		return activationLink;
+	}
+
+	public void setActivationLink(String activationLink) {
+		this.activationLink = activationLink;
+	}
+
+	public String getActivationLinkExpiry() {
+		return activationLinkExpiry;
+	}
+
+	public void setActivationLinkExpiry(String activationLinkExpiry) {
+		this.activationLinkExpiry = activationLinkExpiry;
+	}
+
+	public String getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(String lastLogin) {
+		this.lastLogin = lastLogin;
 	}
 
 	public String getUserType() {

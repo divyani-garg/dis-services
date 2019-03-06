@@ -3,31 +3,24 @@ package sgsits.cse.dis.user.message.request;
 public class StudentBasicProfileForm {
 	
 	private long userId;
-	private String motherName;
-	private long motherContact;
+	private Long motherContact;
 	private String motherEmail;
-	private String fatherName;
-	private long fatherContact;
+	private Long fatherContact;
 	private String fatherEmail;
 	private String bloodGroup;
-	private long mobileNo;
+
+	private Long mobileNo;
 	
 	public long getUserId() {
 		return userId;
 	}
-	public String getMotherName() {
-		return motherName;
-	}
-	public long getMotherContact() {
+	public Long getMotherContact() {
 		return motherContact;
 	}
 	public String getMotherEmail() {
 		return motherEmail;
 	}
-	public String getFatherName() {
-		return fatherName;
-	}
-	public long getFatherContact() {
+	public Long getFatherContact() {
 		return fatherContact;
 	}
 	public String getFatherEmail() {
@@ -36,7 +29,7 @@ public class StudentBasicProfileForm {
 	public String getBloodGroup() {
 		return bloodGroup;
 	}
-	public long getMobileNo() {
+	public Long getMobileNo() {
 		return mobileNo;
 	}
 }

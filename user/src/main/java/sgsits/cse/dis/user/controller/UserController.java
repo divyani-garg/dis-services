@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import sgsits.cse.dis.user.feign.AcademicsClient;
 import sgsits.cse.dis.user.jwt.JwtResolver;
 import sgsits.cse.dis.user.message.request.StaffBasicProfileForm;
 import sgsits.cse.dis.user.message.request.StudentBasicProfileForm;
+import sgsits.cse.dis.user.message.request.UserAddressForm;
 import sgsits.cse.dis.user.message.response.FacultyBriefData;
 import sgsits.cse.dis.user.message.response.FacultyData;
 import sgsits.cse.dis.user.message.response.ResponseMessage;
@@ -165,6 +167,23 @@ public class UserController {
 		return address;
 	}
 
+	/*
+	 * @ApiOperation(value = "Edit User Address", response = Object.class,
+	 * httpMethod = "POST", produces = "application/json")
+	 * 
+	 * @RequestMapping(value = "/editUserAddress", method = RequestMethod.POST)
+	 * public ResponseEntity<?> editUserAddress(@RequestBody List<UserAddressForm>
+	 * userAddressForm, HttpServletRequest request) { long id =
+	 * jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+	 * if(userAddressForm.get(0).getUserId() == id){ List<UserAddress> address =
+	 * userAddressRepository.findByUserId(id);
+	 * 
+	 * return new ResponseEntity<>(new
+	 * ResponseMessage("Profile Updated Successfully!"), HttpStatus.OK); } else
+	 * return new ResponseEntity<>(new
+	 * ResponseMessage("You are not allowed to update!"), HttpStatus.BAD_REQUEST); }
+	 */
+
 	@ApiOperation(value = "User Qualification", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userQualification", method = RequestMethod.GET)
 	public List<UserQualification> getUserQualification(HttpServletRequest request) {
@@ -259,7 +278,8 @@ public class UserController {
 
 	@ApiOperation(value = "Edit Staff Basic Profile Data", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/editStaffBasicProfile", method = RequestMethod.POST)
-	public ResponseEntity<?> editStaffBasicProfile(@RequestBody StaffBasicProfileForm staffBasicProfileForm, HttpServletRequest request) {
+	public ResponseEntity<?> editStaffBasicProfile(@Valid @RequestBody StaffBasicProfileForm staffBasicProfileForm,
+			HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		if (staffBasicProfileForm.getUserId() == id) {
 			Optional<StaffProfile> staffProfile = staffRepository.findByUserId(id);
@@ -294,7 +314,14 @@ public class UserController {
 		StudentBasicProfileResponse sbpr = new StudentBasicProfileResponse();
 		sbpr.setUserId(studentProfile.get().getUserId());
 		sbpr.setEnrollmentId(studentProfile.get().getEnrollmentId());
-		sbpr.setName(studentProfile.get().getFullName());
+
+		if (studentProfile.get().getMiddleName() != null && studentProfile.get().getLastName() != null)
+			sbpr.setName(studentProfile.get().getFirstName() + " " + studentProfile.get().getMiddleName() + " "+ studentProfile.get().getLastName());
+		else if (studentProfile.get().getLastName() != null)
+			sbpr.setName(studentProfile.get().getFirstName() + " " + studentProfile.get().getLastName());
+		else
+			sbpr.setName(studentProfile.get().getFirstName());
+
 		sbpr.setMobileNo(studentProfile.get().getMobileNo());
 		sbpr.setEmail(studentProfile.get().getEmail());
 		sbpr.setDob(studentProfile.get().getDob());
@@ -307,19 +334,39 @@ public class UserController {
 		sbpr.setCategory(studentProfile.get().getCategory());
 		sbpr.setGender(studentProfile.get().getGender());
 		sbpr.setBloodGroup(studentProfile.get().getBloodGroup());
-		String courseYearSession = academicsClient.getCoursename(studentProfile.get().getCourseId()) + "-" + studentProfile.get().getAdmissionYear() + " Batch";
+		String courseYearSession = academicsClient.getCoursename(studentProfile.get().getCourseId()) + "-"+ studentProfile.get().getAdmissionYear() + " Batch";
 		sbpr.setCourseYearSession(courseYearSession);
 		return sbpr;
 	}
 
 	@ApiOperation(value = "Edit Student Basic Profile Data", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/editStudentBasicProfile", method = RequestMethod.POST)
-	public ResponseEntity<?> editStudentBasicProfile(@RequestBody StudentBasicProfileForm studentBasicProfileForm, HttpServletRequest request) {
+	public ResponseEntity<?> editStudentBasicProfile(
+			@Valid @RequestBody StudentBasicProfileForm studentBasicProfileForm, HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-	//	if(studentBasicProfileForm)
-		return null;
+		if (studentBasicProfileForm.getUserId() == id) {
+			Optional<StudentProfile> studentProfile = studentRepository.findByUserId(id);
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			studentProfile.get().setModifiedBy(id);
+			studentProfile.get().setModifiedDate(simpleDateFormat.format(new Date()));
+			if (studentBasicProfileForm.getMotherContact() != 0)
+				studentProfile.get().setMotherContact(studentBasicProfileForm.getMotherContact());
+			if (studentBasicProfileForm.getMotherEmail() != null)
+				studentProfile.get().setMotherEmail(studentBasicProfileForm.getMotherEmail());
+			if (studentBasicProfileForm.getFatherContact() != 0)
+				studentProfile.get().setFatherContact(studentBasicProfileForm.getFatherContact());
+			if (studentBasicProfileForm.getFatherEmail() != null)
+				studentProfile.get().setFatherEmail(studentBasicProfileForm.getFatherEmail());
+			if (studentBasicProfileForm.getBloodGroup() != null)
+				studentProfile.get().setBloodGroup(studentBasicProfileForm.getBloodGroup());
+			if (studentBasicProfileForm.getMobileNo() != 0)
+				studentProfile.get().setMobileNo(studentBasicProfileForm.getMobileNo());
+			studentRepository.save(studentProfile.get());
+			return new ResponseEntity<>(new ResponseMessage("Profile Updated Successfully!"), HttpStatus.OK);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update!"), HttpStatus.BAD_REQUEST);
 	}
-	
+
 	public void getStudentPlacement(HttpServletRequest request) {
 
 	}

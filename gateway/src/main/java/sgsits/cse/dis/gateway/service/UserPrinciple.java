@@ -3,11 +3,14 @@ package sgsits.cse.dis.gateway.service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import sgsits.cse.dis.gateway.model.User;
+import sgsits.cse.dis.gateway.repo.UserRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserPrinciple implements UserDetails {
+	
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
@@ -49,8 +53,8 @@ public class UserPrinciple implements UserDetails {
     public static UserPrinciple build(User user) {
         List<GrantedAuthority> authorities = user.getTasks().stream().map(task ->
                 new SimpleGrantedAuthority(task.getName())
-        ).collect(Collectors.toList());
-
+        ).collect(Collectors.toList());    
+        
         return new UserPrinciple(
                 user.getId(),              
                 user.getUsername(),

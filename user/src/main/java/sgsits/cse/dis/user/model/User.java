@@ -1,12 +1,18 @@
 package sgsits.cse.dis.user.model;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -33,7 +39,7 @@ public class User{
     private Long id;
 
 	@Column(name = "created_by", nullable = false)
-	private Long createdBy;
+	private String createdBy;
 
 	@Column(name = "created_date", nullable = false)
 	private String createdDate;
@@ -77,7 +83,13 @@ public class User{
     private Date resetTokenExpiry;
     
 	@Column(name = "user_type")
-	private String userType;     
+	private String userType;
+	
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_tasks", 
+    	joinColumns = @JoinColumn(name = "user_id"), 
+    	inverseJoinColumns = @JoinColumn(name = "task_id"))
+    private Set<Task> tasks = new HashSet<>();
 
     public User() {}
 
@@ -97,11 +109,11 @@ public class User{
 		this.id = id;
 	}
 
-	public Long getCreatedBy() {
+	public String getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(Long createdBy) {
+	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -201,4 +213,11 @@ public class User{
 		this.userType = userType;
 	}
 
+	public Set<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(Set<Task> tasks) {
+		this.tasks = tasks;
+	}
 }
