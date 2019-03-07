@@ -16,5 +16,8 @@ public interface StaffRepository extends JpaRepository<StaffProfile, Long>{
 	Optional<StaffProfile> findByUserId(Long id);
 	//@Query(value="SELECT s.name, s.email from staff_basic_profile s where class = 'I' or class = 'II' order by current_designation", nativeQuery=true)
 	List<StaffProfile> findByClasssOrClasssOrderByCurrentDesignation(String classs1, String classs2);
+	boolean existsByEmailAndMobileNoAndDob(String email, long mobileNo, String dob);
+	Optional<StaffProfile> findByEmailAndMobileNoAndDob(String email, long mobileNo, String dob);
+	Optional<StaffProfile> findByMobileNo(Long mobileNo);
 
 }

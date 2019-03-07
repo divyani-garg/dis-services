@@ -37,14 +37,8 @@ public class StudentProfile {
 	@Column(name = "profile_picture")
 	private String profilePicture;
 
-	@Column(name = "first_name")
-	private String firstName;
-	
-	@Column(name = "middle_name")
-	private String middleName;
-	
-	@Column(name = "last_name")
-	private String lastName;
+	@Column(name = "full_name")
+	private String fullName;
 
 	@Column(name = "admission_year")
 	private int admissionYear;
@@ -152,28 +146,12 @@ public class StudentProfile {
 		this.profilePicture = profilePicture;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getFullName() {
+		return fullName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getMiddleName() {
-		return middleName;
-	}
-
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	public int getAdmissionYear() {

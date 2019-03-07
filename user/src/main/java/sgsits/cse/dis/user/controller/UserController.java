@@ -314,14 +314,7 @@ public class UserController {
 		StudentBasicProfileResponse sbpr = new StudentBasicProfileResponse();
 		sbpr.setUserId(studentProfile.get().getUserId());
 		sbpr.setEnrollmentId(studentProfile.get().getEnrollmentId());
-
-		if (studentProfile.get().getMiddleName() != null && studentProfile.get().getLastName() != null)
-			sbpr.setName(studentProfile.get().getFirstName() + " " + studentProfile.get().getMiddleName() + " "+ studentProfile.get().getLastName());
-		else if (studentProfile.get().getLastName() != null)
-			sbpr.setName(studentProfile.get().getFirstName() + " " + studentProfile.get().getLastName());
-		else
-			sbpr.setName(studentProfile.get().getFirstName());
-
+		sbpr.setName(studentProfile.get().getFullName());
 		sbpr.setMobileNo(studentProfile.get().getMobileNo());
 		sbpr.setEmail(studentProfile.get().getEmail());
 		sbpr.setDob(studentProfile.get().getDob());

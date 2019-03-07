@@ -82,11 +82,11 @@ public class User{
 	@Column(name = "reset_token_expiry")
     private String resetTokenExpiry;
 	
-	@Column(name = "activation_link")
-    private String activationLink;
+	@Column(name = "activation_token")
+    private String activationToken;
     
-	@Column(name = "activation_link_expiry")
-    private String activationLinkExpiry;	
+	@Column(name = "activation_token_expiry")
+    private String activationTokenExpiry;	
 	
 	@Column(name = "last_login")
 	private String lastLogin;
@@ -210,28 +210,28 @@ public class User{
 		return resetTokenExpiry;
 	}
 
-	public void setResetTokenExpiry(String string) {
-		this.resetTokenExpiry = string;
-	}
-
-	public String getActivationLink() {
-		return activationLink;
-	}
-
-	public void setActivationLink(String activationLink) {
-		this.activationLink = activationLink;
-	}
-
-	public String getActivationLinkExpiry() {
-		return activationLinkExpiry;
-	}
-
-	public void setActivationLinkExpiry(String activationLinkExpiry) {
-		this.activationLinkExpiry = activationLinkExpiry;
+	public void setResetTokenExpiry(String resetTokenExpiry) {
+		this.resetTokenExpiry = resetTokenExpiry;
 	}
 
 	public String getLastLogin() {
 		return lastLogin;
+	}
+
+	public String getActivationToken() {
+		return activationToken;
+	}
+
+	public void setActivationToken(String activationToken) {
+		this.activationToken = activationToken;
+	}
+
+	public String getActivationTokenExpiry() {
+		return activationTokenExpiry;
+	}
+
+	public void setActivationTokenExpiry(String activationTokenExpiry) {
+		this.activationTokenExpiry = activationTokenExpiry;
 	}
 
 	public void setLastLogin(String lastLogin) {
