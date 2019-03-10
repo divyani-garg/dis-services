@@ -103,15 +103,4 @@ public class InfrastructureController {
 		return infrastructureRepository.findByName(name);
 	}
 
-	@ApiOperation(value = "findIncharge", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/findIncharge", method = RequestMethod.GET)
-	public List<String> findInchargeOf(@RequestParam("id") long id) {
-		List<Infrastructure> infrastructure = infrastructureRepository.findByInchargeOrAssociateInchargeOrStaff(id, id,
-				id);
-		List<String> incharge = new ArrayList<String>();
-		for (Infrastructure infra : infrastructure)
-			incharge.add(infra.getName());
-		return incharge;
-	}
-
 }

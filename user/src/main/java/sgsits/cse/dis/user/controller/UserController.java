@@ -24,7 +24,6 @@ import sgsits.cse.dis.user.feign.AcademicsClient;
 import sgsits.cse.dis.user.jwt.JwtResolver;
 import sgsits.cse.dis.user.message.request.StaffBasicProfileForm;
 import sgsits.cse.dis.user.message.request.StudentBasicProfileForm;
-import sgsits.cse.dis.user.message.request.UserAddressForm;
 import sgsits.cse.dis.user.message.response.FacultyBriefData;
 import sgsits.cse.dis.user.message.response.FacultyData;
 import sgsits.cse.dis.user.message.response.ResponseMessage;
@@ -128,6 +127,7 @@ public class UserController {
 		List<FacultyData> facultyData = new ArrayList<>();
 		for (StaffProfile faculty : Data) {
 			FacultyData fd = new FacultyData();
+			fd.setId(faculty.getUserId());
 			fd.setName(faculty.getName());
 			fd.setNameAcronym(faculty.getNameAcronym());
 			fd.setCurrentDesignation(faculty.getCurrentDesignation());
@@ -147,6 +147,7 @@ public class UserController {
 		List<FacultyData> staffData = new ArrayList<>();
 		for (StaffProfile faculty : Data) {
 			FacultyData fd = new FacultyData();
+			fd.setId(faculty.getUserId());
 			fd.setName(faculty.getName());
 			fd.setNameAcronym(faculty.getNameAcronym());
 			fd.setCurrentDesignation(faculty.getCurrentDesignation());

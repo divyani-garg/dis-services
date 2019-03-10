@@ -3,14 +3,11 @@ package sgsits.cse.dis.gateway.service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import sgsits.cse.dis.gateway.model.User;
-import sgsits.cse.dis.gateway.repo.UserRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;

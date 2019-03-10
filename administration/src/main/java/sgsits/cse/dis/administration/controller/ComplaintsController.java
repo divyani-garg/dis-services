@@ -128,7 +128,8 @@ public class ComplaintsController {
 	@RequestMapping(value = "/getRemainingCleanlinessComplaints", method = RequestMethod.GET)
 	public List<CleanlinessComplaints> getRemainingCleanlinessComplaints(HttpServletRequest request)
 	{
-		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		//long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		long id = 11;
 		List<String> location = infrastructureClient.findInchargeOf(id);
 		if(location != null)
 			return cleanlinessComplaintRepository.findByLocationInAndStatusNot(location, "Resolved");

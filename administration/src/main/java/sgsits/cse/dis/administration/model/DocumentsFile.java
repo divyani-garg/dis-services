@@ -45,8 +45,11 @@ public class DocumentsFile {
     private Long folderId;
     
     @Column(name = "subfolder_id")
-    private Long subfolderId;
+    private Long subFolderId;
 
+    @Column(name = "status")
+    private String status;
+    
     public DocumentsFile() {
 
     }
@@ -145,11 +148,19 @@ public class DocumentsFile {
 		this.folderId = folderId;
 	}
 
-	public Long getSubfolderId() {
-		return subfolderId;
+	public Long getSubFolderId() {
+		return subFolderId;
 	}
 
-	public void setSubfolderId(Long subfolderId) {
-		this.subfolderId = subfolderId;
+	public void setSubFolderId(Long subFolderId) {
+		this.subFolderId = subFolderId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

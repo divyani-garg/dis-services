@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import sgsits.cse.dis.administration.exception.FileStorageException;
 import sgsits.cse.dis.administration.exception.MyFileNotFoundException;
 import sgsits.cse.dis.administration.model.DocumentsFile;
-import sgsits.cse.dis.administration.repo.DBFileRepository;
+import sgsits.cse.dis.administration.repo.DocumentsFileRepository;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ import java.io.IOException;
 public class DBFileStorageService {
 
     @Autowired
-    private DBFileRepository dbFileRepository;
+    private DocumentsFileRepository dbFileRepository;
 
     public DocumentsFile storeFile(MultipartFile file) {
         // Normalize file name

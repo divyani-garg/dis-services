@@ -86,16 +86,13 @@ public class AuthRestAPIs {
 			throws SQLException {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-			return new ResponseEntity<>(new ResponseMessage("Fail -> Username is already taken!"),
-					HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ResponseMessage("Fail -> Username is already taken!"), HttpStatus.BAD_REQUEST);
 		}
 		if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-			return new ResponseEntity<>(new ResponseMessage("Fail -> Email is already in use!"),
-					HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ResponseMessage("Fail -> Email is already in use!"), HttpStatus.BAD_REQUEST);
 		}
 		if (userRepository.existsByMobileNo(signUpRequest.getMobileNo())) {
-			return new ResponseEntity<>(new ResponseMessage("Fail -> Mobile Number is already in use!"),
-					HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new ResponseMessage("Fail -> Mobile Number is already in use!"), HttpStatus.BAD_REQUEST);
 		}
 
 		if (userClient.findUser(signUpRequest)) { // separate message for incorrect detail
@@ -109,14 +106,31 @@ public class AuthRestAPIs {
 			userRepository.save(user);
 			String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort();
 			// Email message
-			email.sendSimpleEmail(user.getEmail(), "DIS Account Activation Request",
-					"To activate your account, click the link below:\n" + appUrl + "/dis/activation?token="+ user.getActivationToken());
-			return new ResponseEntity<>(new ResponseMessage(
-					"Registration successfull! An email has been sent to your registered email address. Please verify to continue!"), HttpStatus.OK);
+			email.sendSimpleEmail(user.getEmail(), "DIS Account Activation Request", "To activate your account, click the link below:\n" + appUrl + "/dis/activation?token="+ user.getActivationToken());
+			return new ResponseEntity<>(new ResponseMessage("Registration successfull! An email has been sent to your registered email address. Please verify to continue!"), HttpStatus.OK);
 		} else
 			return new ResponseEntity<>(new ResponseMessage("You are not registered with the System! Please contact administration."), HttpStatus.BAD_REQUEST);
 	}
 
+	@RequestMapping(value = "/preActivation", method = RequestMethod.POST)
+	public ResponseEntity<?> preActivation(@RequestParam("email") String recepientemail, HttpServletRequest request) {
+		Optional<User> userlist = userRepository.findByEmail(recepientemail);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		if (userlist.isPresent()) {
+			User u = userlist.get();
+			u.setActivationToken(UUID.randomUUID().toString());
+			u.setActivationTokenExpiry(simpleDateFormat.format(DateUtils.addDays(new Date(), 3)));
+			u.setModifiedBy(u.getId());
+			u.setModifiedDate(simpleDateFormat.format(new Date()));
+			userRepository.save(u);
+			String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort();
+			// Email message
+			email.sendSimpleEmail(u.getEmail(), "DIS Account Activation Request", "To activate your account, click the link below:\n" + appUrl + "/dis/activation?token="+ u.getActivationToken());
+			return new ResponseEntity<>(new ResponseMessage("An Account Activation link has been sent to registered email address!"), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(new ResponseMessage("We didn't find an account for this e-mail address!"), HttpStatus.BAD_REQUEST);
+	}
+	
 	@RequestMapping(value = "/activation", method = RequestMethod.GET)
 	public ModelAndView activateAccount(@RequestParam("token") String token) throws ParseException {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -211,10 +225,8 @@ public class AuthRestAPIs {
 			resetUser.setModifiedDate(simpleDateFormat.format(new Date()));
 			// Save user
 			userRepository.save(resetUser);
-			// In order to set a model attribute on a redirect, we must use
-			// RedirectAttributes
-			// redir.addFlashAttribute("successMessage", "You have successfully reset your
-			// password. You may now login.");
+			// In order to set a model attribute on a redirect, we must use RedirectAttributes
+			// redir.addFlashAttribute("successMessage", "You have successfully reset your password. You may now login.");
 			modelAndView.setViewName("redirect:http://localhost:4200");
 			return modelAndView;
 		} else {

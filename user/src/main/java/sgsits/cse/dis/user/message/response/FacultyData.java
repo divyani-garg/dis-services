@@ -1,6 +1,7 @@
 package sgsits.cse.dis.user.message.response;
 
 public class FacultyData {
+	private long id;
 	private String name;
 	private String nameAcronym;
 	private String profilePicture;
@@ -9,6 +10,12 @@ public class FacultyData {
 	private Long mobileNo;
 	private Long alternateMobileNo;
 	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}
