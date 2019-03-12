@@ -7,7 +7,14 @@ public class FacultyBriefData {
 	private String profilePicture;
 	private String currentDesignation;
 	private String email;
+	private long id;
 	
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}
