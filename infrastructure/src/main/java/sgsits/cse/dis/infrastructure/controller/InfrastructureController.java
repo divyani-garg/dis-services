@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import sgsits.cse.dis.infrastructure.feign.UserClient;
+import sgsits.cse.dis.infrastructure.model.FacultyRoomAssociation;
 import sgsits.cse.dis.infrastructure.model.Infrastructure;
+import sgsits.cse.dis.infrastructure.repo.FacultyRoomAssociationRepository;
 import sgsits.cse.dis.infrastructure.repo.InfrastructureRepository;
 import sgsits.cse.dis.infrastructure.response.InfrastructureBrief;
+import sgsits.cse.dis.infrastructure.response.RoomAssociationData;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -29,6 +32,9 @@ public class InfrastructureController {
 
 	@Autowired
 	InfrastructureRepository infrastructureRepository;
+	
+	@Autowired
+	FacultyRoomAssociationRepository facultyRoomAssociationRepository;
 
 	@Autowired
 	UserClient userClient;
@@ -36,10 +42,9 @@ public class InfrastructureController {
 	@ApiOperation(value = "listInfrastructure", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/listInfrastructure", method = RequestMethod.GET)
 	public List<InfrastructureBrief> getInfrastructure(@RequestParam("type") String type) {
-		String type1 = "Laboratory";
-		List<Infrastructure> infra = infrastructureRepository.findByType(type1);
+		List<Infrastructure> infra = infrastructureRepository.findByType(type);
 		List<InfrastructureBrief> infraBrief = new ArrayList<>();
-		for (Infrastructure inf : infra) {
+		for (Infrastructure inf : infra){
 			InfrastructureBrief infB = new InfrastructureBrief();
 			infB.setId(inf.getId());
 			infB.setArea(inf.getArea());
@@ -64,8 +69,30 @@ public class InfrastructureController {
 		return infraBrief;
 	}
 	
-	
-	
+	@ApiOperation(value = "getRooms", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRooms", method = RequestMethod.GET)
+	public List<RoomAssociationData> getRoomsAndAssociation(){
+		List<Infrastructure> infra = infrastructureRepository.findByType("Faculty Room");
+		List<RoomAssociationData> roomAssociatedData = new ArrayList<>();
+		for (Infrastructure inf : infra) {
+			RoomAssociationData rad = new RoomAssociationData();
+			rad.setId(inf.getId());
+			rad.setArea(inf.getArea());
+			rad.setLocation(inf.getLocation());
+			rad.setName(inf.getName());
+			List<FacultyRoomAssociation> facultyRoomId = facultyRoomAssociationRepository.findByRoomId(inf.getName());
+			int number = facultyRoomId.size();
+			String facultyAssociated[] = new String[number];
+			int i=0;
+			for(FacultyRoomAssociation fra: facultyRoomId) {
+				facultyAssociated[i] = userClient.getUserName(fra.getFacultyId());
+				i++;
+			}
+			rad.setAssociatedTo(facultyAssociated);
+			roomAssociatedData.add(rad);
+		}
+		return roomAssociatedData;
+	}
 
 	@ApiOperation(value = "addInfrastructure", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addInfrastructure", method = RequestMethod.POST)

@@ -93,6 +93,7 @@ public class UserController {
 
 		for (StaffProfile faculty : facultyData) {
 			FacultyBriefData fbd = new FacultyBriefData();
+			fbd.setId(faculty.getId());
 			fbd.setName(faculty.getName());
 			fbd.setNameAcronym(faculty.getNameAcronym());
 			fbd.setCurrentDesignation(faculty.getCurrentDesignation());
@@ -127,7 +128,7 @@ public class UserController {
 		List<FacultyData> facultyData = new ArrayList<>();
 		for (StaffProfile faculty : Data) {
 			FacultyData fd = new FacultyData();
-			fd.setId(faculty.getUserId());
+			fd.setId(faculty.getId());
 			fd.setName(faculty.getName());
 			fd.setNameAcronym(faculty.getNameAcronym());
 			fd.setCurrentDesignation(faculty.getCurrentDesignation());
