@@ -30,6 +30,7 @@ import sgsits.cse.dis.administration.repo.DocumentsSectionRepository;
 import sgsits.cse.dis.administration.repo.DocumentsSubFolderRepository;
 import sgsits.cse.dis.administration.request.FolderForm;
 import sgsits.cse.dis.administration.request.SectionForm;
+import sgsits.cse.dis.administration.request.SubFolderForm;
 import sgsits.cse.dis.administration.response.ResponseMessage;
 import sgsits.cse.dis.administration.service.FileNameValidation;
 
@@ -89,8 +90,7 @@ public class DocumentsController {
 		long section = id.get("sectionId");
 		long folder = id.get("folderId");
 		long subfolder = id.get("subfolderId");
-		List<DocumentsFile> files = documentsFileRepository.findBySectionIdAndFolderIdAndSubFolderId(section, folder,
-				subfolder);
+		List<DocumentsFile> files = documentsFileRepository.findBySectionIdAndFolderIdAndSubFolderId(section, folder, subfolder);
 		return files;
 	}
 
@@ -100,43 +100,104 @@ public class DocumentsController {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
 			if (!documentsSectionRepository.existsBySectionName(sectionForm.getSectionName())) {
-				if(!sectionForm.getSectionName().isEmpty() && fileNameValidation.filenameIsValidOrNot(sectionForm.getSectionName())) {
+				if (!sectionForm.getSectionName().isEmpty() && fileNameValidation.filenameIsValidOrNot(sectionForm.getSectionName())) {
 					DocumentsSection section = new DocumentsSection();
 					section.setCreatedBy(id);
 					section.setCreatedDate(simpleDateFormat.format(new Date()));
 					section.setSectionName(sectionForm.getSectionName());
 					section = documentsSectionRepository.save(section);
 					if (section != null)
-						return new ResponseEntity<>(new ResponseMessage("Section '" + sectionForm.getSectionName() + "' Added Successfully!"), HttpStatus.OK);
+						return new ResponseEntity<>(
+								new ResponseMessage("Section '" + sectionForm.getSectionName() + "' Added Successfully!"),
+								HttpStatus.OK);
 					else
-						return new ResponseEntity<>(new ResponseMessage("Unable to add new Section, Please try again later!"), HttpStatus.BAD_REQUEST);
-				}
-				else
-					return new ResponseEntity<>(new ResponseMessage("The section name you specified is not valid! Specify a different name."), HttpStatus.BAD_REQUEST);
+						return new ResponseEntity<>(
+								new ResponseMessage("Unable to add new Section, Please try again later!"),
+								HttpStatus.BAD_REQUEST);
+				} else
+					return new ResponseEntity<>(
+							new ResponseMessage("The section name you specified is not valid! Specify a different name."),
+							HttpStatus.BAD_REQUEST);
 			} else
-				return new ResponseEntity<>(new ResponseMessage("Destnation already contains a section named '" + sectionForm.getSectionName() + "'!"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(
+						new ResponseMessage("Destination already contains a section named '" + sectionForm.getSectionName() + "'!"),
+						HttpStatus.BAD_REQUEST);
 		} else
-			return new ResponseEntity<>(new ResponseMessage("You will need to provide administrator permission to add this section!"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(
+					new ResponseMessage("You will need to provide administrator permission to add this section!"),
+					HttpStatus.BAD_REQUEST);
 	}
 
-	@ApiOperation(value = "Add new Folder In Section", response = Object.class, httpMethod = "POST", produces = "application/json")
+	@ApiOperation(value = "Add New Folder In Section", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addFolderInSection", method = RequestMethod.POST)
 	public ResponseEntity<?> addFolderInSection(@RequestBody FolderForm folderForm, HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
-			DocumentsFolder folder = new DocumentsFolder();
-			folder.setCreatedBy(id);
-			folder.setCreatedDate(simpleDateFormat.format(new Date()));
-			folder.setFolderName(folderForm.getFolderName());
-			folder.setSectionId(folderForm.getSectionId());
-			folder = documentsFolderRepository.save(folder);
-			if (folder != null)
-				return new ResponseEntity<>(new ResponseMessage("Folder Added Successfully!"), HttpStatus.OK);
-			else
-				return new ResponseEntity<>(new ResponseMessage("Unable to add new Folder, Please try again later!"),
+			if (!documentsFolderRepository.existsByFolderNameAndSectionId(folderForm.getFolderName(),folderForm.getSectionId())) {
+				if (!folderForm.getFolderName().isEmpty() && fileNameValidation.filenameIsValidOrNot(folderForm.getFolderName())) {
+					DocumentsFolder folder = new DocumentsFolder();
+					folder.setCreatedBy(id);
+					folder.setCreatedDate(simpleDateFormat.format(new Date()));
+					folder.setFolderName(folderForm.getFolderName());
+					folder.setSectionId(folderForm.getSectionId());
+					folder = documentsFolderRepository.save(folder);
+					if (folder != null)
+						return new ResponseEntity<>(
+								new ResponseMessage("Folder '" + folderForm.getFolderName() + "' Added Successfully!"),
+								HttpStatus.OK);
+					else
+						return new ResponseEntity<>(
+								new ResponseMessage("Unable to add new Folder, Please try again later!"),
+								HttpStatus.BAD_REQUEST);
+				} else
+					return new ResponseEntity<>(
+							new ResponseMessage("The folder name you specified is not valid! Specify a different name."),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(
+						new ResponseMessage("Destination already contains a folder named '" + folderForm.getFolderName() + "'!"),
 						HttpStatus.BAD_REQUEST);
 		} else
-			return new ResponseEntity<>(new ResponseMessage("Unable to add new Folder!"), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(
+					new ResponseMessage("You will need to provide administrator permission to add this folder!"),
+					HttpStatus.BAD_REQUEST);
 	}
-
+	
+	@ApiOperation(value = "Add New Sub Folder In Folder", response = Object.class, httpMethod = "POST", produces = "application/json")
+	@RequestMapping(value = "/addSubFolderInFolder", method = RequestMethod.POST)
+	public ResponseEntity<?> addSubFolderInFolder(@RequestBody SubFolderForm subFolderForm, HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
+			if (!documentsSubFolderRepository.existsBySubFolderNameAndFolderIdAndSectionId(subFolderForm.getSubFolderName(),subFolderForm.getFolderId(),subFolderForm.getSectionId())) {
+				if (!subFolderForm.getSubFolderName().isEmpty() && fileNameValidation.filenameIsValidOrNot(subFolderForm.getSubFolderName())) {
+					DocumentsSubFolder subfolder = new DocumentsSubFolder();
+					subfolder.setCreatedBy(id);
+					subfolder.setCreatedDate(simpleDateFormat.format(new Date()));
+					subfolder.setSubFolderName(subFolderForm.getSubFolderName());
+					subfolder.setFolderId(subFolderForm.getFolderId());
+					subfolder.setSectionId(subFolderForm.getSectionId());
+					subfolder = documentsSubFolderRepository.save(subfolder);
+					if (subfolder != null)
+						return new ResponseEntity<>(
+								new ResponseMessage("Folder '" + subFolderForm.getSubFolderName() + "' Added Successfully!"),
+								HttpStatus.OK);
+					else
+						return new ResponseEntity<>(
+								new ResponseMessage("Unable to add new Folder, Please try again later!"),
+								HttpStatus.BAD_REQUEST);
+				} else
+					return new ResponseEntity<>(
+							new ResponseMessage("The folder name you specified is not valid! Specify a different name."),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(
+						new ResponseMessage("Destination already contains a folder named '" + subFolderForm.getSubFolderName() + "'!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(
+					new ResponseMessage("You will need to provide administrator permission to add this folder!"),
+					HttpStatus.BAD_REQUEST);
+	}
+	
+	
 }

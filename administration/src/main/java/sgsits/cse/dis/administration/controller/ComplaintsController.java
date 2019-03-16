@@ -128,8 +128,7 @@ public class ComplaintsController {
 	@RequestMapping(value = "/getRemainingCleanlinessComplaints", method = RequestMethod.GET)
 	public List<CleanlinessComplaints> getRemainingCleanlinessComplaints(HttpServletRequest request)
 	{
-		//long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		long id = 11;
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		List<String> location = infrastructureClient.findInchargeOf(id);
 		if(location != null)
 			return cleanlinessComplaintRepository.findByLocationInAndStatusNot(location, "Resolved");
@@ -466,6 +465,7 @@ public class ComplaintsController {
 			cleanlinessComplaints.setCreatedBy(id);
 			cleanlinessComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
 			cleanlinessComplaints.setStatus("Not Assigned");
+			cleanlinessComplaints.setType("CL");
 			CleanlinessComplaints test = cleanlinessComplaintRepository.save(cleanlinessComplaints);
 			if (test != null)
 				return new ResponseEntity<>(new ResponseMessage("Your Complaint has been registered successfully!"),
@@ -507,6 +507,7 @@ public class ComplaintsController {
 	public ResponseEntity<String> addFacultyComplaint(@RequestBody FacultyComplaints facultyComplaints,
 			HttpServletRequest request) {
 		facultyComplaintRepository.save(facultyComplaints);
+		
 		return null;
 	}
 
@@ -530,6 +531,7 @@ public class ComplaintsController {
 	public ResponseEntity<String> addStudentComplaint(@RequestBody StudentComplaints studentComplaints,
 			HttpServletRequest request) {
 		studentComplaintRepository.save(studentComplaints);
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		return null;
 	}
 

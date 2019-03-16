@@ -1,7 +1,6 @@
 package sgsits.cse.dis.academics.model;
 
 import java.sql.Time;
-import java.time.Instant;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -21,16 +20,16 @@ public class ExtraClassTimeTable {
 	private long id;
 
 	@Column(name = "created_by", nullable = false)
-	private String createdBy;
+	private Long createdBy;
 
 	@Column(name = "created_date", nullable = false)
-	private Instant createdDate;
+	private String createdDate;
 
 	@Column(name = "modified_by")
-	private String modifiedBy;
+	private Long modifiedBy;
 
 	@Column(name = "modified_date")
-	private Instant modifiedDate;
+	private String modifiedDate;
 
 	@Column(name = "course_id", nullable = false)
 	private String courseId;
@@ -82,6 +81,9 @@ public class ExtraClassTimeTable {
 
 	@Column(name = "location", nullable = false)
 	private String location;
+	
+	@Column(name = "which")
+	private String which;
 
 	public long getId() {
 		return id;
@@ -91,35 +93,35 @@ public class ExtraClassTimeTable {
 		this.id = id;
 	}
 
-	public String getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public Instant getCreatedDate() {
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Instant createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 
-	public String getModifiedBy() {
+	public Long getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
+	public void setModifiedBy(Long modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Instant getModifiedDate() {
+	public String getModifiedDate() {
 		return modifiedDate;
 	}
 
-	public void setModifiedDate(Instant modifiedDate) {
+	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
 
@@ -257,6 +259,14 @@ public class ExtraClassTimeTable {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public String getWhich() {
+		return which;
+	}
+
+	public void setWhich(String which) {
+		this.which = which;
 	}
 
 }

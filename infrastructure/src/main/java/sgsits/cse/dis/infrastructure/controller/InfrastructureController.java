@@ -63,9 +63,6 @@ public class InfrastructureController {
 		}
 		return infraBrief;
 	}
-	
-	
-	
 
 	@ApiOperation(value = "addInfrastructure", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addInfrastructure", method = RequestMethod.POST)

@@ -11,5 +11,6 @@ import sgsits.cse.dis.administration.model.DocumentsSubFolder;
 public interface DocumentsSubFolderRepository extends JpaRepository<DocumentsSubFolder, Long>{
 
 	List<DocumentsSubFolder> findBySectionIdAndFolderId(long section, long folder);
+	boolean existsBySubFolderNameAndFolderIdAndSectionId(String subFolderName, long folderId, long sectionId);
 
 }

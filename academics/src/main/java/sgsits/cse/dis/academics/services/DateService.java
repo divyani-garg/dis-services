@@ -53,11 +53,10 @@ public class DateService {
 			break;
 
 		case Calendar.SATURDAY:
-			c.add(Calendar.DATE, 2);
+			c.add(Calendar.DATE, -5);
 			break;
 		}
 
-		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		// Add the Monday to the output

@@ -7,11 +7,11 @@ public class FileNameValidation {
 	
 	public boolean filenameIsValidOrNot(String file)
 	{
-		Pattern regex = Pattern.compile("^[^A-Za-z0-9][^A-Za-z0-9.,/&()_-]*");
+		Pattern regex = Pattern.compile("^[a-zA-Z0-9][a-zA-Z0-9.,/&()_-]*$");
 		Matcher matcher = regex.matcher(file);
 		if(matcher.find())
-			return false;
-		else
 			return true;
+		else
+			return false;
 	}
 }

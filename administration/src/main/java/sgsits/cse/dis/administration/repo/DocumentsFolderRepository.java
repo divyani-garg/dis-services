@@ -12,4 +12,6 @@ public interface DocumentsFolderRepository extends JpaRepository<DocumentsFolder
 
 	List<DocumentsFolder> findBySectionId(long section);
 
+	boolean existsByFolderNameAndSectionId(String folderName, long sectionId);
+
 }

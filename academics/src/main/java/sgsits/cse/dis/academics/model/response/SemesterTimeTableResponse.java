@@ -1,9 +1,8 @@
-package sgsits.cse.dis.academics.model.presentation;
+package sgsits.cse.dis.academics.model.response;
 
 import java.sql.Time;
-import java.util.Date;
 
-public class SemesterTimeTablePresentation {
+public class SemesterTimeTableResponse {
 	
 	private String subjectCode;
 	private Time from;
