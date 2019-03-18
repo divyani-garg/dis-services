@@ -16,4 +16,7 @@ public interface UserClient {
 	
 	@RequestMapping(value = "/getStudentName", method = RequestMethod.GET)
 	public String getStudentName(@RequestParam("id") long id);
+	
+	@RequestMapping(value = "/getAcronymName", method = RequestMethod.GET)
+	public String getAcronymName(@RequestParam("id") long id);
 }

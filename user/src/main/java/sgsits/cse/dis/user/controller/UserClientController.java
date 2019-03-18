@@ -148,5 +148,16 @@ public class UserClientController {
 			return true;
 		}			
 	}
+	
+	@ApiOperation(value = "Get Acronym Name", response = Object.class, httpMethod = "GET", produces = "text/plain")
+	@RequestMapping(value = "/getAcronymName", method = RequestMethod.GET)
+	public String getAcronymName(@RequestParam("id") long id)
+	{
+		Optional<StaffProfile> staff = staffRepository.findByUserId(id);
+		if(staff!=null)
+			if(staff.get().getNameAcronym()!=null)
+				return staff.get().getNameAcronym();
+		return null;
+	}
 
 }

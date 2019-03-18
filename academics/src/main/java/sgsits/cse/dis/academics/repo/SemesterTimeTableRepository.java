@@ -11,7 +11,6 @@ import sgsits.cse.dis.academics.model.SemesterTimeTable;
 public interface SemesterTimeTableRepository extends JpaRepository<SemesterTimeTable, Long> {
 	public List<SemesterTimeTable> findByFaculty1OrFaculty2OrFaculty3AndSession(String faculty1, String faculty2, String faculty3, String session);
 	public List<SemesterTimeTable> findByLabTechnicianAndSession(String lt, String session);
-	public List<SemesterTimeTable> findByLocationAndSession(String location, String session);
 	public List<SemesterTimeTable> findByFaculty1OrFaculty2OrFaculty3AndSessionAndSemester(String faculty, String faculty2, String faculty3, String session, String semester);
 	public List<SemesterTimeTable> findByLabTechnicianAndSessionAndSemester(String lt, String session, String semester);
 	public List<SemesterTimeTable> findBySessionAndSemesterAndFaculty1OrFaculty2OrFaculty3(String session,
@@ -20,4 +19,6 @@ public interface SemesterTimeTableRepository extends JpaRepository<SemesterTimeT
 	public List<SemesterTimeTable> findByCourseIdAndSessionAndYearAndSemester(String course, String session,
 			String year, String semester);
 	public List<SemesterTimeTable> findBySessionAndYearAndSemester(String session, String year, String semester);
+	public List<SemesterTimeTable> findByLocationAndSessionAndSemester(String location, String session,
+			String semester);
 }

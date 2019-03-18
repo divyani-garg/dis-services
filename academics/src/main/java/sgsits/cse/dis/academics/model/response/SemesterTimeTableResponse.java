@@ -5,8 +5,8 @@ import java.sql.Time;
 public class SemesterTimeTableResponse {
 	
 	private String subjectCode;
-	private Time from;
-	private Time to;
+	private String from;
+	private String to;
 	private String day;
 	private String type;
 	private String faculty1;
@@ -24,16 +24,16 @@ public class SemesterTimeTableResponse {
 	public void setSubjectCode(String subjectCode) {
 		this.subjectCode = subjectCode;
 	}
-	public Time getFrom() {
+	public String getFrom() {
 		return from;
 	}
-	public void setFrom(Time from) {
+	public void setFrom(String from) {
 		this.from = from;
 	}
-	public Time getTo() {
+	public String getTo() {
 		return to;
 	}
-	public void setTo(Time to) {
+	public void setTo(String to) {
 		this.to = to;
 	}
 	public String getDay() {

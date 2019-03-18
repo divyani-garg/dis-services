@@ -54,10 +54,10 @@ public class SemesterTimeTable {
 	//private Scheme subjectCode;
 	
 	@Column(name = "from", nullable = false)
-	private Time from;
+	private String from;
 	
 	@Column(name = "to", nullable = false)
-	private Time to;
+	private String to;
 	
 	@Column(name = "day", nullable = false)
 	private String day;
@@ -175,19 +175,19 @@ public class SemesterTimeTable {
 		this.subjectCode = subjectCode;
 	}
 
-	public Time getFrom() {
+	public String getFrom() {
 		return from;
 	}
 
-	public void setFrom(Time from) {
+	public void setFrom(String from) {
 		this.from = from;
 	}
 
-	public Time getTo() {
+	public String getTo() {
 		return to;
 	}
 
-	public void setTo(Time to) {
+	public void setTo(String to) {
 		this.to = to;
 	}
 

@@ -1,8 +1,5 @@
 package sgsits.cse.dis.academics.model;
 
-import java.sql.Time;
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,16 +44,16 @@ public class ExtraClassTimeTable {
 	private String subjectCode;
 
 	@Column(name = "from", nullable = false)
-	private Time from;
+	private String from;
 
 	@Column(name = "to", nullable = false)
-	private Time to;
+	private String to;
 	
 	@Column(name = "day", nullable = false)
 	private String day;
 	
 	@Column(name = "date", nullable = false)
-	private Date date;
+	private String date;
 
 	@Column(name = "type", nullable = false)
 	private String type;
@@ -165,19 +162,19 @@ public class ExtraClassTimeTable {
 		this.subjectCode = subjectCode;
 	}
 
-	public Time getFrom() {
+	public String getFrom() {
 		return from;
 	}
 
-	public void setFrom(Time from) {
+	public void setFrom(String from) {
 		this.from = from;
 	}
 
-	public Time getTo() {
+	public String getTo() {
 		return to;
 	}
 
-	public void setTo(Time to) {
+	public void setTo(String to) {
 		this.to = to;
 	}
 
@@ -189,11 +186,11 @@ public class ExtraClassTimeTable {
 		this.day = day;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 

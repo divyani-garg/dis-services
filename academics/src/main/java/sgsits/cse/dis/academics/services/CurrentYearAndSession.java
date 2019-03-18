@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 public class CurrentYearAndSession {
 
-	public String getCurrentSession(int adYear) {
+	public String getCurrentSession() {
 		Calendar cal = Calendar.getInstance();
 		int curYear = cal.get(Calendar.YEAR);
 		int curMonth = (cal.get(Calendar.MONTH)) + 1;
@@ -44,7 +44,7 @@ public class CurrentYearAndSession {
 		return year;
 	}
 
-	public String getCurrentSemester(int adYear) {
+	public String getCurrentSemester() {
 		Calendar cal = Calendar.getInstance();
 		int curMonth = (cal.get(Calendar.MONTH)) + 1;
 		String semester = null;
