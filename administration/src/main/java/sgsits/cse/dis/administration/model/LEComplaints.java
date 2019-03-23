@@ -50,6 +50,15 @@ public class LEComplaints {
 
 	@Column(name = "remarks")
 	private String remarks;
+	
+	public LEComplaints() {}
+
+	public LEComplaints(String lab, String systemNo, String details) {
+		super();
+		this.lab = lab;
+		this.systemNo = systemNo;
+		this.details = details;
+	}
 
 	public long getId() {
 		return id;

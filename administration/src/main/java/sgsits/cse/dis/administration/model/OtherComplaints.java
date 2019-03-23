@@ -48,6 +48,13 @@ public class OtherComplaints {
 	@Column(name = "remarks")
 	private String remarks;
 
+	public OtherComplaints() {}
+	
+	public OtherComplaints(String details) {
+		super();
+		this.details = details;
+	}
+
 	public long getId() {
 		return id;
 	}

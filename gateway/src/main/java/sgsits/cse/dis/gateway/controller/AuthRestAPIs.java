@@ -208,7 +208,7 @@ public class AuthRestAPIs {
 
 	// Process reset password form
 	@RequestMapping(value = "/processResetPassword", method = RequestMethod.POST)
-	public ModelAndView setNewPassword(@RequestBody Map<String, String> requestParams, RedirectAttributes redir, HttpServletResponse response) {
+	public ResponseEntity<?> setNewPassword(@RequestBody Map<String, String> requestParams, RedirectAttributes redir, HttpServletResponse response) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		// Find the user associated with the reset token
 		Optional<User> user = userRepository.findUserByResetToken(requestParams.get("resetToken"));
@@ -229,14 +229,16 @@ public class AuthRestAPIs {
 			// In order to set a model attribute on a redirect, we must use RedirectAttributes
 			// redir.addFlashAttribute("successMessage", "You have successfully reset your password. You may now login.");
 			//modelAndView.addObject("successMessage", "You have successfully reset your password. You may now login.");
-			response.setHeader("origin", "http://localhost:4200");
-			modelAndView.setViewName("redirect:http://localhost:4200");
-			return modelAndView;
+			//modelAndView.setViewName("redirect:http://localhost:4200");
+			return new ResponseEntity<>(new ResponseMessage("You have successfully reset your password. You may now login."),
+					HttpStatus.OK);
+			//return modelAndView;
 		} else {
-			modelAndView.addObject("errorMessage", "Oops!  This is an invalid password reset link.");
-			modelAndView.setViewName("redirect:http://localhost:4200/forgot-password");
+			//modelAndView.addObject("errorMessage", "Oops!  This is an invalid password reset link.");
+			//modelAndView.setViewName("redirect:http://localhost:4200/forgot-password");
+			return new ResponseEntity<>(new ResponseMessage("Oops!  This is an invalid password reset link."),
+					HttpStatus.BAD_REQUEST);
 		}
-		return modelAndView;
 	}
 
 	@GetMapping("/getUserType")
