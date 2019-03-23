@@ -12,5 +12,7 @@ public interface DocumentsFileRepository extends JpaRepository<DocumentsFile, St
 
 	List<DocumentsFile> findBySectionIdAndFolderId(long section, long folder);
 	List<DocumentsFile> findBySectionIdAndFolderIdAndSubFolderId(long section, long folder, long subfolder);
+	boolean existsByFileNameAndSectionIdAndFolderIdAndSubFolderId(String fileName, Long sectionId, Long folderId,
+			Long subFolderId);
 
 }

@@ -452,6 +452,101 @@ public class ComplaintsController {
 			return null;
 	}
 	
+	//count complaints
+	
+	@ApiOperation(value = "Get Remaining Complaints Count", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getRemainingComplaintsCount", method = RequestMethod.GET)
+	public long getRemainingComplaintsCount(HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
+		long count = 0;
+		if (user_type.equals("head")) {
+			count = count + facultyComplaintRepository.countByStatusNot("Resolved");
+			count = count + studentComplaintRepository.countByStatusNot("Resolved");
+			count = count + otherComplaintRepository.countByStatusNot("Resolved");
+		} else {
+			List<String> location = infrastructureClient.findInchargeOf(id);
+			for (String loc : location) {
+				count = count + cleanlinessComplaintRepository.countByLocationAndStatusNot(loc, "Resolved");
+				count = count + cwnComplaintRepository.countByLocationAndStatusNot(loc, "Resolved");
+				count = count + eccwComplaintRepository.countByLocationAndStatusNot(loc, "Resolved");
+				count = count + emrsComplaintRepository.countByLocationAndStatusNot(loc, "Resolved");
+				count = count + leComplaintRepository.countByLabAndStatusNot(loc, "Resolved");
+				count = count + telephoneComplaintRepository.countByLocationAndStatusNot(loc, "Resolved");
+				count = count + otherComplaintRepository.countByAssignedToAndStatusNot(id, "Resolved");
+			}
+		}
+		return count;
+	}
+	
+	@ApiOperation(value = "Get Resolved Complaints Count", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResolvedComplaintsCount", method = RequestMethod.GET)
+	public long getResolvedComplaintsCount(HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
+		long count = 0;
+		if (user_type.equals("head")) {
+			count = count + facultyComplaintRepository.countByStatus("Resolved");
+			count = count + studentComplaintRepository.countByStatus("Resolved");
+			count = count + otherComplaintRepository.countByStatus("Resolved");
+		} else {
+			List<String> location = infrastructureClient.findInchargeOf(id);
+			for (String loc : location) {
+				count = count + cleanlinessComplaintRepository.countByLocationAndStatus(loc, "Resolved");
+				count = count + cwnComplaintRepository.countByLocationAndStatus(loc, "Resolved");
+				count = count + eccwComplaintRepository.countByLocationAndStatus(loc, "Resolved");
+				count = count + emrsComplaintRepository.countByLocationAndStatus(loc, "Resolved");
+				count = count + leComplaintRepository.countByLabAndStatus(loc, "Resolved");
+				count = count + telephoneComplaintRepository.countByLocationAndStatus(loc, "Resolved");
+				count = count + otherComplaintRepository.countByAssignedToAndStatus(id, "Resolved");
+			}
+		}
+		return count;
+	}
+	
+	@ApiOperation(value = "Get Total Complaints Count", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getTotalComplaintsCount", method = RequestMethod.GET)
+	public long getTotalComplaintsCount(HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
+		long count = 0;
+		if (user_type.equals("head")) {
+			count = count + facultyComplaintRepository.count();
+			count = count + studentComplaintRepository.count();
+			count = count + otherComplaintRepository.count();
+		} else {
+			List<String> location = infrastructureClient.findInchargeOf(id);
+			for (String loc : location) {
+				count = count + cleanlinessComplaintRepository.countByLocation(loc);
+				count = count + cwnComplaintRepository.countByLocation(loc);
+				count = count + eccwComplaintRepository.countByLocation(loc);
+				count = count + emrsComplaintRepository.countByLocation(loc);
+				count = count + leComplaintRepository.countByLab(loc);
+				count = count + telephoneComplaintRepository.countByLocation(loc);
+				count = count + otherComplaintRepository.countByAssignedTo(id);
+			}
+		}
+		return count;
+	}
+	
+	@ApiOperation(value = "Get My Complaints Count", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getMyComplaintsCount", method = RequestMethod.GET)
+	public long getMyComplaintsCount(HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		String user_type = userClient.getUserType(id);
+		long count = 0;
+		count = count +  cleanlinessComplaintRepository.countByCreatedBy(id);
+		count = count +  leComplaintRepository.countByCreatedBy(id);
+		count = count +  otherComplaintRepository.countByCreatedBy(id);
+		if (user_type.equals("student")) {
+			count = count +  facultyComplaintRepository.countByCreatedBy(id);
+		}
+		if (user_type.equals("faculty")) {
+			count = count +  studentComplaintRepository.countByCreatedBy(id);
+		}
+		return count;
+	}
+	
 	// Add Complaints //create notification for all
 
 	@ApiOperation(value = "Add Cleanliness Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
@@ -531,7 +626,7 @@ public class ComplaintsController {
 	public ResponseEntity<String> addStudentComplaint(@RequestBody StudentComplaints studentComplaints,
 			HttpServletRequest request) {
 		studentComplaintRepository.save(studentComplaints);
-		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		//long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		return null;
 	}
 

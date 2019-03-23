@@ -10,12 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +30,7 @@ import sgsits.cse.dis.administration.repo.DocumentsFileRepository;
 import sgsits.cse.dis.administration.repo.DocumentsFolderRepository;
 import sgsits.cse.dis.administration.repo.DocumentsSectionRepository;
 import sgsits.cse.dis.administration.repo.DocumentsSubFolderRepository;
+import sgsits.cse.dis.administration.request.FileForm;
 import sgsits.cse.dis.administration.request.FolderForm;
 import sgsits.cse.dis.administration.request.SectionForm;
 import sgsits.cse.dis.administration.request.SubFolderForm;
@@ -47,6 +50,8 @@ public class DocumentsController {
 	DocumentsSubFolderRepository documentsSubFolderRepository;
 	@Autowired
 	DocumentsFileRepository documentsFileRepository;
+	@Autowired
+	FileController fileController;
 
 	JwtResolver jwtResolver = new JwtResolver();
 	FileNameValidation fileNameValidation = new FileNameValidation();
@@ -199,5 +204,20 @@ public class DocumentsController {
 					HttpStatus.BAD_REQUEST);
 	}
 	
+	public void addFile(@RequestBody FileForm fileForm, HttpServletRequest request)
+	{
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
+			for(MultipartFile file : fileForm.getFile())
+			{
+				String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+				if(!documentsFileRepository.existsByFileNameAndSectionIdAndFolderIdAndSubFolderId(fileName, fileForm.getSectionId(), fileForm.getFolderId(), fileForm.getSubFolderId()))
+				{
+					fileController.uploadMultipleFiles(fileForm.getFile());
+					
+				}
+			}
+		}
+	}
 	
 }

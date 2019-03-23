@@ -14,4 +14,7 @@ public interface StudentComplaintRepository extends JpaRepository<StudentComplai
 	List<StudentComplaints> findByCreatedBy(long id);
 	List<StudentComplaints> findByStatus(String status);
 	List<StudentComplaints>findByStatusNot(String string);
+	long countByStatusNot(String string);
+	long countByCreatedBy(long id);
+	long countByStatus(String string);
 }

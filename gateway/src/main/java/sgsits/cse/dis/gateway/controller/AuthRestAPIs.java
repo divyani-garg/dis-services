@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -207,7 +208,7 @@ public class AuthRestAPIs {
 
 	// Process reset password form
 	@RequestMapping(value = "/processResetPassword", method = RequestMethod.POST)
-	public ModelAndView setNewPassword(@RequestParam Map<String, String> requestParams, RedirectAttributes redir) {
+	public ModelAndView setNewPassword(@RequestBody Map<String, String> requestParams, RedirectAttributes redir, HttpServletResponse response) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		// Find the user associated with the reset token
 		Optional<User> user = userRepository.findUserByResetToken(requestParams.get("resetToken"));
@@ -227,11 +228,13 @@ public class AuthRestAPIs {
 			userRepository.save(resetUser);
 			// In order to set a model attribute on a redirect, we must use RedirectAttributes
 			// redir.addFlashAttribute("successMessage", "You have successfully reset your password. You may now login.");
+			//modelAndView.addObject("successMessage", "You have successfully reset your password. You may now login.");
+			response.setHeader("origin", "http://localhost:4200");
 			modelAndView.setViewName("redirect:http://localhost:4200");
 			return modelAndView;
 		} else {
 			modelAndView.addObject("errorMessage", "Oops!  This is an invalid password reset link.");
-			modelAndView.setViewName("redirect:http://localhost:4200");
+			modelAndView.setViewName("redirect:http://localhost:4200/forgot-password");
 		}
 		return modelAndView;
 	}

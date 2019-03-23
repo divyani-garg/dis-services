@@ -18,4 +18,8 @@ public interface LEComplaintRepository extends JpaRepository<LEComplaints, Long>
 	List<LEComplaints> findByLabInAndStatus(List<String> location, String string);
 	List<LEComplaints> findByLabInAndStatusNot(List<String> location, String string);
 	List<LEComplaints> findByLabIn(List<String> location);
+	long countByLabAndStatusNot(String loc, String string);
+	long countByCreatedBy(long id);
+	long countByLabAndStatus(String loc, String string);
+	long countByLab(String loc);
 }

@@ -18,4 +18,7 @@ public interface CWNComplaintRepository extends JpaRepository<CWNComplaints, Lon
 	List<CWNComplaints> findByLocationInAndStatus(List<String> location, String string);
 	List<CWNComplaints> findByLocationInAndStatusNot(List<String> location, String string);
 	List<CWNComplaints> findByLocationIn(List<String> location);
+	long countByLocationAndStatusNot(String loc, String string);
+	long countByLocationAndStatus(String loc, String string);
+	long countByLocation(String loc);
 }
