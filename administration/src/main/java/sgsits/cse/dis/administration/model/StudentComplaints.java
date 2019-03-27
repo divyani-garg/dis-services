@@ -39,6 +39,9 @@ public class StudentComplaints {
 	@Column(name = "student_name")
 	private String studentName;
 
+	@Column(name = "course")
+	private String course;
+	
 	@Column(name = "year")
 	private String year;
 
@@ -53,6 +56,17 @@ public class StudentComplaints {
 
 	@Column(name = "remarks")
 	private String remarks;
+
+	public StudentComplaints() {}
+	
+	public StudentComplaints(String studentRollNo, String studentName, String course, String year, String details) {
+		super();
+		this.studentRollNo = studentRollNo;
+		this.studentName = studentName;
+		this.course = course;
+		this.year = year;
+		this.details = details;
+	}
 
 	public long getId() {
 		return id;
@@ -116,6 +130,14 @@ public class StudentComplaints {
 
 	public void setStudentName(String studentName) {
 		this.studentName = studentName;
+	}
+
+	public String getCourse() {
+		return course;
+	}
+
+	public void setCourse(String course) {
+		this.course = course;
 	}
 
 	public String getYear() {

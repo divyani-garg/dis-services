@@ -10,9 +10,8 @@ import sgsits.cse.dis.administration.model.DocumentsFile;
 @Repository
 public interface DocumentsFileRepository extends JpaRepository<DocumentsFile, String> {
 
-	List<DocumentsFile> findBySectionIdAndFolderId(long section, long folder);
-	List<DocumentsFile> findBySectionIdAndFolderIdAndSubFolderId(long section, long folder, long subfolder);
-	boolean existsByFileNameAndSectionIdAndFolderIdAndSubFolderId(String fileName, Long sectionId, Long folderId,
-			Long subFolderId);
+	List<DocumentsFile> findByParent(long parent);
+
+	boolean existsByFileNameAndParent(String fileName, Long parent);
 
 }

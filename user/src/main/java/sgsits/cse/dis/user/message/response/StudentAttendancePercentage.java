@@ -1,4 +1,4 @@
-package sgsits.cse.dis.user.model;
+package sgsits.cse.dis.user.message.response;
 
 public class StudentAttendancePercentage {
 	

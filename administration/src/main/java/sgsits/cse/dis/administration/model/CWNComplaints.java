@@ -49,10 +49,18 @@ public class CWNComplaints {
 	private String pdfId;
 
 	@Column(name = "form_id")
-	private int formId;
+	private long formId;
 
 	@Column(name = "remarks")
 	private String remarks;
+
+	public CWNComplaints() {}
+	
+	public CWNComplaints(String details, String location) {
+		super();
+		this.details = details;
+		this.location = location;
+	}
 
 	public long getId() {
 		return id;
@@ -142,12 +150,12 @@ public class CWNComplaints {
 		this.pdfId = pdfId;
 	}
 
-	public int getFormId() {
+	public long getFormId() {
 		return formId;
 	}
 
-	public void setFormId(int formId) {
-		this.formId = formId;
+	public void setFormId(long l) {
+		this.formId = l;
 	}
 
 	public String getRemarks() {

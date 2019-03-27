@@ -23,4 +23,5 @@ public interface OtherComplaintRepository extends JpaRepository<OtherComplaints,
 	long countByStatus(String string);
 	long countByAssignedToAndStatus(long id, String string);
 	long countByAssignedTo(long id);
+	boolean existsByCreatedByAndDetailsAndStatusNot(long id, String details, String string);
 }

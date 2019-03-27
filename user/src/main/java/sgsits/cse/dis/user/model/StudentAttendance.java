@@ -30,6 +30,9 @@ public class StudentAttendance {
 
 	@Column(name = "modified_date")
 	private String modifiedDate;
+	
+	@Column(name = "session")
+	private String session;
 
 	@Column(name = "enrollment_id", nullable = false)
 	private String enrollmentId;
@@ -50,7 +53,10 @@ public class StudentAttendance {
 	private Time to;
 	
 	@Column(name = "attendance", nullable = false)
-	private char attendance;
+	private int attendance;
+	
+	@Column(name = "lecture_count", nullable = false)
+	private int lectureCount;
 
 	public long getId() {
 		return id;
@@ -90,6 +96,14 @@ public class StudentAttendance {
 
 	public void setModifiedDate(String modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+
+	public String getSession() {
+		return session;
+	}
+
+	public void setSession(String session) {
+		this.session = session;
 	}
 
 	public String getEnrollmentId() {
@@ -140,11 +154,20 @@ public class StudentAttendance {
 		this.to = to;
 	}
 
-	public char getAttendance() {
+	public int getAttendance() {
 		return attendance;
 	}
 
-	public void setAttendance(char attendance) {
+	public void setAttendance(int attendance) {
 		this.attendance = attendance;
 	}
+
+	public int getLectureCount() {
+		return lectureCount;
+	}
+
+	public void setLectureCount(int lectureCount) {
+		this.lectureCount = lectureCount;
+	}
+
 }

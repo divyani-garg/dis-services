@@ -39,8 +39,12 @@ import sgsits.cse.dis.administration.repo.LEComplaintRepository;
 import sgsits.cse.dis.administration.repo.OtherComplaintRepository;
 import sgsits.cse.dis.administration.repo.StudentComplaintRepository;
 import sgsits.cse.dis.administration.repo.TelephoneComplaintRepository;
+import sgsits.cse.dis.administration.request.CWNComplaintForm;
 import sgsits.cse.dis.administration.request.CleanlinessComplaintForm;
+import sgsits.cse.dis.administration.request.FacultyComplaintForm;
 import sgsits.cse.dis.administration.request.LEComplaintForm;
+import sgsits.cse.dis.administration.request.OtherComplaintForm;
+import sgsits.cse.dis.administration.request.StudentComplaintForm;
 import sgsits.cse.dis.administration.response.ResponseMessage;
 
 @CrossOrigin(origins = "*")
@@ -546,11 +550,13 @@ public class ComplaintsController {
 	}
 
 	@ApiOperation(value = "Add Lab Equipment Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addLE", method = RequestMethod.POST)
+	@RequestMapping(value = "/addLEComplaint", method = RequestMethod.POST)
 	public ResponseEntity<?> addLEComplaint(@RequestBody LEComplaintForm leComplaintForm, HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if (!leComplaintRepository.existsByCreatedByAndLabAndSystemNoAndStatusNot(id, leComplaintForm.getLab(), leComplaintForm.getSystemNo(), "Resolved")) {
-			LEComplaints leComplaints = new LEComplaints(leComplaintForm.getLab(), leComplaintForm.getSystemNo(), leComplaintForm.getDetails());
+		if (!leComplaintRepository.existsByCreatedByAndLabAndSystemNoAndStatusNot(id, leComplaintForm.getLab(),
+				leComplaintForm.getSystemNo(), "Resolved")) {
+			LEComplaints leComplaints = new LEComplaints(leComplaintForm.getLab(), leComplaintForm.getSystemNo(),
+					leComplaintForm.getDetails());
 			leComplaints.setCreatedBy(id);
 			leComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
 			leComplaints.setType("LE");
@@ -568,60 +574,153 @@ public class ComplaintsController {
 					HttpStatus.BAD_REQUEST);
 	}
 
-	@ApiOperation(value = "Add CWN Maintenance Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addCWN", method = RequestMethod.POST)
-	public ResponseEntity<String> addCWNComplaint(@RequestBody CWNComplaints cwnComplaints,
+	@ApiOperation(value = "Add Other Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
+	@RequestMapping(value = "/addOtherComplaint", method = RequestMethod.POST)
+	public ResponseEntity<?> addOtherComplaint(@RequestBody OtherComplaintForm otherComplaintForm,
 			HttpServletRequest request) {
-		cwnComplaintRepository.save(cwnComplaints);
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (!otherComplaintRepository.existsByCreatedByAndDetailsAndStatusNot(id, otherComplaintForm.getDetails(),
+				"Resolved")) {
+			OtherComplaints otherComplaints = new OtherComplaints(otherComplaintForm.getDetails());
+			otherComplaints.setCreatedBy(id);
+			otherComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
+			otherComplaints.setType("OTHER");
+			otherComplaints.setStatus("Not Assigned");
+			OtherComplaints test = otherComplaintRepository.save(otherComplaints);
+			if (test != null)
+				return new ResponseEntity<>(new ResponseMessage("Your Complaint has been registered successfully!"),
+						HttpStatus.OK);
+			else
+				return new ResponseEntity<>(new ResponseMessage("Unable to record Complaint, Please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage(
+					"Your Complaint is already registered, You will be informed of the action taken on your complaint!"),
+					HttpStatus.BAD_REQUEST);
+	}
+
+	@ApiOperation(value = "Add Student Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
+	@RequestMapping(value = "/addStudentComplaint", method = RequestMethod.POST)
+	public ResponseEntity<?> addStudentComplaint(@RequestBody StudentComplaintForm studentComplaintForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("faculty")) {
+			boolean check1 = studentComplaintRepository
+					.existsByCreatedByAndStudentRollNoAndStudentNameAndYearAndStatusNot(id,
+							studentComplaintForm.getStudentRollNo(), studentComplaintForm.getStudentName(),
+							studentComplaintForm.getYear(), "Resolved");
+			boolean check2 = studentComplaintRepository.existsByCreatedByAndStudentRollNoAndYearAndStatusNot(id,
+					studentComplaintForm.getStudentRollNo(), studentComplaintForm.getYear(), "Resolved");
+			boolean check3 = studentComplaintRepository.existsByCreatedByAndStudentNameAndYearAndStatusNot(id,
+					studentComplaintForm.getStudentName(), studentComplaintForm.getYear(), "Resolved");
+			if (!(check1 || check2 || check3)) {
+
+				StudentComplaints studentComplaints = new StudentComplaints();
+				if (studentComplaintForm.getStudentName().isEmpty() || studentComplaintForm.getStudentName() == null)
+					studentComplaints = new StudentComplaints(studentComplaintForm.getStudentRollNo(), null,
+							studentComplaintForm.getCourse(), studentComplaintForm.getYear(),
+							studentComplaintForm.getDetails());
+				else if (studentComplaintForm.getStudentRollNo().isEmpty()
+						|| studentComplaintForm.getStudentRollNo() == null)
+					studentComplaints = new StudentComplaints(null, studentComplaintForm.getStudentName(),
+							studentComplaintForm.getCourse(), studentComplaintForm.getYear(),
+							studentComplaintForm.getDetails());
+				else
+					studentComplaints = new StudentComplaints(studentComplaintForm.getStudentRollNo(),
+							studentComplaintForm.getStudentName(), studentComplaintForm.getCourse(),
+							studentComplaintForm.getYear(), studentComplaintForm.getDetails());
+
+				studentComplaints.setCreatedBy(id);
+				studentComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
+				studentComplaints.setType("STUDENT");
+				studentComplaints.setStatus("Not Assigned");
+				StudentComplaints test = studentComplaintRepository.save(studentComplaints);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("Your Complaint has been registered successfully!"),
+							HttpStatus.OK);
+				else
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to record Complaint, Please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(new ResponseMessage(
+						"Your Complaint is already registered, You will be informed of the action taken on your complaint!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(
+					new ResponseMessage("You will need to provide administrator permission to add this complaint!"),
+					HttpStatus.BAD_REQUEST);
+	}
+
+	@ApiOperation(value = "Add Faculty Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
+	@RequestMapping(value = "/addFacultyComplaint", method = RequestMethod.POST)
+	public ResponseEntity<?> addFacultyComplaint(@RequestBody FacultyComplaintForm facultyComplaintForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
+			if (!facultyComplaintRepository.existsByCreatedByAndFacultyNameAndStatusNot(id,
+					facultyComplaintForm.getFacultyName(), "Resolved")) {
+				FacultyComplaints facultyComplaints = new FacultyComplaints(facultyComplaintForm.getFacultyName(),
+						facultyComplaintForm.getDetails());
+				facultyComplaints.setCreatedBy(id);
+				facultyComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
+				facultyComplaints.setType("FACULTY");
+				facultyComplaints.setStatus("Not Assigned");
+				FacultyComplaints test = facultyComplaintRepository.save(facultyComplaints);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("Your Complaint has been registered successfully!"),
+							HttpStatus.OK);
+				else
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to record Complaint, Please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(new ResponseMessage(
+						"Your Complaint is already registered, You will be informed of the action taken on your complaint!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(
+					new ResponseMessage("You will need to provide administrator permission to add this complaint!"),
+					HttpStatus.BAD_REQUEST);
+	}
+
+	@ApiOperation(value = "Add CWN Maintenance Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
+	@RequestMapping(value = "/addCWNComplaint", method = RequestMethod.POST)
+	public ResponseEntity<?> addCWNComplaint(@RequestBody List<CWNComplaintForm> cwnComplaintForm, HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		long formId = cwnComplaintRepository.maxOfFormId();
+		for(CWNComplaintForm complaint : cwnComplaintForm)
+		{
+			if(!cwnComplaintRepository.existsByLocationAndDetailsAndStatusNot(complaint.getLocation(),complaint.getDetails(),"Resolved")) {
+				CWNComplaints cwnComplaints = new CWNComplaints(complaint.getDetails(), complaint.getLocation());
+				cwnComplaints.setCreatedBy(id);
+				cwnComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
+				cwnComplaints.setType("CWN");
+				cwnComplaints.setStatus("Not Assigned");
+				cwnComplaints.setFormId(formId+1);
+				cwnComplaintRepository.save(cwnComplaints);
+			}
+		}
 		return null;
 	}
 
 	@ApiOperation(value = "Add Engineering Cell / Central Workshop Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addECCW", method = RequestMethod.POST)
-	public ResponseEntity<String> addECCWComplaint(@RequestBody ECCWComplaints eccwComplaints,
-			HttpServletRequest request) {
+	@RequestMapping(value = "/addECCWComplaint", method = RequestMethod.POST)
+	public ResponseEntity<String> addECCWComplaint(@RequestBody ECCWComplaints eccwComplaints, HttpServletRequest request) {
 		eccwComplaintRepository.save(eccwComplaints);
 		return null;
 	}
 
 	@ApiOperation(value = "Add Electrical Maintenance and Repairs Section Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addEMRS", method = RequestMethod.POST)
-	public ResponseEntity<String> addEMRSComplaint(@RequestBody EMRSComplaints emrsComplaints,
-			HttpServletRequest request) {
+	@RequestMapping(value = "/addEMRSComplaint", method = RequestMethod.POST)
+	public ResponseEntity<String> addEMRSComplaint(@RequestBody EMRSComplaints emrsComplaints, HttpServletRequest request) {
 		emrsComplaintRepository.save(emrsComplaints);
 		return null;
 	}
 
-	@ApiOperation(value = "Add Faculty Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addFaculty", method = RequestMethod.POST)
-	public ResponseEntity<String> addFacultyComplaint(@RequestBody FacultyComplaints facultyComplaints,
-			HttpServletRequest request) {
-		facultyComplaintRepository.save(facultyComplaints);
-
-		return null;
-	}
-
-	@ApiOperation(value = "Add Other Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addOther", method = RequestMethod.POST)
-	public ResponseEntity<String> addOtherComplaint(@RequestBody OtherComplaints otherComplaints,
-			HttpServletRequest request) {
-		otherComplaintRepository.save(otherComplaints);
-		return null;
-	}
-
-	@ApiOperation(value = "Add Student Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addStudent", method = RequestMethod.POST)
-	public ResponseEntity<String> addStudentComplaint(@RequestBody StudentComplaints studentComplaints,
-			HttpServletRequest request) {
-		studentComplaintRepository.save(studentComplaints);
-		// long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		return null;
-	}
-
 	@ApiOperation(value = "Add Telephone Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addTelephone", method = RequestMethod.POST)
-	public ResponseEntity<String> addTelephoneComplaint(@RequestBody TelephoneComplaints telephoneComplaints,
-			HttpServletRequest request) {
+	@RequestMapping(value = "/addTelephoneComplaint", method = RequestMethod.POST)
+	public ResponseEntity<String> addTelephoneComplaint(@RequestBody TelephoneComplaints telephoneComplaints, HttpServletRequest request) {
 		telephoneComplaintRepository.save(telephoneComplaints);
 		return null;
 	}

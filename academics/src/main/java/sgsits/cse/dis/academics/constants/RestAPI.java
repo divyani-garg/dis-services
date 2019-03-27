@@ -12,6 +12,9 @@ public class RestAPI {
 	public static final String FACULTY_WISE_TIMETABLE = "/timetable/faculty/{facultyid}";
 	public static final String STAFF_WISE_TIMETABLE = "/timetable/staff/{staffid}";
 	
+	public static final String SUBJECT_LIST = "/subjectList";
+	public static final String SUBJECT_LIST_SERVICE = "/subjectListService";
+	
 	
 
 	

@@ -23,6 +23,6 @@ public class AcademicsApplication {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(AcademicsApplication.class, args);
-        moodleQuizService.startQuizData();	
+       // moodleQuizService.startQuizData();	
 	}
 }

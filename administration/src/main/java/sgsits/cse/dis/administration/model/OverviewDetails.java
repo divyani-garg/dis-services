@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "documents_subfolder")
-public class DocumentsSubFolder {
+@Table(name = "overview_details")
+public class OverviewDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,14 +28,23 @@ public class DocumentsSubFolder {
 	@Column(name = "modified_date")
 	private String modifiedDate;
 	
-	@Column(name = "subfolder_name")
-	private String subFolderName;
+	@Column(name = "heading1")
+	private String heading1;
 	
-	@Column(name = "section_id")
-	private long sectionId;
+	@Column(name = "heading2")
+	private String heading2;
 	
-	@Column(name = "folder_id")
-	private long folderId;
+	@Column(name = "heading3")
+	private String heading3;
+	
+	@Column(name = "content")
+	private String content;
+	
+	@Column(name = "session")
+	private String session;
+	
+	@Column(name = "status")
+	private String status;
 
 	public long getId() {
 		return id;
@@ -77,28 +86,52 @@ public class DocumentsSubFolder {
 		this.modifiedDate = modifiedDate;
 	}
 
-	public String getSubFolderName() {
-		return subFolderName;
+	public String getHeading1() {
+		return heading1;
 	}
 
-	public void setSubFolderName(String subFolderName) {
-		this.subFolderName = subFolderName;
+	public void setHeading1(String heading1) {
+		this.heading1 = heading1;
 	}
 
-	public long getSectionId() {
-		return sectionId;
+	public String getHeading2() {
+		return heading2;
 	}
 
-	public void setSectionId(long sectionId) {
-		this.sectionId = sectionId;
+	public void setHeading2(String heading2) {
+		this.heading2 = heading2;
 	}
 
-	public long getFolderId() {
-		return folderId;
+	public String getHeading3() {
+		return heading3;
 	}
 
-	public void setFolderId(long folderId) {
-		this.folderId = folderId;
+	public void setHeading3(String heading3) {
+		this.heading3 = heading3;
 	}
 
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getSession() {
+		return session;
+	}
+
+	public void setSession(String session) {
+		this.session = session;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 }

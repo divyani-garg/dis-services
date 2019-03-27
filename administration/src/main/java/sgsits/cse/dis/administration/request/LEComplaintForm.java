@@ -17,23 +17,11 @@ public class LEComplaintForm {
 		return lab;
 	}
 
-	public void setLab(String lab) {
-		this.lab = lab;
-	}
-
 	public String getSystemNo() {
 		return systemNo;
 	}
 
-	public void setSystemNo(String systemNo) {
-		this.systemNo = systemNo;
-	}
-
 	public String getDetails() {
 		return details;
-	}
-
-	public void setDetails(String details) {
-		this.details = details;
 	}
 }

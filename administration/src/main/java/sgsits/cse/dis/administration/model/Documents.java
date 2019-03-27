@@ -8,9 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "documents_folder")
-
-public class DocumentsFolder {
+@Table(name = "documents")
+public class Documents {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +28,14 @@ public class DocumentsFolder {
 	@Column(name = "modified_date")
 	private String modifiedDate;
 	
-	@Column(name = "folder_name")
-	private String folderName;
+	@Column(name = "name")
+	private String name;
 	
-	@Column(name = "section_id")
-	private long sectionId;
+	@Column(name = "parent")
+	private long parent;
+	
+	@Column(name = "status")
+	private String status;
 
 	public long getId() {
 		return id;
@@ -75,20 +77,27 @@ public class DocumentsFolder {
 		this.modifiedDate = modifiedDate;
 	}
 
-	public String getFolderName() {
-		return folderName;
+	public String getName() {
+		return name;
 	}
 
-	public void setFolderName(String folderName) {
-		this.folderName = folderName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public long getSectionId() {
-		return sectionId;
+	public long getParent() {
+		return parent;
 	}
 
-	public void setSectionId(long sectionId) {
-		this.sectionId = sectionId;
+	public void setParent(long parent) {
+		this.parent = parent;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

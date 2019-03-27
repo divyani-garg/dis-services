@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 
-import sgsits.cse.dis.user.model.Email;
+import sgsits.cse.dis.user.constants.Email;
 import sgsits.cse.dis.user.service.EmailService;
 
 @Controller

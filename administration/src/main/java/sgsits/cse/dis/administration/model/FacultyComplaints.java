@@ -48,6 +48,14 @@ public class FacultyComplaints {
 	@Column(name = "remarks")
 	private String remarks;
 
+	public FacultyComplaints() {}
+	
+	public FacultyComplaints(String facultyName, String details) {
+		super();
+		this.facultyName = facultyName;
+		this.details = details;
+	}
+
 	public long getId() {
 		return id;
 	}

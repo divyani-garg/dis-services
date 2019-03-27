@@ -1,4 +1,4 @@
-package sgsits.cse.dis.academics.services;
+package sgsits.cse.dis.user.service;
 
 import java.util.Calendar;
 
