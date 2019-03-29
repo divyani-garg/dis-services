@@ -43,7 +43,7 @@ import sgsits.cse.dis.gateway.repo.UserRepository;
 import sgsits.cse.dis.gateway.security.jwt.JwtProvider;
 import sgsits.cse.dis.gateway.service.UserPrinciple;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/dis")
 public class AuthRestAPIs {
