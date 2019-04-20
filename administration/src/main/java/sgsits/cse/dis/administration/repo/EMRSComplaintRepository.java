@@ -3,13 +3,14 @@ package sgsits.cse.dis.administration.repo;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import sgsits.cse.dis.administration.model.EMRSComplaints;
 
 //Electrical Maintenance and repairs section
 
-@Repository("")
+@Repository("emrsComplaintRepository")
 public interface EMRSComplaintRepository extends JpaRepository<EMRSComplaints, Long> {
 	List<EMRSComplaints> findByLocationAndStatus(String location, String status);
 	List<EMRSComplaints> findByCreatedBy(Long id);
@@ -21,4 +22,8 @@ public interface EMRSComplaintRepository extends JpaRepository<EMRSComplaints, L
 	long countByLocationAndStatusNot(String loc, String string);
 	long countByLocationAndStatus(String loc, String string);
 	long countByLocation(String loc);
+	boolean existsByLocationAndDetailsAndStatusNot(String location, String details, String status);
+	
+	@Query(value = "select max(form_id) from electrical_maintenance_and_repairs_section_complaints", nativeQuery = true)
+	long maxOfFormId();
 }

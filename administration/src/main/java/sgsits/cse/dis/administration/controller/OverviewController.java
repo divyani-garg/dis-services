@@ -1,4 +1,4 @@
-package sgsits.cse.dis.administration.request;
+package sgsits.cse.dis.administration.controller;
 
 import java.util.List;
 import java.util.Optional;

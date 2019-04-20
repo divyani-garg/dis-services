@@ -204,6 +204,7 @@ public class AuthRestAPIs {
 			modelAndView.setViewName("redirect:http://localhost:4200/forgot-password");
 		}
 		return modelAndView;
+		
 	}
 
 	// Process reset password form

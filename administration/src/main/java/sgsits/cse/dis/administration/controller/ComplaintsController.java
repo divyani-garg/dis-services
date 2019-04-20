@@ -1,6 +1,7 @@
 package sgsits.cse.dis.administration.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -41,10 +42,13 @@ import sgsits.cse.dis.administration.repo.StudentComplaintRepository;
 import sgsits.cse.dis.administration.repo.TelephoneComplaintRepository;
 import sgsits.cse.dis.administration.request.CWNComplaintForm;
 import sgsits.cse.dis.administration.request.CleanlinessComplaintForm;
+import sgsits.cse.dis.administration.request.ECCWComplaintForm;
+import sgsits.cse.dis.administration.request.EMRSComplaintForm;
 import sgsits.cse.dis.administration.request.FacultyComplaintForm;
 import sgsits.cse.dis.administration.request.LEComplaintForm;
 import sgsits.cse.dis.administration.request.OtherComplaintForm;
 import sgsits.cse.dis.administration.request.StudentComplaintForm;
+import sgsits.cse.dis.administration.request.TelephoneComplaintForm;
 import sgsits.cse.dis.administration.response.ResponseMessage;
 
 @CrossOrigin(origins = "*")
@@ -686,43 +690,171 @@ public class ComplaintsController {
 
 	@ApiOperation(value = "Add CWN Maintenance Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addCWNComplaint", method = RequestMethod.POST)
-	public ResponseEntity<?> addCWNComplaint(@RequestBody List<CWNComplaintForm> cwnComplaintForm, HttpServletRequest request) {
+	public ResponseEntity<?> addCWNComplaint(@RequestBody List<CWNComplaintForm> cwnComplaintForm,
+			HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		long formId = cwnComplaintRepository.maxOfFormId();
-		for(CWNComplaintForm complaint : cwnComplaintForm)
-		{
-			if(!cwnComplaintRepository.existsByLocationAndDetailsAndStatusNot(complaint.getLocation(),complaint.getDetails(),"Resolved")) {
-				CWNComplaints cwnComplaints = new CWNComplaints(complaint.getDetails(), complaint.getLocation());
-				cwnComplaints.setCreatedBy(id);
-				cwnComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
-				cwnComplaints.setType("CWN");
-				cwnComplaints.setStatus("Not Assigned");
-				cwnComplaints.setFormId(formId+1);
-				cwnComplaintRepository.save(cwnComplaints);
+		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
+			long formId = cwnComplaintRepository.maxOfFormId();
+			int size = cwnComplaintForm.size();
+			int count = 0;
+			List<CWNComplaints> complaintList = new ArrayList<>();
+			for (CWNComplaintForm complaint : cwnComplaintForm) {
+				if (!cwnComplaintRepository.existsByLocationAndDetailsAndStatusNot(complaint.getLocation(),
+						complaint.getDetails(), "Resolved")) {
+					CWNComplaints cwnComplaints = new CWNComplaints(complaint.getDetails(), complaint.getLocation());
+					cwnComplaints.setCreatedBy(id);
+					cwnComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
+					cwnComplaints.setType("CWN");
+					cwnComplaints.setStatus("Not Assigned");
+					cwnComplaints.setFormId(formId + 1);
+					complaintList.add(cwnComplaints);
+					count++;
+				}
 			}
-		}
-		return null;
+			if (count == size) {
+				List<CWNComplaints> test = cwnComplaintRepository.saveAll(complaintList);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("Your Complaint has been registered successfully!"),
+							HttpStatus.OK);
+				else
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to record Complaint, Please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(new ResponseMessage(
+						"One of Your Complaint is already registered, You will be informed of the action taken on your complaint!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(
+					new ResponseMessage("You will need to provide administrator permission to add this complaint!"),
+					HttpStatus.BAD_REQUEST);
 	}
 
 	@ApiOperation(value = "Add Engineering Cell / Central Workshop Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addECCWComplaint", method = RequestMethod.POST)
-	public ResponseEntity<String> addECCWComplaint(@RequestBody ECCWComplaints eccwComplaints, HttpServletRequest request) {
-		eccwComplaintRepository.save(eccwComplaints);
-		return null;
+	public ResponseEntity<?> addECCWComplaint(@RequestBody List<ECCWComplaintForm> eccwComplaintForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
+			long formId = eccwComplaintRepository.maxOfFormId();
+			int size = eccwComplaintForm.size();
+			int count = 0;
+			List<ECCWComplaints> complaintList = new ArrayList<>();
+			for (ECCWComplaintForm complaint : eccwComplaintForm) {
+				if (!eccwComplaintRepository.existsByLocationAndDetailsAndStatusNot(complaint.getLocation(),
+						complaint.getDetails(), "Resolved")) {
+					ECCWComplaints eccwComplaints = new ECCWComplaints(complaint.getDetails(), complaint.getLocation());
+					eccwComplaints.setCreatedBy(id);
+					eccwComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
+					eccwComplaints.setType("ECCW");
+					eccwComplaints.setStatus("Not Assigned");
+					eccwComplaints.setFormId(formId + 1);
+					complaintList.add(eccwComplaints);
+					count++;
+				}
+			}
+			if (count == size) {
+				List<ECCWComplaints> test = eccwComplaintRepository.saveAll(complaintList);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("Your Complaint has been registered successfully!"),
+							HttpStatus.OK);
+				else
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to record Complaint, Please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(new ResponseMessage(
+						"One of Your Complaint is already registered, You will be informed of the action taken on your complaint!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(
+					new ResponseMessage("You will need to provide administrator permission to add this complaint!"),
+					HttpStatus.BAD_REQUEST);
 	}
 
 	@ApiOperation(value = "Add Electrical Maintenance and Repairs Section Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addEMRSComplaint", method = RequestMethod.POST)
-	public ResponseEntity<String> addEMRSComplaint(@RequestBody EMRSComplaints emrsComplaints, HttpServletRequest request) {
-		emrsComplaintRepository.save(emrsComplaints);
-		return null;
+	public ResponseEntity<?> addEMRSComplaint(@RequestBody List<EMRSComplaintForm> emrsComplaintForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
+			long formId = emrsComplaintRepository.maxOfFormId();
+			int size = emrsComplaintForm.size();
+			int count = 0;
+			List<EMRSComplaints> complaintList = new ArrayList<>();
+			for (EMRSComplaintForm complaint : emrsComplaintForm) {
+				if (!emrsComplaintRepository.existsByLocationAndDetailsAndStatusNot(complaint.getLocation(),
+						complaint.getDetails(), "Resolved")) {
+					EMRSComplaints emrsComplaints = new EMRSComplaints(complaint.getDetails(), complaint.getLocation());
+					emrsComplaints.setCreatedBy(id);
+					emrsComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
+					emrsComplaints.setType("ECCW");
+					emrsComplaints.setStatus("Not Assigned");
+					emrsComplaints.setFormId(formId + 1);
+					complaintList.add(emrsComplaints);
+					count++;
+				}
+			}
+			if (count == size) {
+				List<EMRSComplaints> test = emrsComplaintRepository.saveAll(complaintList);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("Your Complaint has been registered successfully!"),
+							HttpStatus.OK);
+				else
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to record Complaint, Please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(new ResponseMessage(
+						"One of Your Complaint is already registered, You will be informed of the action taken on your complaint!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(
+					new ResponseMessage("You will need to provide administrator permission to add this complaint!"),
+					HttpStatus.BAD_REQUEST);
 	}
 
 	@ApiOperation(value = "Add Telephone Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addTelephoneComplaint", method = RequestMethod.POST)
-	public ResponseEntity<String> addTelephoneComplaint(@RequestBody TelephoneComplaints telephoneComplaints, HttpServletRequest request) {
-		telephoneComplaintRepository.save(telephoneComplaints);
-		return null;
+	public ResponseEntity<?> addTelephoneComplaint(@RequestBody List<TelephoneComplaintForm> telephoneComplaintForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
+			long formId = telephoneComplaintRepository.maxOfFormId();
+			int size = telephoneComplaintForm.size();
+			int count = 0;
+			List<TelephoneComplaints> complaintList = new ArrayList<>();
+			for (TelephoneComplaintForm complaint : telephoneComplaintForm) {
+				if (!telephoneComplaintRepository.existsByExtensionNoAndLocationAndDetailsAndStatusNot(
+						complaint.getExtensionNo(), complaint.getLocation(), complaint.getDetails(), "Resolved")) {
+					TelephoneComplaints telephoneComplaints = new TelephoneComplaints(complaint.getExtensionNo(),
+							complaint.getDetails(), complaint.getLocation());
+					telephoneComplaints.setCreatedBy(id);
+					telephoneComplaints.setCreatedDate(simpleDateFormat.format(new Date()));
+					telephoneComplaints.setType("TELEPHONE");
+					telephoneComplaints.setStatus("Not Assigned");
+					telephoneComplaints.setFormId(formId + 1);
+					complaintList.add(telephoneComplaints);
+					count++;
+				}
+			}
+			if (count == size) {
+				List<TelephoneComplaints> test = telephoneComplaintRepository.saveAll(complaintList);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("Your Complaint has been registered successfully!"),
+							HttpStatus.OK);
+				else
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to record Complaint, Please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(new ResponseMessage(
+						"One of Your Complaint is already registered, You will be informed of the action taken on your complaint!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(
+					new ResponseMessage("You will need to provide administrator permission to add this complaint!"),
+					HttpStatus.BAD_REQUEST);
 	}
 
 }

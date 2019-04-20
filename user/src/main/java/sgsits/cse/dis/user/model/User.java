@@ -80,7 +80,16 @@ public class User{
     private String resetToken;
     
 	@Column(name = "reset_token_expiry")
-    private Date resetTokenExpiry;
+    private String resetTokenExpiry;
+	
+	@Column(name = "activation_token")
+    private String activationToken;
+    
+	@Column(name = "activation_token_expiry")
+    private String activationTokenExpiry;	
+	
+	@Column(name = "last_login")
+	private String lastLogin;
     
 	@Column(name = "user_type")
 	private String userType;
@@ -197,12 +206,36 @@ public class User{
 		this.resetToken = resetToken;
 	}
 
-	public Date getResetTokenExpiry() {
+	public String getResetTokenExpiry() {
 		return resetTokenExpiry;
 	}
 
-	public void setResetTokenExpiry(Date resetTokenExpiry) {
+	public void setResetTokenExpiry(String resetTokenExpiry) {
 		this.resetTokenExpiry = resetTokenExpiry;
+	}
+
+	public String getLastLogin() {
+		return lastLogin;
+	}
+
+	public String getActivationToken() {
+		return activationToken;
+	}
+
+	public void setActivationToken(String activationToken) {
+		this.activationToken = activationToken;
+	}
+
+	public String getActivationTokenExpiry() {
+		return activationTokenExpiry;
+	}
+
+	public void setActivationTokenExpiry(String activationTokenExpiry) {
+		this.activationTokenExpiry = activationTokenExpiry;
+	}
+
+	public void setLastLogin(String lastLogin) {
+		this.lastLogin = lastLogin;
 	}
 
 	public String getUserType() {

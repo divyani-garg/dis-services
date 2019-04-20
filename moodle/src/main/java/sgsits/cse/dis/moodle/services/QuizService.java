@@ -1,4 +1,4 @@
-package sgsits.cse.dis.academics.services;
+package sgsits.cse.dis.moodle.services;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,17 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import sgsits.cse.dis.academics.model.Quiz;
-import sgsits.cse.dis.academics.model.Scheme;
-import sgsits.cse.dis.academics.repo.QuizRepository;
-import sgsits.cse.dis.academics.repo.SchemeRepository;
+import sgsits.cse.dis.moodle.model.Quiz;
+import sgsits.cse.dis.moodle.repo.QuizRepository;
 
 @Service
 public class QuizService {
@@ -26,9 +22,6 @@ public class QuizService {
 
 	@Autowired
 	QuizRepository quizRepository;
-	
-	@Autowired
-	SchemeRepository schemeRepository;
 
 	public void fetchQuizData() {
 		try {
@@ -45,30 +38,16 @@ public class QuizService {
 					"where q.course = c.id and q.id = g.quiz and g.userid = u.id and u.username LIKE \"0801%\" ";
 			ResultSet rs = stmt.executeQuery(query);
 			
-			List<Scheme> schemes = schemeRepository.findAll();
-			List<String> subjects = new ArrayList<>();
-			for(Scheme scheme : schemes){
-				subjects.add(scheme.getSubjectCode());
-			}
-			
 			if (rs != null)
 				while (rs.next()) {
-					Quiz quiz = new Quiz();	
-					
-					String course = rs.getString(3);
-					for(String sub : subjects) {
-						if(course.contains(sub)) {
-							quiz.setCreatedBy((long) 0);
-							quiz.setCreatedDate(formatter.format(new Date()));
-							quiz.setCourseName(sub);
-							quiz.setQuizName(rs.getString(1));
-							quiz.setGrade(rs.getBigDecimal(2));
-							quiz.setUsername(rs.getString(4));
-							quiz.setTime(rs.getString(5));
-							break;
-						}
-					}
-					
+					Quiz quiz = new Quiz();
+					quiz.setCreatedBy((long) 0);
+					quiz.setCreatedDate(formatter.format(new Date()));				
+					quiz.setCourseName(rs.getString(3));	
+					quiz.setQuizName(rs.getString(1));
+					quiz.setGrade(rs.getBigDecimal(2));
+					quiz.setUsername(rs.getString(4));
+					quiz.setTime(rs.getString(5));
 					if (quiz != null)
 						quizRepository.save(quiz);
 				}

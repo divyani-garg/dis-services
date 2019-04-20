@@ -1,4 +1,4 @@
-package sgsits.cse.dis.academics.controller;
+package sgsits.cse.dis.moodle.controller;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
-import sgsits.cse.dis.academics.services.QuizService;
+import sgsits.cse.dis.moodle.services.QuizService;
 
 @RestController
 public class MoodleController {

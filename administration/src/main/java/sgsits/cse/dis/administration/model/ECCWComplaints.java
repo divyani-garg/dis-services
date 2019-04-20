@@ -49,10 +49,16 @@ public class ECCWComplaints {
 	private String pdfId;
 
 	@Column(name = "form_id")
-	private int formId;
+	private long formId;
 
 	@Column(name = "remarks")
 	private String remarks;
+
+	public ECCWComplaints(String details, String location) {
+		super();
+		this.details = details;
+		this.location = location;
+	}
 
 	public long getId() {
 		return id;
@@ -142,11 +148,11 @@ public class ECCWComplaints {
 		this.pdfId = pdfId;
 	}
 
-	public int getFormId() {
+	public long getFormId() {
 		return formId;
 	}
 
-	public void setFormId(int formId) {
+	public void setFormId(long formId) {
 		this.formId = formId;
 	}
 

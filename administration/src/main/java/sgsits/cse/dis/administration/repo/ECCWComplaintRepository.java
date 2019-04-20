@@ -3,6 +3,7 @@ package sgsits.cse.dis.administration.repo;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import sgsits.cse.dis.administration.model.ECCWComplaints;
@@ -21,4 +22,8 @@ public interface ECCWComplaintRepository extends JpaRepository<ECCWComplaints, L
 	long countByLocationAndStatusNot(String loc, String string);
 	long countByLocationAndStatus(String loc, String string);
 	long countByLocation(String loc);
+	
+	@Query(value = "select max(form_id) from engineering_cell_and_central_workshop_complaints", nativeQuery = true)
+	long maxOfFormId();
+	boolean existsByLocationAndDetailsAndStatusNot(String location, String details, String status);
 }

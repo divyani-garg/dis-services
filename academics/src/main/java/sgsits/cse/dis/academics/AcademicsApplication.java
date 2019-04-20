@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-import sgsits.cse.dis.academics.services.MoodleQuizService;
+import sgsits.cse.dis.academics.controller.MoodleController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
@@ -14,15 +14,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class AcademicsApplication {
 	
-	private static MoodleQuizService moodleQuizService;
+	private static MoodleController moodleController;
 	
-	public AcademicsApplication(MoodleQuizService moodleQuizService)
+	public AcademicsApplication(MoodleController moodleController)
 	{
-		AcademicsApplication.moodleQuizService = moodleQuizService;
+		AcademicsApplication.moodleController = moodleController;
 	}
 	
 	public static void main(String[] args) {
 		SpringApplication.run(AcademicsApplication.class, args);
-       // moodleQuizService.startQuizData();	
+		//moodleController.startQuizData();
 	}
 }
