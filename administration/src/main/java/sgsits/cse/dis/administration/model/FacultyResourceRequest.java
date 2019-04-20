@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "lab_equipment_complaints")
-public class LEComplaints {
+@Table(name = "faculty_resource_request")
+public class FacultyResourceRequest {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,16 +28,10 @@ public class LEComplaints {
 	@Column(name = "modified_date")
 	private String modifiedDate;
 	
-	@Column(name = "type")
-	private String type;
-	
-	@Column(name = "lab")
-	private String lab;
+	@Column(name = "resource")
+	private String resource;
 
-	@Column(name = "system_no")
-	private String systemNo;
-
-	@Column(name = "details", nullable = false)
+	@Column(name = "details")
 	private String details;
 
 	@Column(name = "status")
@@ -48,13 +42,12 @@ public class LEComplaints {
 
 	@Column(name = "remarks")
 	private String remarks;
-	
-	public LEComplaints() {}
 
-	public LEComplaints(String lab, String systemNo, String details) {
+	public FacultyResourceRequest() { }
+	
+	public FacultyResourceRequest(String resource, String details) {
 		super();
-		this.lab = lab;
-		this.systemNo = systemNo;
+		this.resource = resource;
 		this.details = details;
 	}
 
@@ -65,7 +58,7 @@ public class LEComplaints {
 	public void setId(long id) {
 		this.id = id;
 	}
-
+	
 	public Long getCreatedBy() {
 		return createdBy;
 	}
@@ -98,28 +91,12 @@ public class LEComplaints {
 		this.modifiedDate = modifiedDate;
 	}
 
-	public String getType() {
-		return type;
+	public String getResource() {
+		return resource;
 	}
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getLab() {
-		return lab;
-	}
-
-	public void setLab(String lab) {
-		this.lab = lab;
-	}
-
-	public String getSystemNo() {
-		return systemNo;
-	}
-
-	public void setSystemNo(String systemNo) {
-		this.systemNo = systemNo;
+	public void setResource(String resource) {
+		this.resource = resource;
 	}
 
 	public String getDetails() {
@@ -153,4 +130,5 @@ public class LEComplaints {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+	
 }

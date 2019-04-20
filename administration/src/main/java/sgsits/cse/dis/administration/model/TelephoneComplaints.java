@@ -1,7 +1,5 @@
 package sgsits.cse.dis.administration.model;
 
-import java.sql.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,7 +44,7 @@ public class TelephoneComplaints {
 	private String status;
 
 	@Column(name = "date_of_resolution")
-	private Date dateOfResolution;
+	private String dateOfResolution;
 
 	@Column(name = "pdf_id")
 	private String pdfId;
@@ -57,6 +55,8 @@ public class TelephoneComplaints {
 	@Column(name = "remarks")
 	private String remarks;
 
+	public TelephoneComplaints() {}
+	
 	public TelephoneComplaints(int extensionNo, String details, String location) {
 		super();
 		this.extensionNo = extensionNo;
@@ -144,12 +144,12 @@ public class TelephoneComplaints {
 		this.status = status;
 	}
 
-	public Date getDateOfResolution() {
+	public String getDateOfResolution() {
 		return dateOfResolution;
 	}
 
-	public void setDateOfResolution(Date dateOfResolution) {
-		this.dateOfResolution = dateOfResolution;
+	public void setDateOfResolution(String date) {
+		this.dateOfResolution = date;
 	}
 
 	public String getPdfId() {

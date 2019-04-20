@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,6 +45,7 @@ import sgsits.cse.dis.administration.request.CWNComplaintForm;
 import sgsits.cse.dis.administration.request.CleanlinessComplaintForm;
 import sgsits.cse.dis.administration.request.ECCWComplaintForm;
 import sgsits.cse.dis.administration.request.EMRSComplaintForm;
+import sgsits.cse.dis.administration.request.EditComplaintForm;
 import sgsits.cse.dis.administration.request.FacultyComplaintForm;
 import sgsits.cse.dis.administration.request.LEComplaintForm;
 import sgsits.cse.dis.administration.request.OtherComplaintForm;
@@ -81,6 +83,7 @@ public class ComplaintsController {
 
 	JwtResolver jwtResolver = new JwtResolver();
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	
 	// Get My Complaints
 
 	@ApiOperation(value = "Get My Cleanliness Complaints", response = Object.class, httpMethod = "GET", produces = "application/json")
@@ -855,6 +858,156 @@ public class ComplaintsController {
 			return new ResponseEntity<>(
 					new ResponseMessage("You will need to provide administrator permission to add this complaint!"),
 					HttpStatus.BAD_REQUEST);
+	}
+
+	// Edit Complaints
+
+	@ApiOperation(value = "Edit Complaint", response = Object.class, httpMethod = "PUT", produces = "application/json")
+	@RequestMapping(value = "/editComplaint", method = RequestMethod.PUT)
+	public ResponseEntity<?> editComplaint(@RequestBody EditComplaintForm editComplaintForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		
+		switch (editComplaintForm.getType()) {
+		
+		case "CL":
+			Optional<CleanlinessComplaints> cc = cleanlinessComplaintRepository.findById(editComplaintForm.getId());
+			if (cc.isPresent()) {
+				cc.get().setModifiedBy(id);
+				cc.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				cc.get().setStatus(editComplaintForm.getStatus());
+				cc.get().setRemarks(editComplaintForm.getRemarks());
+				if(editComplaintForm.getStatus().equals("Resolved"))
+					cc.get().setDateOfResolution(simpleDateFormat.format(new Date()));
+				cleanlinessComplaintRepository.save(cc.get());
+				return new ResponseEntity<>(new ResponseMessage("Complaint has been updated successfully!"), HttpStatus.OK);
+			}
+			else
+				return new ResponseEntity<>( new ResponseMessage("Unable to find Complaint, Please try again later!"), HttpStatus.BAD_REQUEST);
+		
+		case "LE":
+			Optional<LEComplaints> lec = leComplaintRepository.findById(editComplaintForm.getId());
+			if (lec.isPresent()) {
+				lec.get().setModifiedBy(id);
+				lec.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				lec.get().setStatus(editComplaintForm.getStatus());
+				lec.get().setRemarks(editComplaintForm.getRemarks());
+				if(editComplaintForm.getStatus().equals("Resolved"))
+					lec.get().setDateOfResolution(simpleDateFormat.format(new Date()));
+				leComplaintRepository.save(lec.get());
+				return new ResponseEntity<>(new ResponseMessage("Complaint has been updated successfully!"), HttpStatus.OK);
+			}
+			else
+				return new ResponseEntity<>( new ResponseMessage("Unable to find Complaint, Please try again later!"), HttpStatus.BAD_REQUEST);
+			
+		case "STUDENT":
+			Optional<StudentComplaints> sc = studentComplaintRepository.findById(editComplaintForm.getId());
+			if (sc.isPresent()) {
+				sc.get().setModifiedBy(id);
+				sc.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				sc.get().setStatus(editComplaintForm.getStatus());
+				sc.get().setRemarks(editComplaintForm.getRemarks());
+				if(editComplaintForm.getStatus().equals("Resolved"))
+					sc.get().setDateOfResolution(simpleDateFormat.format(new Date()));
+				studentComplaintRepository.save(sc.get());
+				return new ResponseEntity<>(new ResponseMessage("Complaint has been updated successfully!"), HttpStatus.OK);
+			}
+			else
+				return new ResponseEntity<>( new ResponseMessage("Unable to find Complaint, Please try again later!"), HttpStatus.BAD_REQUEST);
+			
+		case "FACULTY":
+			Optional<FacultyComplaints> fc = facultyComplaintRepository.findById(editComplaintForm.getId());
+			if (fc.isPresent()) {
+				fc.get().setModifiedBy(id);
+				fc.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				fc.get().setStatus(editComplaintForm.getStatus());
+				fc.get().setRemarks(editComplaintForm.getRemarks());
+				if(editComplaintForm.getStatus().equals("Resolved"))
+					fc.get().setDateOfResolution(simpleDateFormat.format(new Date()));
+				facultyComplaintRepository.save(fc.get());
+				return new ResponseEntity<>(new ResponseMessage("Complaint has been updated successfully!"), HttpStatus.OK);
+			}
+			else
+				return new ResponseEntity<>( new ResponseMessage("Unable to find Complaint, Please try again later!"), HttpStatus.BAD_REQUEST);
+
+		case "OTHER":
+			Optional<OtherComplaints> other = otherComplaintRepository.findById(editComplaintForm.getId());
+			if (other.isPresent()) {
+				other.get().setModifiedBy(id);
+				other.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				other.get().setStatus(editComplaintForm.getStatus());
+				other.get().setRemarks(editComplaintForm.getRemarks());
+				other.get().setAssignedTo(editComplaintForm.getAssignedTo());
+				if(editComplaintForm.getStatus().equals("Resolved"))
+					other.get().setDateOfResolution(simpleDateFormat.format(new Date()));
+				otherComplaintRepository.save(other.get());
+				return new ResponseEntity<>(new ResponseMessage("Complaint has been updated successfully!"), HttpStatus.OK);
+			}
+			else
+				return new ResponseEntity<>( new ResponseMessage("Unable to find Complaint, Please try again later!"), HttpStatus.BAD_REQUEST);
+
+		case "CWN":
+			Optional<CWNComplaints> cwn = cwnComplaintRepository.findById(editComplaintForm.getId());
+			if (cwn.isPresent()) {
+				cwn.get().setModifiedBy(id);
+				cwn.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				cwn.get().setStatus(editComplaintForm.getStatus());
+				cwn.get().setRemarks(editComplaintForm.getRemarks());
+				if(editComplaintForm.getStatus().equals("Resolved"))
+					cwn.get().setDateOfResolution(simpleDateFormat.format(new Date()));
+				cwnComplaintRepository.save(cwn.get());
+				return new ResponseEntity<>(new ResponseMessage("Complaint has been updated successfully!"), HttpStatus.OK);
+			}
+			else
+				return new ResponseEntity<>( new ResponseMessage("Unable to find Complaint, Please try again later!"), HttpStatus.BAD_REQUEST);
+			
+		case "ECCW":
+			Optional<ECCWComplaints> eccw = eccwComplaintRepository.findById(editComplaintForm.getId());
+			if (eccw.isPresent()) {
+				eccw.get().setModifiedBy(id);
+				eccw.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				eccw.get().setStatus(editComplaintForm.getStatus());
+				eccw.get().setRemarks(editComplaintForm.getRemarks());
+				if(editComplaintForm.getStatus().equals("Resolved"))
+					eccw.get().setDateOfResolution(simpleDateFormat.format(new Date()));
+				eccwComplaintRepository.save(eccw.get());
+				return new ResponseEntity<>(new ResponseMessage("Complaint has been updated successfully!"), HttpStatus.OK);
+			}
+			else
+				return new ResponseEntity<>( new ResponseMessage("Unable to find Complaint, Please try again later!"), HttpStatus.BAD_REQUEST);
+
+		case "EMRS":
+			Optional<EMRSComplaints> emrs = emrsComplaintRepository.findById(editComplaintForm.getId());
+			if (emrs.isPresent()) {
+				emrs.get().setModifiedBy(id);
+				emrs.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				emrs.get().setStatus(editComplaintForm.getStatus());
+				emrs.get().setRemarks(editComplaintForm.getRemarks());
+				if(editComplaintForm.getStatus().equals("Resolved"))
+					emrs.get().setDateOfResolution(simpleDateFormat.format(new Date()));
+				emrsComplaintRepository.save(emrs.get());
+				return new ResponseEntity<>(new ResponseMessage("Complaint has been updated successfully!"), HttpStatus.OK);
+			}
+			else
+				return new ResponseEntity<>( new ResponseMessage("Unable to find Complaint, Please try again later!"), HttpStatus.BAD_REQUEST);
+
+		case "TELEPHONE":
+			Optional<TelephoneComplaints> tc = telephoneComplaintRepository.findById(editComplaintForm.getId());
+			if (tc.isPresent()) {
+				tc.get().setModifiedBy(id);
+				tc.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				tc.get().setStatus(editComplaintForm.getStatus());
+				tc.get().setRemarks(editComplaintForm.getRemarks());
+				if(editComplaintForm.getStatus().equals("Resolved"))
+					tc.get().setDateOfResolution(simpleDateFormat.format(new Date()));
+				telephoneComplaintRepository.save(tc.get());
+				return new ResponseEntity<>(new ResponseMessage("Complaint has been updated successfully!"), HttpStatus.OK);
+			}
+			else
+				return new ResponseEntity<>( new ResponseMessage("Unable to find Complaint, Please try again later!"), HttpStatus.BAD_REQUEST);
+		
+		}
+		return null;
 	}
 
 }
