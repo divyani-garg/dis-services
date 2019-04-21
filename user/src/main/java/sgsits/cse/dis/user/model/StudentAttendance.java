@@ -46,10 +46,10 @@ public class StudentAttendance {
 	@Column(name = "class_date", nullable = false)
 	private Date classDate;
 	
-	@Column(name = "from", nullable = false)
+	@Column(name = "from_time", nullable = false)
 	private Time from;
 	
-	@Column(name = "to", nullable = false)
+	@Column(name = "to_time", nullable = false)
 	private Time to;
 	
 	@Column(name = "attendance", nullable = false)
