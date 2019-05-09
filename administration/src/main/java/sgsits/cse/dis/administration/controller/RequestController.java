@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import sgsits.cse.dis.administration.constants.RestAPI;
 import sgsits.cse.dis.administration.jwt.JwtResolver;
 import sgsits.cse.dis.administration.model.FacultyResourceRequest;
 import sgsits.cse.dis.administration.repo.FacultyResourceRequestRepository;
@@ -34,7 +35,7 @@ public class RequestController {
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 	@ApiOperation(value = "Add Faculty Resource Request", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addFacultyResourceRequest", method = RequestMethod.POST)
+	@RequestMapping(value = RestAPI.ADD_FACULTY_RESOURCE_REQUEST, method = RequestMethod.POST)
 	public ResponseEntity<?> addFacultyResourceRequest(
 			@RequestBody FacultyResourceRequestForm facultyResourceRequestForm, HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));

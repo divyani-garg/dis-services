@@ -95,7 +95,7 @@ public class AuthRestAPIs {
 		if (userRepository.existsByMobileNo(signUpRequest.getMobileNo())) {
 			return new ResponseEntity<>(new ResponseMessage("Fail -> Mobile Number is already in use!"), HttpStatus.BAD_REQUEST);
 		}
-
+		
 		if (userClient.findUser(signUpRequest)) { // separate message for incorrect detail
 			User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), signUpRequest.getDob(),
 					signUpRequest.getMobileNo(), encoder.encode(signUpRequest.getPassword()));

@@ -16,4 +16,13 @@ public interface OverviewDetailsRepository extends JpaRepository<OverviewDetails
 	@Query(value="SELECT id from overview_details WHERE created_date = (SELECT max(created_date) from overview_details) LIMIT 1" , nativeQuery = true) 
 	long findMax();
 
+	boolean existsBySessionAndHeading1AndHeading2AndHeading3AndContent(String session, String heading1, String heading2,
+			String heading3, String content);
+
+	boolean existsBySessionNotAndHeading1AndHeading2AndHeading3AndContent(String session, String heading1,
+			String heading2, String heading3, String content);
+
+	boolean existsBySessionAndHeading1AndHeading2AndContentNot(String session, String heading1, String heading2,
+			String content);
+
 }

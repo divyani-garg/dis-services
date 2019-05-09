@@ -27,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import sgsits.cse.dis.administration.constants.RestAPI;
 import sgsits.cse.dis.administration.jwt.JwtResolver;
 import sgsits.cse.dis.administration.model.DocumentsFile;
 import sgsits.cse.dis.administration.model.Documents;
@@ -57,7 +58,7 @@ public class DocumentsController {
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 	@ApiOperation(value = "Get Structure", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getStructure", method = RequestMethod.GET)
+	@RequestMapping(value = RestAPI.GET_DOCUMENT_STRUCTURE, method = RequestMethod.GET)
 	public List<DocumentsResponse> getStructure(HttpServletRequest request) {
 		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
 			List<Documents> documents = documentsRepository.findAll();
@@ -76,7 +77,7 @@ public class DocumentsController {
 	}
 
 	@ApiOperation(value = "Get Files", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/getFiles", method = RequestMethod.GET)
+	@RequestMapping(value = RestAPI.GET_FILES, method = RequestMethod.GET)
 	public List<DocumentsFile> getFilesInFolder(@RequestParam("parent") long parent, HttpServletRequest request) {
 		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
 			List<DocumentsFile> files = documentsFileRepository.findByParent(parent);
@@ -97,7 +98,7 @@ public class DocumentsController {
 	}
 
 	@ApiOperation(value = "Add new Section or Folder", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/addFolder", method = RequestMethod.POST)
+	@RequestMapping(value = RestAPI.ADD_NEW_FOLDER, method = RequestMethod.POST)
 	public ResponseEntity<?> addSection(@RequestBody DocumentsForm documentsForm, HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
@@ -135,7 +136,7 @@ public class DocumentsController {
 	}
 
 	@ApiOperation(value = "Upload File", response = Object.class, httpMethod = "POST", produces = "application/json")
-	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+	@RequestMapping(value = RestAPI.UPLOAD_FILE, method = RequestMethod.POST)
 	public ResponseEntity<?> addFile(@RequestBody FileForm fileForm, HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
@@ -171,7 +172,7 @@ public class DocumentsController {
 	}
 
 	@ApiOperation(value = "Download file", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/downloadFile/{fileId}", method = RequestMethod.GET)
+	@RequestMapping(value = RestAPI.DOWNLOAD_FILE, method = RequestMethod.GET)
 	public ResponseEntity<Resource> downloadFile(@PathVariable String fileId) {
 		// Load file from database
 		DocumentsFile dbFile = DBFileStorageService.getFile(fileId);
