@@ -39,6 +39,17 @@ public class InfrastructureController {
 	@Autowired
 	UserClient userClient;
 
+	@ApiOperation(value = "Get Location Drop Down", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getLocationDropDown", method = RequestMethod.GET)
+	public List<String> getLocationDropDown() {
+		List<Infrastructure> infra = infrastructureRepository.findByTypeOrType("Laboratory","Classroom");
+		List<String> result = new ArrayList<>();
+		for(Infrastructure in : infra) {
+			result.add(in.getName());
+		}	
+		return result;
+	}
+	
 	@ApiOperation(value = "listInfrastructure", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/listInfrastructure", method = RequestMethod.GET)
 	public List<InfrastructureBrief> getInfrastructure(@RequestParam("type") String type) {
