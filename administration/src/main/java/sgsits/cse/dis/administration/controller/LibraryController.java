@@ -211,7 +211,8 @@ public class LibraryController {
 				res.setSession(the.getSession());
 				res.setSubmittedBy(the.getSubmittedBy());
 				res.setGuide(the.getGuide());
-				res.setCoguide(the.getCoguide());
+				res.setCoguide(the.getGuide2());
+				res.setCoguide(the.getGuide3());
 				res.setMediaAvailable(the.getMediaAvailable());
 				res.setStatus(the.getStatus());
 				res.setRemarks(the.getRemarks());
@@ -228,11 +229,84 @@ public class LibraryController {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
 			if(!thesisBERepository.existsBySerialNo(thesisForm.getSerialNo())) {
+				int serial=0;
+				if(thesisForm.getSerialNo()!=null) {
+					ThesisBE thesis=new ThesisBE();
+					thesis.setCreatedBy(id);
+					thesis.setCreatedDate(simpleDateFormat.format(new Date()));
+					thesis.setSerialNo(thesisForm.getSerialNo());
+					thesis.setTitle(thesisForm.getTitle());
+					thesis.setSession(thesisForm.getSession());
+					thesis.setYear(thesisForm.getYear());
+					thesis.setSubmittedBy(thesisForm.getSubmittedBy());
+					thesis.setGuide(thesisForm.getGuide());
+					thesis.setGuide2(thesisForm.getGuide2());
+					thesis.setGuide3(thesisForm.getGuide3());
+					thesis.setMediaAvailable(thesisForm.getMediaAvailable());
+					thesis.setStatus(thesisForm.getStatus());
+					thesis.setStatus(thesisForm.getStatus());
+					
+					ThesisBE test=thesisBERepository.save(thesis);
+					
+					if(test!=null) {
+						return new ResponseEntity<>(new ResponseMessage("BE Thesis has been added successfully!"),HttpStatus.OK);
+					}
+					else {
+						return new ResponseEntity<>(new ResponseMessage("Unable to add BE Thesis, please try again later!"),HttpStatus.BAD_REQUEST);
+					}
+				}
+				else {
+					return new ResponseEntity<>(new ResponseMessage("Please enter the serial number!"),HttpStatus.BAD_REQUEST);
+				}
 				
 			}
+			else {
+				return new ResponseEntity<>(new ResponseMessage("BE Thesis is already available with Thesis no. "+thesisForm.getSerialNo()+" !"),HttpStatus.BAD_REQUEST);
+			}
 		}
-		return null;
+		else {
+			return new ResponseEntity<>(new ResponseMessage("You will need to provide administrator permission to add this BE Thesis!"),HttpStatus.BAD_REQUEST);
+		}
 	}
+	
+	
+	@ApiOperation(value= "Edit BE Thesis", response=Object.class, httpMethod= "PUT", produces= "application/json")
+	@RequestMapping(value= "/editThesisBE", method= RequestMethod.PUT)
+	public ResponseEntity<?> editThesisBE(@RequestBody ThesisForm thesisForm, HttpServletRequest request){
+		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if(!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
+			if(thesisBERepository.existsBySerialNo(thesisForm.getSerialNo())) {
+				Optional<ThesisBE> thesisBE = thesisBERepository.findBySerialNo(thesisForm.getSerialNo());
+						thesisBE.get().setModifiedBy(id);
+						thesisBE.get().setModifiedDate(simpleDateFormat.format(new Date()));
+						thesisBE.get().setSerialNo(thesisForm.getSerialNo());
+						thesisBE.get().setTitle(thesisForm.getTitle());
+						thesisBE.get().setYear(thesisForm.getYear());
+						thesisBE.get().setSession(thesisForm.getSession());
+						thesisBE.get().setSubmittedBy(thesisForm.getSubmittedBy());
+						thesisBE.get().setGuide(thesisForm.getGuide());
+						thesisBE.get().setGuide2(thesisForm.getGuide2());
+						thesisBE.get().setGuide3(thesisForm.getGuide3());
+						thesisBE.get().setMediaAvailable(thesisForm.getMediaAvailable());
+						thesisBE.get().setRemarks(thesisForm.getRemarks());
+						thesisBE.get().setStatus(thesisForm.getStatus());
+						
+						ThesisBE test=thesisBERepository.save(thesisBE.get());
+						if(test!= null)
+							return new ResponseEntity<>(new ResponseMessage("BE Thesis has been updated successfully!"),HttpStatus.OK);
+						else
+							return new ResponseEntity<>(new ResponseMessage("Unable to update BE Thesis, Please try again later!"),HttpStatus.BAD_REQUEST);
+						
+						
+			}
+			else
+				return new ResponseEntity<>(new ResponseMessage("BE Thesis is not available with Serial No. "+thesisForm.getSerialNo()+"! You will need to add the BE Thesis first!"),HttpStatus.BAD_REQUEST);
+			
+		}
+		else
+			return new ResponseEntity<>(new ResponseMessage("You will need to provide administrator permission to update this BE Thesis!"),HttpStatus.BAD_REQUEST);
+	}
+
 	
 	@ApiOperation(value = "Get ME Thesis Count", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/getThesisMECount", method = RequestMethod.GET)
@@ -256,7 +330,8 @@ public class LibraryController {
 				res.setSession(the.getSession());
 				res.setSubmittedBy(the.getSubmittedBy());
 				res.setGuide(the.getGuide());
-				res.setCoguide(the.getCoguide());
+				res.setCoguide(the.getGuide2());
+				res.setCoguide(the.getGuide3());
 				res.setMediaAvailable(the.getMediaAvailable());
 				res.setStatus(the.getStatus());
 				res.setRemarks(the.getRemarks());
@@ -266,5 +341,93 @@ public class LibraryController {
 		}
 		return null;
 	}
+
+
+
+
+@ApiOperation(value = "Add ME Thesis", response = Object.class, httpMethod = "POST", produces = "application/json")
+@RequestMapping(value = "/addThesisME", method = RequestMethod.POST)
+public ResponseEntity<?> addThesisME(@RequestBody ThesisForm thesisForm, HttpServletRequest request) {
+	long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+	if (!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
+		if(!thesisMERepository.existsBySerialNo(thesisForm.getSerialNo())) {
+			int serial=0;
+			if(thesisForm.getSerialNo()!=null) {
+				ThesisME thesis=new ThesisME();
+				thesis.setCreatedBy(id);
+				thesis.setCreatedDate(simpleDateFormat.format(new Date()));
+				thesis.setSerialNo(thesisForm.getSerialNo());
+				thesis.setTitle(thesisForm.getTitle());
+				thesis.setSession(thesisForm.getSession());
+				thesis.setYear(thesisForm.getYear());
+				thesis.setSubmittedBy(thesisForm.getSubmittedBy());
+				thesis.setGuide(thesisForm.getGuide());
+				thesis.setGuide2(thesisForm.getGuide2());
+				thesis.setGuide3(thesisForm.getGuide3());
+				thesis.setMediaAvailable(thesisForm.getMediaAvailable());
+				thesis.setStatus(thesisForm.getStatus());
+				thesis.setStatus(thesisForm.getStatus());
+				
+				ThesisME test=thesisMERepository.save(thesis);
+				
+				if(test!=null) {
+					return new ResponseEntity<>(new ResponseMessage("ME Thesis has been added successfully!"),HttpStatus.OK);
+				}
+				else {
+					return new ResponseEntity<>(new ResponseMessage("Unable to add ME Thesis, please try again later!"),HttpStatus.BAD_REQUEST);
+				}
+			}
+			else {
+				return new ResponseEntity<>(new ResponseMessage("Please enter the serial number!"),HttpStatus.BAD_REQUEST);
+			}
+			
+		}
+		else {
+			return new ResponseEntity<>(new ResponseMessage("ME Thesis is already available with Thesis no. "+thesisForm.getSerialNo()+" !"),HttpStatus.BAD_REQUEST);
+		}
+	}
+	else {
+		return new ResponseEntity<>(new ResponseMessage("You will need to provide administrator permission to add this BE Thesis!"),HttpStatus.BAD_REQUEST);
+	}
+}
+
+@ApiOperation(value= "Edit ME Thesis", response=Object.class, httpMethod= "PUT", produces= "application/json")
+@RequestMapping(value= "/editThesisME", method= RequestMethod.PUT)
+public ResponseEntity<?> editThesisME(@RequestBody ThesisForm thesisForm, HttpServletRequest request){
+	long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+	if(!jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("student")) {
+		if(thesisMERepository.existsBySerialNo(thesisForm.getSerialNo())) {
+			Optional<ThesisME> thesisME = thesisMERepository.findBySerialNo(thesisForm.getSerialNo());
+					thesisME.get().setModifiedBy(id);
+					thesisME.get().setModifiedDate(simpleDateFormat.format(new Date()));
+					thesisME.get().setSerialNo(thesisForm.getSerialNo());
+					thesisME.get().setTitle(thesisForm.getTitle());
+					thesisME.get().setYear(thesisForm.getYear());
+					thesisME.get().setSession(thesisForm.getSession());
+					thesisME.get().setSubmittedBy(thesisForm.getSubmittedBy());
+					thesisME.get().setGuide(thesisForm.getGuide());
+					thesisME.get().setGuide2(thesisForm.getGuide2());
+					thesisME.get().setGuide3(thesisForm.getGuide3());
+					thesisME.get().setMediaAvailable(thesisForm.getMediaAvailable());
+					thesisME.get().setRemarks(thesisForm.getRemarks());
+					thesisME.get().setStatus(thesisForm.getStatus());
+					
+					ThesisME test=thesisMERepository.save(thesisME.get());
+					if(test!= null)
+						return new ResponseEntity<>(new ResponseMessage("ME Thesis has been updated successfully!"),HttpStatus.OK);
+					else
+						return new ResponseEntity<>(new ResponseMessage("Unable to update ME Thesis, Please try again later!"),HttpStatus.BAD_REQUEST);
+					
+					
+		}
+		else
+			return new ResponseEntity<>(new ResponseMessage("ME Thesis is not available with Serial No. "+thesisForm.getSerialNo()+"! You will need to add the ME Thesis first!"),HttpStatus.BAD_REQUEST);
+		
+	}
+	else
+		return new ResponseEntity<>(new ResponseMessage("You will need to provide administrator permission to update this ME Thesis!"),HttpStatus.BAD_REQUEST);
+}
+
+
 
 }

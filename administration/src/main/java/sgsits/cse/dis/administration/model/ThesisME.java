@@ -46,8 +46,11 @@ public class ThesisME {
 	@Column(name = "guide")
 	private String guide;
 	
-	@Column(name = "coguide")
-	private String coguide;
+	@Column(name = "guide2")
+	private String guide2;
+	
+	@Column(name = "guide3")
+	private String guide3;
 	
 	@Column(name = "media_available")
 	private String mediaAvailable;
@@ -146,14 +149,22 @@ public class ThesisME {
 		this.guide = guide;
 	}
 
-	public String getCoguide() {
-		return coguide;
+	public String getGuide2() {
+		return guide2;
 	}
 
-	public void setCoguide(String coguide) {
-		this.coguide = coguide;
+	public void setGuide2(String guide2) {
+		this.guide2 = guide2;
+	}
+	
+	public String getGuide3() {
+		return guide3;
 	}
 
+	public void setGuide3(String guide3) {
+		this.guide3 = guide3;
+	}
+	
 	public String getMediaAvailable() {
 		return mediaAvailable;
 	}

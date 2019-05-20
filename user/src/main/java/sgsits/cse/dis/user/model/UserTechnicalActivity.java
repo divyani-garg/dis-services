@@ -37,10 +37,10 @@ public class UserTechnicalActivity {
 	@Column(name = "topic_subject")
 	private String subject; 
 	
-	@Column(name = "from")
+	@Column(name = "from_date")
 	private String from;
 	
-	@Column(name = "to")
+	@Column(name = "to_date")
 	private String to;
 
 	@Column(name = "name_of_coordinator")
