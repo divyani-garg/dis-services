@@ -1,5 +1,7 @@
 package sgsits.cse.dis.administration.repo;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +11,7 @@ import sgsits.cse.dis.administration.model.ThesisBE;
 public interface ThesisBERepository extends JpaRepository<ThesisBE, Long>{
 
 	boolean existsBySerialNo(Long serialNo);
+
+	Optional<ThesisBE> findBySerialNo(Long serialNo);
 
 }
