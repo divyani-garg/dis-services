@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import sgsits.cse.dis.user.feign.AcademicsClient;
 import sgsits.cse.dis.user.jwt.JwtResolver;
-import sgsits.cse.dis.user.message.request.ProfileForm;
 import sgsits.cse.dis.user.message.request.StaffBasicProfileForm;
 import sgsits.cse.dis.user.message.request.StudentBasicProfileForm;
 import sgsits.cse.dis.user.message.request.UserAddressForm;
@@ -29,6 +29,10 @@ import sgsits.cse.dis.user.message.request.UserCompetitiveExamsForm;
 import sgsits.cse.dis.user.message.request.UserCulturalActivityAchievementsForm;
 import sgsits.cse.dis.user.message.request.UserInternshipForm;
 import sgsits.cse.dis.user.message.request.UserProjectForm;
+import sgsits.cse.dis.user.message.request.UserQualificationForm;
+import sgsits.cse.dis.user.message.request.UserResearchWorkForm;
+import sgsits.cse.dis.user.message.request.UserTechnicalActivityForm;
+import sgsits.cse.dis.user.message.request.UserWorkExperienceForm;
 import sgsits.cse.dis.user.message.response.ResponseMessage;
 import sgsits.cse.dis.user.message.response.StaffBasicProfileResponse;
 import sgsits.cse.dis.user.message.response.StudentBasicProfileResponse;
@@ -54,10 +58,6 @@ import sgsits.cse.dis.user.repo.UserQualificationRepository;
 import sgsits.cse.dis.user.repo.UserResearchWorkRepository;
 import sgsits.cse.dis.user.repo.UserTechnicalActivityRepository;
 import sgsits.cse.dis.user.repo.UserWorkExperienceRepository;
-import sgsits.cse.dis.user.message.request.UserQualificationForm;
-import sgsits.cse.dis.user.message.request.UserResearchWorkForm;
-import sgsits.cse.dis.user.message.request.UserTechnicalActivityForm;
-import sgsits.cse.dis.user.message.request.UserWorkExperienceForm;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -93,13 +93,10 @@ public class ProfileController {
 
 	@ApiOperation(value = "User Address", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userAddress", method = RequestMethod.GET)
-	public List<UserAddress> getUserAddress(@RequestBody ProfileForm profileForm, HttpServletRequest request) {
-		long id;
-		if (profileForm.getId() == null) {
+	public List<UserAddress> getUserAddress(@RequestParam(required=false) Long id, HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
-		}
+		} 
 		List<UserAddress> address = userAddressRepository.findByUserId(id);
 		return address;
 	}
@@ -161,15 +158,11 @@ public class ProfileController {
 
 	@ApiOperation(value = "User Qualification", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userQualification", method = RequestMethod.GET)
-	public List<UserQualification> getUserQualification(@RequestBody ProfileForm profileForm,
+	public List<UserQualification> getUserQualification(@RequestParam(required=false) Long id,
 			HttpServletRequest request) {
-
-		long id;
-		if (profileForm.getId() == null) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
-		}
+		} 
 		List<UserQualification> qualification = userQualificationRepository.findByUserId(id);
 		// marksheet
 		return qualification;
@@ -247,14 +240,11 @@ public class ProfileController {
 
 	@ApiOperation(value = "User Work Experience", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userWorkExperience", method = RequestMethod.GET)
-	public List<UserWorkExperience> getUserWorkExperience(@RequestBody ProfileForm profileForm,
+	public List<UserWorkExperience> getUserWorkExperience(@RequestParam(required=false) Long id,
 			HttpServletRequest request) {
-		long id;
-		if (profileForm.getId() == null) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
-		}
+		} 
 		List<UserWorkExperience> experience = userWorkExperienceRepository.findByUserId(id);
 		return experience;
 	}
@@ -334,14 +324,10 @@ public class ProfileController {
 
 	@ApiOperation(value = "User Research Work", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userResearchWork", method = RequestMethod.GET)
-	public List<UserResearchWork> geUserResearchWork(@RequestBody ProfileForm profileForm, HttpServletRequest request) {
-
-		long id;
-		if (profileForm.getId() == null) {
+	public List<UserResearchWork> geUserResearchWork(@RequestParam(required=false) Long id, HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
-		}
+		} 
 		List<UserResearchWork> research = userResearchWorkRepository.findByUserId(id);
 		// pdf
 		return research;
@@ -420,14 +406,10 @@ public class ProfileController {
 
 	@ApiOperation(value = "User Internship", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userInternship", method = RequestMethod.GET)
-	public List<UserInternship> getUserInternship(@RequestBody ProfileForm profileForm, HttpServletRequest request) {
-
-		long id;
-		if (profileForm.getId() == null) {
+	public List<UserInternship> getUserInternship(@RequestParam(required=false) Long id, HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
-		}
+		} 
 		List<UserInternship> internship = userInternshipRepository.findByUserId(id);
 		// certificate
 		return internship;
@@ -502,14 +484,10 @@ public class ProfileController {
 
 	@ApiOperation(value = "User Technical Acitvity", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userTechnicalActivity", method = RequestMethod.GET)
-	public List<UserTechnicalActivity> getUserTechnicalActivity(@RequestBody ProfileForm profileForm,
+	public List<UserTechnicalActivity> getUserTechnicalActivity(@RequestParam(required=false) Long id,
 			HttpServletRequest request) {
-
-		long id;
-		if (profileForm.getId() == null) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
 		}
 		List<UserTechnicalActivity> technical = userTechnicalActivityRepository.findByUserId(id);
 		return technical;
@@ -586,15 +564,10 @@ public class ProfileController {
 
 	@ApiOperation(value = "User Cultural Activity Achievements", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userCulturalActivityAchievements", method = RequestMethod.GET)
-	public List<UserCulturalActivityAchievements> getUserCulturalActivityAchievements(
-			@RequestBody ProfileForm profileForm, HttpServletRequest request) {
-
-		long id;
-		if (profileForm.getId() == null) {
+	public List<UserCulturalActivityAchievements> getUserCulturalActivityAchievements(@RequestParam(required=false) Long id, HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
-		}
+		} 
 		List<UserCulturalActivityAchievements> cultural = userCulturalActivityAchievementsRepository.findByUserId(id);
 		// certificate
 		return cultural;
@@ -680,15 +653,11 @@ public class ProfileController {
 
 	@ApiOperation(value = "User Competitive Exams", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userCompetitiveExams", method = RequestMethod.GET)
-	public List<UserCompetitiveExams> getUserCompetitiveExams(@RequestBody ProfileForm profileForm,
+	public List<UserCompetitiveExams> getUserCompetitiveExams(@RequestParam(required=false) Long id,
 			HttpServletRequest request) {
-
-		long id;
-		if (profileForm.getId() == null) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
-		}
+		} 
 		List<UserCompetitiveExams> exams = userCompetitiveExamsRepository.findByUserId(id);
 		// score card
 		return exams;
@@ -764,13 +733,10 @@ public class ProfileController {
 
 	@ApiOperation(value = "User Project", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userProject", method = RequestMethod.GET)
-	public List<UserProjects> getUserProject(@RequestBody ProfileForm profileForm, HttpServletRequest request) {
-		long id;
-		if (profileForm.getId() == null) {
+	public List<UserProjects> getUserProject(@RequestParam(required=false) Long id, HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
-		}
+		} 
 		List<UserProjects> projects = userProjectsRepository.findByUserId(id);
 		return projects;
 	}
@@ -841,15 +807,11 @@ public class ProfileController {
 
 	@ApiOperation(value = "Staff Basic Profile Data", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/staffBasicProfile", method = RequestMethod.GET)
-	public StaffBasicProfileResponse getStaffBasicProfile(@RequestBody ProfileForm profileForm,
+	public StaffBasicProfileResponse getStaffBasicProfile(@RequestParam(required=false) Long id,
 			HttpServletRequest request) {
-
-		long id;
-		if (profileForm.getId() == null) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
-		}
+		} 
 		Optional<StaffProfile> staffProfile = staffRepository.findByUserId(id);
 		if (staffProfile.isPresent()) {
 			StaffBasicProfileResponse sbpr = new StaffBasicProfileResponse();
@@ -904,15 +866,11 @@ public class ProfileController {
 
 	@ApiOperation(value = "Student Basic Profile Data", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/studentBasicProfile", method = RequestMethod.GET)
-	public StudentBasicProfileResponse getStudentBasicProfile(@RequestBody ProfileForm profileForm,
+	public StudentBasicProfileResponse getStudentBasicProfile(@RequestParam(required=false) Long id,
 			HttpServletRequest request) {
-		long id;
-		if (profileForm.getId() == null) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		} else {
-			id = profileForm.getId();
-		}
-
+		} 
 		Optional<StudentProfile> studentProfile = studentRepository.findByUserId(id);
 		if (studentProfile.isPresent()) {
 			StudentBasicProfileResponse sbpr = new StudentBasicProfileResponse();
