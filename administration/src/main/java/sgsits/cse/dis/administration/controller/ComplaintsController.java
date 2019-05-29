@@ -735,6 +735,7 @@ public class ComplaintsController {
 			if (count == size) {
 				List<CWNComplaints> test = cwnComplaintRepository.saveAll(complaintList);
 				if (test != null)
+					
 					return new ResponseEntity<>(new ResponseMessage("Your Complaint has been registered successfully!"),
 							HttpStatus.OK);
 				else

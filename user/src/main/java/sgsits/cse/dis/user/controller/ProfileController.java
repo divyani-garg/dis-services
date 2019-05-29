@@ -232,7 +232,6 @@ public class ProfileController {
 				return new ResponseEntity<>(
 						new ResponseMessage("User Qualification not found, you need to add it first!"),
 						HttpStatus.BAD_REQUEST);
-
 		} else
 			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Qualification!"),
 					HttpStatus.BAD_REQUEST);
@@ -284,26 +283,28 @@ public class ProfileController {
 
 	@ApiOperation(value = "Edit User Work Experience", response = Object.class, httpMethod = "PUT", produces = "application/json")
 	@RequestMapping(value = "/editUserWorkExperience", method = RequestMethod.PUT)
-	public ResponseEntity<?> editUserWorkExperience(@RequestBody UserWorkExperienceForm userWorkExperienceForm,
+	public ResponseEntity<?> editUserWorkExperience(@RequestBody List<UserWorkExperienceForm> userWorkExperienceForm,
 			HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if (userWorkExperienceForm.getUserId() == id) {
+		for(UserWorkExperienceForm uwef : userWorkExperienceForm)
+		{
+		if (uwef.getUserId() == id) {
 			if (userWorkExperienceRepository.existsByUserIdAndOrganizationName(id,
-					userWorkExperienceForm.getOrganizationName())) {
+					uwef.getOrganizationName())) {
 				Optional<UserWorkExperience> userWorkExperience = userWorkExperienceRepository
-						.findByUserIdAndOrganizationName(id, userWorkExperienceForm.getOrganizationName());
+						.findByUserIdAndOrganizationName(id, uwef.getOrganizationName());
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				userWorkExperience.get().setModifiedDate(simpleDateFormat.format(new Date()));
 				userWorkExperience.get().setUserId(id);
 				userWorkExperience.get().setModifiedBy(id);
-				userWorkExperience.get().setOrganizationName(userWorkExperienceForm.getOrganizationName());
-				userWorkExperience.get().setDesignation(userWorkExperienceForm.getDesignation());
-				userWorkExperience.get().setDateOfJoining(userWorkExperienceForm.getDateOfJoining());
-				userWorkExperience.get().setDateOfLeaving(userWorkExperienceForm.getDateOfLeaving());
-				userWorkExperience.get().setPayscale(userWorkExperienceForm.getPayscale());
-				userWorkExperience.get().setCountry(userWorkExperienceForm.getCountry());
-				userWorkExperience.get().setState(userWorkExperienceForm.getState());
-				userWorkExperience.get().setCity(userWorkExperienceForm.getCity());
+				userWorkExperience.get().setOrganizationName(uwef.getOrganizationName());
+				userWorkExperience.get().setDesignation(uwef.getDesignation());
+				userWorkExperience.get().setDateOfJoining(uwef.getDateOfJoining());
+				userWorkExperience.get().setDateOfLeaving(uwef.getDateOfLeaving());
+				userWorkExperience.get().setPayscale(uwef.getPayscale());
+				userWorkExperience.get().setCountry(uwef.getCountry());
+				userWorkExperience.get().setState(uwef.getState());
+				userWorkExperience.get().setCity(uwef.getCity());
 				UserWorkExperience test = userWorkExperienceRepository.save(userWorkExperience.get());
 				if (test != null)
 					return new ResponseEntity<>(new ResponseMessage("User Work Experience updated successfully!"),
@@ -320,6 +321,8 @@ public class ProfileController {
 		} else
 			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Work Experience!"),
 					HttpStatus.BAD_REQUEST);
+		}
+		return null;
 	}
 
 	@ApiOperation(value = "User Research Work", response = Object.class, httpMethod = "GET", produces = "application/json")
