@@ -1,6 +1,7 @@
 package sgsits.cse.dis.user.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+//import sgsits.cse.dis.administration.model.Books;
+//import sgsits.cse.dis.administration.response.BookResponse;
 import sgsits.cse.dis.user.feign.AcademicsClient;
 import sgsits.cse.dis.user.jwt.JwtResolver;
 import sgsits.cse.dis.user.message.request.ProfileForm;
@@ -32,6 +35,7 @@ import sgsits.cse.dis.user.message.request.UserProjectForm;
 import sgsits.cse.dis.user.message.response.ResponseMessage;
 import sgsits.cse.dis.user.message.response.StaffBasicProfileResponse;
 import sgsits.cse.dis.user.message.response.StudentBasicProfileResponse;
+import sgsits.cse.dis.user.message.response.UserResearchWorkResponse;
 import sgsits.cse.dis.user.model.StaffProfile;
 import sgsits.cse.dis.user.model.StudentProfile;
 import sgsits.cse.dis.user.model.UserAddress;
@@ -350,6 +354,32 @@ public class ProfileController {
 		return research;
 	}
 	
+	@ApiOperation(value = "Show Research Paper", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/showResearchPaper", method = RequestMethod.GET) //From Library
+	public List<UserResearchWorkResponse> showResearchPaper() {
+		List<UserResearchWork> researchWorks = userResearchWorkRepository.findAll();
+		if (!researchWorks.isEmpty()) {
+			List<UserResearchWorkResponse> result = new ArrayList<>();
+			for (UserResearchWork researchWork : researchWorks) {
+				UserResearchWorkResponse res = new UserResearchWorkResponse();
+				res.setTitle(researchWork.getTitle());
+				res.setCategory(researchWork.getCategory());
+				res.setSubCategory(researchWork.getSubcategory());
+				res.setJournalConferenceName(researchWork.getJournalConferenceName());
+				res.setPublisher(researchWork.getPublisher());
+				res.setYearOfPublication(researchWork.getYearOfPublication());
+				res.setPdf(researchWork.getPdf());
+				res.setAuthorOne(researchWork.getAuthorOne());
+				res.setAuthorTwo(researchWork.getAuthorTwo());
+				res.setOtherAuthors(researchWork.getOtherAuthors());
+				res.setNoOfAuthors(researchWork.getNoOfAuthors());
+				result.add(res);
+			}
+			return result;
+		}
+		return null;
+	}
+	
 	@ApiOperation(value = "Add User Research Work", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addUserResearchWork", method = RequestMethod.POST)
 	public ResponseEntity<?> addUserResearchWork(@RequestBody UserResearchWorkForm userResearchWorkForm, HttpServletRequest request)
@@ -367,8 +397,10 @@ public class ProfileController {
 			userResearchWork.setSubcategory(userResearchWorkForm.getSubcategory());
 			userResearchWork.setJournalConferenceName(userResearchWorkForm.getJournalConferenceName());
 			userResearchWork.setPublisher(userResearchWorkForm.getPublisher());
-			userResearchWork.setCoAuthors(userResearchWorkForm.getCoAuthors());
-			userResearchWork.setGuideName(userResearchWorkForm.getGuideName());
+			userResearchWork.setNoOfAuthors(userResearchWorkForm.getNoOfAuthors());
+			userResearchWork.setAuthorOne(userResearchWorkForm.getAuthorOne());
+			userResearchWork.setAuthorTwo(userResearchWorkForm.getAuthorTwo());
+			userResearchWork.setOtherAuthors(userResearchWorkForm.getOtherAuthors());
 			userResearchWork.setYearOfPublication(userResearchWorkForm.getYearOfPublication());
 			UserResearchWork test = userResearchWorkRepository.save(userResearchWork);
 			if(test!=null)
@@ -399,8 +431,10 @@ public class ProfileController {
 				userResearchWork.get().setSubcategory(userResearchWorkForm.getSubcategory());
 				userResearchWork.get().setJournalConferenceName(userResearchWorkForm.getJournalConferenceName());
 				userResearchWork.get().setPublisher(userResearchWorkForm.getPublisher());
-				userResearchWork.get().setCoAuthors(userResearchWorkForm.getCoAuthors());
-				userResearchWork.get().setGuideName(userResearchWorkForm.getGuideName());
+				userResearchWork.get().setNoOfAuthors(userResearchWorkForm.getNoOfAuthors());
+				userResearchWork.get().setAuthorOne(userResearchWorkForm.getAuthorOne());
+				userResearchWork.get().setAuthorTwo(userResearchWorkForm.getAuthorTwo());
+				userResearchWork.get().setOtherAuthors(userResearchWorkForm.getOtherAuthors());
 				userResearchWork.get().setYearOfPublication(userResearchWorkForm.getYearOfPublication());
 				UserResearchWork test = userResearchWorkRepository.save(userResearchWork.get());
 				if(test!=null)

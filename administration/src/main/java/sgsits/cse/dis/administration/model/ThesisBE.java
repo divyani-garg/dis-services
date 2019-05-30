@@ -43,7 +43,7 @@ public class ThesisBE {
 	@Column(name = "submitted_by")
 	private String submittedBy;
 	
-	@Column(name = "guide")
+	@Column(name = "guide1")
 	private String guide;
 	
 	@Column(name = "guide2")

@@ -3,13 +3,17 @@ package sgsits.cse.dis.academics.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +25,11 @@ import sgsits.cse.dis.academics.feign.UserClient;
 import sgsits.cse.dis.academics.jwt.JwtResolver;
 import sgsits.cse.dis.academics.model.ExtraClassTimeTable;
 import sgsits.cse.dis.academics.model.SemesterTimeTable;
+import sgsits.cse.dis.academics.model.response.ResponseMessage;
 import sgsits.cse.dis.academics.model.response.SemesterTimeTableResponse;
 import sgsits.cse.dis.academics.repo.ExtraClassTimeTableRepository;
 import sgsits.cse.dis.academics.repo.SemesterTimeTableRepository;
+import sgsits.cse.dis.academics.request.ExtraClassForm;
 import sgsits.cse.dis.academics.services.CurrentYearAndSession;
 import sgsits.cse.dis.academics.services.DateService;
 import sgsits.cse.dis.academics.services.FormatTimeTable;
@@ -314,5 +320,44 @@ public class TimeTableController {
 			return result;
 		}
 		return null;
+	}
+	
+	@ApiOperation(value = "Add Extra Class", response = Object.class, httpMethod = "POST", produces = "application/json")
+	@RequestMapping(value = RestAPI.ADD_EXTRA_CLASS, method = RequestMethod.POST)
+	public ResponseEntity<?> addExtraClass(@RequestBody ExtraClassForm extraClassForm, HttpServletRequest request)
+	{
+		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("faculty") || jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization")).equals("head"))
+		{
+			ExtraClassTimeTable extraClass = new ExtraClassTimeTable();
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			extraClass.setCreatedDate(simpleDateFormat.format(new Date()));
+			extraClass.setCreatedBy(id);
+			extraClass.setCourseId(extraClassForm.getCourseId());
+			extraClass.setSession(extraClassForm.getSession());
+			extraClass.setYear(extraClassForm.getYear());
+			extraClass.setSemester(extraClassForm.getSemester());
+			extraClass.setFrom(extraClassForm.getFrom());
+			extraClass.setTo(extraClassForm.getTo());
+			extraClass.setDay(extraClassForm.getDay());
+			extraClass.setDate(extraClassForm.getDate());
+			extraClass.setType(extraClassForm.getType());
+			extraClass.setFaculty1(extraClassForm.getFaculty1());
+			extraClass.setFaculty2(extraClassForm.getFaculty2());
+			extraClass.setFaculty3(extraClassForm.getFaculty3());
+			extraClass.setLabTechnician(extraClassForm.getLabTechnician());
+			extraClass.setTa(extraClassForm.getTa());
+			extraClass.setBatch(extraClassForm.getBatch());
+			extraClass.setLocation(extraClassForm.getLocation());
+			extraClass.setWhich(extraClassForm.getWhich());
+			extraClass.setSubjectCode(extraClassForm.getSubjectCode());
+			ExtraClassTimeTable test = extraClassTimeTableRepository.save(extraClass);
+			if(test!=null)
+				return new ResponseEntity<>(new ResponseMessage("Extra Class added successfully!"), HttpStatus.OK);
+			else
+				return new ResponseEntity<>(new ResponseMessage("Unable to add Extra Class, please try again later!"), HttpStatus.BAD_REQUEST);
+		}
+		else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add Extra Class!"), HttpStatus.BAD_REQUEST);
 	}
 }

@@ -8,7 +8,10 @@ public class UserResearchWorkForm {
 	private String subcategory;
 	private String journalConferenceName;
 	private String publisher;
-	private String coAuthors;
+	private int noOfAuthors;
+	private String authorOne;
+	private String authorTwo;
+	private String otherAuthors;
 	private String guideName;
 	private int yearOfPublication; 
 	
@@ -30,8 +33,17 @@ public class UserResearchWorkForm {
 	public String getPublisher() {
 		return publisher;
 	}
-	public String getCoAuthors() {
-		return coAuthors;
+	public int getNoOfAuthors() {
+		return noOfAuthors;
+	}
+	public String getAuthorOne() {
+		return authorOne;
+	}
+	public String getAuthorTwo() {
+		return authorTwo;
+	}
+	public String getOtherAuthors() {
+		return otherAuthors;
 	}
 	public String getGuideName() {
 		return guideName;

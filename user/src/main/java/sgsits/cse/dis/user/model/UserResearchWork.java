@@ -46,15 +46,24 @@ public class UserResearchWork {
 	@Column(name = "publisher")
 	private String publisher;
 	
-	@Column(name = "co_authors")
-	private String coAuthors;
+	@Column(name = "no_of_authors")
+	private int noOfAuthors;
 	
-	@Column(name = "guide_name")
-	private String guideName;
+	@Column(name = "author_one")
+	private String authorOne;
+	
+	@Column(name = "author_two")
+	private String authortwo;
+	
+	@Column(name = "other_authors")
+	private String otherAuthors;
 	
 	@Column(name = "year_of_publication")
 	private int yearOfPublication;
 
+	@Column(name = "pdf")
+	private String pdf;
+	
 	public long getId() {
 		return id;
 	}
@@ -143,20 +152,36 @@ public class UserResearchWork {
 		this.publisher = publisher;
 	}
 
-	public String getCoAuthors() {
-		return coAuthors;
+	public void setNoOfAuthors(int noOfAuthors) {
+		this.noOfAuthors = noOfAuthors;
 	}
 
-	public void setCoAuthors(String coAuthors) {
-		this.coAuthors = coAuthors;
+	public void setAuthorOne(String authorOne) {
+		this.authorOne = authorOne;
 	}
 
-	public String getGuideName() {
-		return guideName;
+	public void setAuthorTwo(String authortwo) {
+		this.authortwo = authortwo;
 	}
 
-	public void setGuideName(String guideName) {
-		this.guideName = guideName;
+	public void setOtherAuthors(String otherAuthors) {
+		this.otherAuthors = otherAuthors;
+	}
+
+	public int getNoOfAuthors() {
+		return noOfAuthors;
+	}
+
+	public String getAuthorOne() {
+		return authorOne;
+	}
+
+	public String getAuthorTwo() {
+		return authortwo;
+	}
+
+	public String getOtherAuthors() {
+		return otherAuthors;
 	}
 
 	public int getYearOfPublication() {
@@ -166,4 +191,22 @@ public class UserResearchWork {
 	public void setYearOfPublication(int yearOfPublication) {
 		this.yearOfPublication = yearOfPublication;
 	}
+
+	public String getAuthortwo() {
+		return authortwo;
+	}
+
+	public String getPdf() {
+		return pdf;
+	}
+
+	public void setAuthortwo(String authortwo) {
+		this.authortwo = authortwo;
+	}
+
+	public void setPdf(String pdf) {
+		this.pdf = pdf;
+	}
+	
+	
 }
