@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -379,6 +380,309 @@ public class ProfileController {
 		}
 		return null;
 	}
+	
+	@ApiOperation(value = "Search Research Paper By Keyword", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/searchResearchPaper/byTitle/{keyword}", method = RequestMethod.GET) //From Library
+	public List<UserResearchWorkResponse> searchResearchPaperByTitle(@PathVariable String keyword) {
+		List<UserResearchWork> researchWorks = userResearchWorkRepository.findAll();
+		if (!researchWorks.isEmpty()) {
+			String keyw=keyword.toLowerCase();
+			List<UserResearchWorkResponse> result = new ArrayList<>();
+			for (UserResearchWork researchWork : researchWorks) {
+				if(researchWork.getTitle()!=null)
+				{
+					String title=researchWork.getTitle().toLowerCase();
+					if(title.contains(keyw))
+					{
+						UserResearchWorkResponse res = new UserResearchWorkResponse();
+						res.setTitle(researchWork.getTitle());
+						res.setCategory(researchWork.getCategory());
+						res.setSubCategory(researchWork.getSubcategory());
+						res.setJournalConferenceName(researchWork.getJournalConferenceName());
+						res.setPublisher(researchWork.getPublisher());
+						res.setYearOfPublication(researchWork.getYearOfPublication());
+						res.setPdf(researchWork.getPdf());
+						res.setAuthorOne(researchWork.getAuthorOne());
+						res.setAuthorTwo(researchWork.getAuthorTwo());
+						res.setOtherAuthors(researchWork.getOtherAuthors());
+						res.setNoOfAuthors(researchWork.getNoOfAuthors());
+						result.add(res);
+					}
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	@ApiOperation(value = "Search Research Paper By Category", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/searchResearchPaper/byCategory/{keyword}", method = RequestMethod.GET) //From Library
+	public List<UserResearchWorkResponse> searchResearchPaperByCategory(@PathVariable String keyword) {
+		List<UserResearchWork> researchWorks = userResearchWorkRepository.findAll();
+		if (!researchWorks.isEmpty()) {
+			List<UserResearchWorkResponse> result = new ArrayList<>();
+			for (UserResearchWork researchWork : researchWorks) {
+				if(researchWork.getCategory()!=null)
+				{
+					if(researchWork.getCategory().equalsIgnoreCase(keyword))
+					{
+						UserResearchWorkResponse res = new UserResearchWorkResponse();
+						res.setTitle(researchWork.getTitle());
+						res.setCategory(researchWork.getCategory());
+						res.setSubCategory(researchWork.getSubcategory());
+						res.setJournalConferenceName(researchWork.getJournalConferenceName());
+						res.setPublisher(researchWork.getPublisher());
+						res.setYearOfPublication(researchWork.getYearOfPublication());
+						res.setPdf(researchWork.getPdf());
+						res.setAuthorOne(researchWork.getAuthorOne());
+						res.setAuthorTwo(researchWork.getAuthorTwo());
+						res.setOtherAuthors(researchWork.getOtherAuthors());
+						res.setNoOfAuthors(researchWork.getNoOfAuthors());
+						result.add(res);
+					}
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	@ApiOperation(value = "Search Research Paper By Subcategory", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/searchResearchPaper/bySubcategory/{keyword}", method = RequestMethod.GET) //From Library
+	public List<UserResearchWorkResponse> searchResearchPaperBySubcategory(@PathVariable String keyword) {
+		List<UserResearchWork> researchWorks = userResearchWorkRepository.findAll();
+		if (!researchWorks.isEmpty()) {
+			List<UserResearchWorkResponse> result = new ArrayList<>();
+			for (UserResearchWork researchWork : researchWorks) {
+				if(researchWork.getSubcategory()!=null)
+				{
+					if(researchWork.getSubcategory().equalsIgnoreCase(keyword))
+					{
+						UserResearchWorkResponse res = new UserResearchWorkResponse();
+						res.setTitle(researchWork.getTitle());
+						res.setCategory(researchWork.getCategory());
+						res.setSubCategory(researchWork.getSubcategory());
+						res.setJournalConferenceName(researchWork.getJournalConferenceName());
+						res.setPublisher(researchWork.getPublisher());
+						res.setYearOfPublication(researchWork.getYearOfPublication());
+						res.setPdf(researchWork.getPdf());
+						res.setAuthorOne(researchWork.getAuthorOne());
+						res.setAuthorTwo(researchWork.getAuthorTwo());
+						res.setOtherAuthors(researchWork.getOtherAuthors());
+						res.setNoOfAuthors(researchWork.getNoOfAuthors());
+						result.add(res);
+					}
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	@ApiOperation(value = "Search Research Paper By Publisher", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/searchResearchPaper/byPublisher/{keyword}", method = RequestMethod.GET) //From Library
+	public List<UserResearchWorkResponse> searchResearchPaperByPublisher(@PathVariable String keyword) {
+		List<UserResearchWork> researchWorks = userResearchWorkRepository.findAll();
+		if (!researchWorks.isEmpty()) {
+			List<UserResearchWorkResponse> result = new ArrayList<>();
+			for (UserResearchWork researchWork : researchWorks) {
+				if(researchWork.getPublisher()!=null)
+				{
+					if(researchWork.getPublisher().toLowerCase().contains(keyword.toLowerCase()))
+					{
+						UserResearchWorkResponse res = new UserResearchWorkResponse();
+						res.setTitle(researchWork.getTitle());
+						res.setCategory(researchWork.getCategory());
+						res.setSubCategory(researchWork.getSubcategory());
+						res.setJournalConferenceName(researchWork.getJournalConferenceName());
+						res.setPublisher(researchWork.getPublisher());
+						res.setYearOfPublication(researchWork.getYearOfPublication());
+						res.setPdf(researchWork.getPdf());
+						res.setAuthorOne(researchWork.getAuthorOne());
+						res.setAuthorTwo(researchWork.getAuthorTwo());
+						res.setOtherAuthors(researchWork.getOtherAuthors());
+						res.setNoOfAuthors(researchWork.getNoOfAuthors());
+						result.add(res);
+					}
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	@ApiOperation(value = "Search Research Paper By Author", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/searchResearchPaper/byAuthor/{keyword}", method = RequestMethod.GET) //From Library
+	public List<UserResearchWorkResponse> searchResearchPaperByAuthor(@PathVariable String keyword) {
+		List<UserResearchWork> researchWorks = userResearchWorkRepository.findAll();
+		if (!researchWorks.isEmpty()) {
+			List<UserResearchWorkResponse> result = new ArrayList<>();
+			String keyw=keyword.toLowerCase();
+			for (UserResearchWork researchWork : researchWorks) {
+				if(researchWork.getAuthorOne()!=null)
+				{
+					String authorOne=researchWork.getAuthorOne().toLowerCase();
+					if(researchWork.getAuthorTwo()!=null)
+					{
+						String authorTwo=researchWork.getAuthorTwo().toLowerCase();
+						if(researchWork.getOtherAuthors()!=null)
+						{
+							String otherAuthors=researchWork.getOtherAuthors().toLowerCase();
+							if(authorOne.contains(keyw)||authorTwo.contains(keyw)||otherAuthors.contains(keyw))
+							{
+								UserResearchWorkResponse res = new UserResearchWorkResponse();
+								res.setTitle(researchWork.getTitle());
+								res.setCategory(researchWork.getCategory());
+								res.setSubCategory(researchWork.getSubcategory());
+								res.setJournalConferenceName(researchWork.getJournalConferenceName());
+								res.setPublisher(researchWork.getPublisher());
+								res.setYearOfPublication(researchWork.getYearOfPublication());
+								res.setPdf(researchWork.getPdf());
+								res.setAuthorOne(researchWork.getAuthorOne());
+								res.setAuthorTwo(researchWork.getAuthorTwo());
+								res.setOtherAuthors(researchWork.getOtherAuthors());
+								res.setNoOfAuthors(researchWork.getNoOfAuthors());
+								result.add(res);
+							}
+						}
+						else
+						{
+							if(authorOne.contains(keyw)||authorTwo.contains(keyw))
+							{
+								UserResearchWorkResponse res = new UserResearchWorkResponse();
+								res.setTitle(researchWork.getTitle());
+								res.setCategory(researchWork.getCategory());
+								res.setSubCategory(researchWork.getSubcategory());
+								res.setJournalConferenceName(researchWork.getJournalConferenceName());
+								res.setPublisher(researchWork.getPublisher());
+								res.setYearOfPublication(researchWork.getYearOfPublication());
+								res.setPdf(researchWork.getPdf());
+								res.setAuthorOne(researchWork.getAuthorOne());
+								res.setAuthorTwo(researchWork.getAuthorTwo());
+								res.setOtherAuthors(researchWork.getOtherAuthors());
+								res.setNoOfAuthors(researchWork.getNoOfAuthors());
+								result.add(res);
+							}
+						}
+					}
+					else
+					{
+						if(researchWork.getOtherAuthors()!=null)
+						{
+							String otherAuthors=researchWork.getOtherAuthors().toLowerCase();
+							if(authorOne.contains(keyw)||otherAuthors.contains(keyw))
+							{
+								UserResearchWorkResponse res = new UserResearchWorkResponse();
+								res.setTitle(researchWork.getTitle());
+								res.setCategory(researchWork.getCategory());
+								res.setSubCategory(researchWork.getSubcategory());
+								res.setJournalConferenceName(researchWork.getJournalConferenceName());
+								res.setPublisher(researchWork.getPublisher());
+								res.setYearOfPublication(researchWork.getYearOfPublication());
+								res.setPdf(researchWork.getPdf());
+								res.setAuthorOne(researchWork.getAuthorOne());
+								res.setAuthorTwo(researchWork.getAuthorTwo());
+								res.setOtherAuthors(researchWork.getOtherAuthors());
+								res.setNoOfAuthors(researchWork.getNoOfAuthors());
+								result.add(res);
+							}
+						}
+						else
+						{
+							if(authorOne.contains(keyw))
+							{
+								UserResearchWorkResponse res = new UserResearchWorkResponse();
+								res.setTitle(researchWork.getTitle());
+								res.setCategory(researchWork.getCategory());
+								res.setSubCategory(researchWork.getSubcategory());
+								res.setJournalConferenceName(researchWork.getJournalConferenceName());
+								res.setPublisher(researchWork.getPublisher());
+								res.setYearOfPublication(researchWork.getYearOfPublication());
+								res.setPdf(researchWork.getPdf());
+								res.setAuthorOne(researchWork.getAuthorOne());
+								res.setAuthorTwo(researchWork.getAuthorTwo());
+								res.setOtherAuthors(researchWork.getOtherAuthors());
+								res.setNoOfAuthors(researchWork.getNoOfAuthors());
+								result.add(res);
+							}
+						}
+					}
+				}
+				else
+				{
+					if(researchWork.getAuthorTwo()!=null)
+					{
+						String authorTwo=researchWork.getAuthorTwo().toLowerCase();
+						if(researchWork.getOtherAuthors()!=null)
+						{
+							String otherAuthors=researchWork.getOtherAuthors().toLowerCase();
+							if(authorTwo.contains(keyw)||otherAuthors.contains(keyw))
+							{
+								UserResearchWorkResponse res = new UserResearchWorkResponse();
+								res.setTitle(researchWork.getTitle());
+								res.setCategory(researchWork.getCategory());
+								res.setSubCategory(researchWork.getSubcategory());
+								res.setJournalConferenceName(researchWork.getJournalConferenceName());
+								res.setPublisher(researchWork.getPublisher());
+								res.setYearOfPublication(researchWork.getYearOfPublication());
+								res.setPdf(researchWork.getPdf());
+								res.setAuthorOne(researchWork.getAuthorOne());
+								res.setAuthorTwo(researchWork.getAuthorTwo());
+								res.setOtherAuthors(researchWork.getOtherAuthors());
+								res.setNoOfAuthors(researchWork.getNoOfAuthors());
+								result.add(res);
+							}
+						}
+						else
+						{
+							if(authorTwo.contains(keyw))
+							{
+								UserResearchWorkResponse res = new UserResearchWorkResponse();
+								res.setTitle(researchWork.getTitle());
+								res.setCategory(researchWork.getCategory());
+								res.setSubCategory(researchWork.getSubcategory());
+								res.setJournalConferenceName(researchWork.getJournalConferenceName());
+								res.setPublisher(researchWork.getPublisher());
+								res.setYearOfPublication(researchWork.getYearOfPublication());
+								res.setPdf(researchWork.getPdf());
+								res.setAuthorOne(researchWork.getAuthorOne());
+								res.setAuthorTwo(researchWork.getAuthorTwo());
+								res.setOtherAuthors(researchWork.getOtherAuthors());
+								res.setNoOfAuthors(researchWork.getNoOfAuthors());
+								result.add(res);
+							}
+						}
+					}
+					else
+					{
+						if(researchWork.getOtherAuthors()!=null)
+						{
+							String otherAuthors=researchWork.getOtherAuthors().toLowerCase();
+							if(otherAuthors.contains(keyw))
+							{
+								UserResearchWorkResponse res = new UserResearchWorkResponse();
+								res.setTitle(researchWork.getTitle());
+								res.setCategory(researchWork.getCategory());
+								res.setSubCategory(researchWork.getSubcategory());
+								res.setJournalConferenceName(researchWork.getJournalConferenceName());
+								res.setPublisher(researchWork.getPublisher());
+								res.setYearOfPublication(researchWork.getYearOfPublication());
+								res.setPdf(researchWork.getPdf());
+								res.setAuthorOne(researchWork.getAuthorOne());
+								res.setAuthorTwo(researchWork.getAuthorTwo());
+								res.setOtherAuthors(researchWork.getOtherAuthors());
+								res.setNoOfAuthors(researchWork.getNoOfAuthors());
+								result.add(res);
+							}
+						}
+					}
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+	
 	
 	@ApiOperation(value = "Add User Research Work", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addUserResearchWork", method = RequestMethod.POST)
