@@ -12,6 +12,8 @@ import sgsits.cse.dis.gateway.model.Email;
 @Configuration
 public class MailConfig {
 
+	final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+	
 	@Bean
 	public JavaMailSender getJavaMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -22,6 +24,15 @@ public class MailConfig {
 		mailSender.setPassword(Email.DIS_PASSWORD);
 
 		Properties props = mailSender.getJavaMailProperties();
+		
+		props.setProperty("proxySet","true");
+        props.setProperty("socksProxyHost","10.25.0.42");
+        props.setProperty("socksProxyPort","3128");
+        props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+        props.setProperty("mail.smtp.socketFactory.fallback", "false");
+        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.smtp.socketFactory.port", "465");
+        
 		props.put("mail.transport.protocol", "smtp");
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");

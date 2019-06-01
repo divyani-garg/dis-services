@@ -842,6 +842,7 @@ public class ProfileController {
 	public ResponseEntity<?> editStaffBasicProfile(@Valid @RequestBody StaffBasicProfileForm staffBasicProfileForm,
 			HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		System.out.println(id);
 		if (staffBasicProfileForm.getUserId() == id) {
 			Optional<StaffProfile> staffProfile = staffRepository.findByUserId(id);
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
