@@ -9,7 +9,8 @@ public class ThesisResponse {
 	private String session;
 	private String submittedBy;
 	private String guide;
-	private String coguide;
+	private String guide2;
+	private String guide3;
 	private String mediaAvailable;
 	private String remarks;
 	private String status;
@@ -56,11 +57,17 @@ public class ThesisResponse {
 	public void setGuide(String guide) {
 		this.guide = guide;
 	}
-	public String getCoguide() {
-		return coguide;
+	public String getGuide2() {
+		return guide2;
 	}
-	public void setCoguide(String coguide) {
-		this.coguide = coguide;
+	public void setGuide2(String coguide) {
+		this.guide2 = coguide;
+	}
+	public String getGuide3() {
+		return guide3;
+	}
+	public void setGuide3(String coguide) {
+		this.guide3 = coguide;
 	}
 	public String getMediaAvailable() {
 		return mediaAvailable;

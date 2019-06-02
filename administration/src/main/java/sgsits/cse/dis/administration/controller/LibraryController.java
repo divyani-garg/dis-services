@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -79,7 +80,86 @@ public class LibraryController {
 		}
 		return null;
 	}
-
+	
+	@ApiOperation(value = "Search Book", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/searchBook/{keyword}", method = RequestMethod.GET)
+	public List<BookResponse> searchBook(@PathVariable String keyword) {
+		List<Books> books = booksRepository.findAll();
+		if (!books.isEmpty()) {
+			String keyw=keyword.toLowerCase();
+			//System.out.println(keyw);
+			List<BookResponse> result = new ArrayList<>();
+			for (Books book : books) {
+				if(book.getBookName()!=null)
+				{
+					String book_name=book.getBookName().toLowerCase();
+					if(book.getAuthor()!=null)
+					{
+						String author_name=book.getAuthor().toLowerCase();
+						if(book_name.contains(keyw) || author_name.contains(keyw))
+						{
+							//System.out.println(book_name + " "+ author_name);
+							BookResponse res = new BookResponse();
+							res.setId(book.getId());
+							res.setSerialNo(book.getSerialNo());
+							res.setBookNo(book.getBookNo());
+							res.setBookName(book.getBookName());
+							res.setAuthor(book.getAuthor());
+							res.setType(book.getType());
+							res.setVersion(book.getVersion());
+							res.setStatus(book.getStatus());
+							res.setRemarks(book.getRemarks());
+							result.add(res);
+						}
+					}
+					else
+					{
+						if(book_name.contains(keyw))
+						{
+							//System.out.println(book_name + " "+ author_name);
+							BookResponse res = new BookResponse();
+							res.setId(book.getId());
+							res.setSerialNo(book.getSerialNo());
+							res.setBookNo(book.getBookNo());
+							res.setBookName(book.getBookName());
+							res.setAuthor(book.getAuthor());
+							res.setType(book.getType());
+							res.setVersion(book.getVersion());
+							res.setStatus(book.getStatus());
+							res.setRemarks(book.getRemarks());
+							result.add(res);
+						}
+					}
+				}
+				else
+				{
+					if(book.getAuthor()!=null)
+					{
+						String author_name=book.getAuthor().toLowerCase();
+						if(author_name.contains(keyw))
+						{
+							//System.out.println(book_name + " "+ author_name);
+							BookResponse res = new BookResponse();
+							res.setId(book.getId());
+							res.setSerialNo(book.getSerialNo());
+							res.setBookNo(book.getBookNo());
+							res.setBookName(book.getBookName());
+							res.setAuthor(book.getAuthor());
+							res.setType(book.getType());
+							res.setVersion(book.getVersion());
+							res.setStatus(book.getStatus());
+							res.setRemarks(book.getRemarks());
+							result.add(res);
+						}
+					}
+				}
+				
+			}
+			return result;
+		}
+		return null;
+	}
+	
 	@ApiOperation(value = "Add Book", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addBook", method = RequestMethod.POST)
 	public ResponseEntity<?> addBook(@RequestBody BookForm bookForm, HttpServletRequest request) {
@@ -183,11 +263,11 @@ public class LibraryController {
 					HttpStatus.BAD_REQUEST);
 	}
 
-	@ApiOperation(value = "Search Book", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = RestAPI.SEARCH_BOOK, method = RequestMethod.GET)
-	public List<BookResponse> searchBook(@RequestParam("name") String name) {
-		return null;
-	}
+//	@ApiOperation(value = "Search Book", response = Object.class, httpMethod = "GET", produces = "application/json")
+//	@RequestMapping(value = RestAPI.SEARCH_BOOK, method = RequestMethod.GET)
+//	public List<BookResponse> searchBook(@RequestParam("name") String name) {
+//		return null;
+//	}
 
 	@ApiOperation(value = "Get BE Thesis Count", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/getThesisBECount", method = RequestMethod.GET)
@@ -211,8 +291,8 @@ public class LibraryController {
 				res.setSession(the.getSession());
 				res.setSubmittedBy(the.getSubmittedBy());
 				res.setGuide(the.getGuide());
-				res.setCoguide(the.getGuide2());
-				res.setCoguide(the.getGuide3());
+				res.setGuide2(the.getGuide2());
+				res.setGuide3(the.getGuide3());
 				res.setMediaAvailable(the.getMediaAvailable());
 				res.setStatus(the.getStatus());
 				res.setRemarks(the.getRemarks());
@@ -306,7 +386,259 @@ public class LibraryController {
 		else
 			return new ResponseEntity<>(new ResponseMessage("You will need to provide administrator permission to update this BE Thesis!"),HttpStatus.BAD_REQUEST);
 	}
+	
+	@ApiOperation(value = "Search BE Thesis (by Title)", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/searchBEThesis/byTitle/{keyword}", method = RequestMethod.GET)
+	public List<ThesisResponse> searchBEThesisByTitle(@PathVariable String keyword) {
+		List<ThesisBE> thesis = thesisBERepository.findAll();
+		String keyw=keyword.toLowerCase();
+		if (thesis != null) {
+			List<ThesisResponse> result = new ArrayList<>();
+			for (ThesisBE the : thesis) {
+				if(the.getTitle()!=null)
+				{
+					String title=the.getTitle().toLowerCase();
+					if(title.contains(keyw))
+					{
+						ThesisResponse res = new ThesisResponse();
+						res.setId(the.getId());
+						res.setSerialNo(the.getSerialNo());
+						res.setTitle(the.getTitle());
+						res.setYear(the.getYear());
+						res.setSession(the.getSession());
+						res.setSubmittedBy(the.getSubmittedBy());
+						res.setGuide(the.getGuide());
+						res.setGuide2(the.getGuide2());
+						res.setGuide3(the.getGuide3());
+						res.setMediaAvailable(the.getMediaAvailable());
+						res.setStatus(the.getStatus());
+						res.setRemarks(the.getRemarks());
+						result.add(res);
+					}
+				}
+			}
+			return result;
+		}
+		return null;
+	}
 
+	@ApiOperation(value = "Search BE Thesis (by SubmittedBy)", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/searchBEThesis/bySubmittedBy/{keyword}", method = RequestMethod.GET)
+	public List<ThesisResponse> searchBEThesisBySubmittedBy(@PathVariable String keyword) {
+		List<ThesisBE> thesis = thesisBERepository.findAll();
+		String keyw=keyword.toLowerCase();
+		if (thesis != null) {
+			List<ThesisResponse> result = new ArrayList<>();
+			for (ThesisBE the : thesis) {
+				if(the.getSubmittedBy()!=null)
+				{
+					String submittedBy=the.getSubmittedBy().toLowerCase();
+					if(submittedBy.contains(keyw))
+					{
+						ThesisResponse res = new ThesisResponse();
+						res.setId(the.getId());
+						res.setSerialNo(the.getSerialNo());
+						res.setTitle(the.getTitle());
+						res.setYear(the.getYear());
+						res.setSession(the.getSession());
+						res.setSubmittedBy(the.getSubmittedBy());
+						res.setGuide(the.getGuide());
+						res.setGuide2(the.getGuide2());
+						res.setGuide3(the.getGuide3());
+						res.setMediaAvailable(the.getMediaAvailable());
+						res.setStatus(the.getStatus());
+						res.setRemarks(the.getRemarks());
+						result.add(res);
+					}
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	@ApiOperation(value = "Search BE Thesis (by Guide)", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/searchBEThesis/byGuide/{keyword}", method = RequestMethod.GET)
+	public List<ThesisResponse> searchBEThesisByGuide(@PathVariable String keyword) {
+		List<ThesisBE> thesis = thesisBERepository.findAll();
+		String keyw=keyword.toLowerCase();
+		if (thesis != null) {
+			List<ThesisResponse> result = new ArrayList<>();
+			for (ThesisBE the : thesis) {
+				if(the.getGuide()!=null)
+				{
+					String guide=the.getGuide().toLowerCase();
+					if(the.getGuide2()!=null)
+					{
+						String guide2=the.getGuide2().toLowerCase();
+						if(the.getGuide3()!=null)
+						{
+							String guide3=the.getGuide3().toLowerCase();
+							if(guide.contains(keyw)||guide2.contains(keyw)||guide3.contains(keyw))
+							{
+								ThesisResponse res = new ThesisResponse();
+								res.setId(the.getId());
+								res.setSerialNo(the.getSerialNo());
+								res.setTitle(the.getTitle());
+								res.setYear(the.getYear());
+								res.setSession(the.getSession());
+								res.setSubmittedBy(the.getSubmittedBy());
+								res.setGuide(the.getGuide());
+								res.setGuide2(the.getGuide2());
+								res.setGuide3(the.getGuide3());
+								res.setMediaAvailable(the.getMediaAvailable());
+								res.setStatus(the.getStatus());
+								res.setRemarks(the.getRemarks());
+								result.add(res);
+							}
+						}
+						else
+						{
+							if(guide.contains(keyw)||guide2.contains(keyw))
+							{
+								ThesisResponse res = new ThesisResponse();
+								res.setId(the.getId());
+								res.setSerialNo(the.getSerialNo());
+								res.setTitle(the.getTitle());
+								res.setYear(the.getYear());
+								res.setSession(the.getSession());
+								res.setSubmittedBy(the.getSubmittedBy());
+								res.setGuide(the.getGuide());
+								res.setGuide2(the.getGuide2());
+								res.setGuide3(the.getGuide3());
+								res.setMediaAvailable(the.getMediaAvailable());
+								res.setStatus(the.getStatus());
+								res.setRemarks(the.getRemarks());
+								result.add(res);
+							}
+						}
+						
+					}
+					else
+					{
+						if(the.getGuide3()!=null)
+						{
+							String guide3=the.getGuide3().toLowerCase();
+							if(guide.contains(keyw)||guide3.contains(keyw))
+							{
+								ThesisResponse res = new ThesisResponse();
+								res.setId(the.getId());
+								res.setSerialNo(the.getSerialNo());
+								res.setTitle(the.getTitle());
+								res.setYear(the.getYear());
+								res.setSession(the.getSession());
+								res.setSubmittedBy(the.getSubmittedBy());
+								res.setGuide(the.getGuide());
+								res.setGuide2(the.getGuide2());
+								res.setGuide3(the.getGuide3());
+								res.setMediaAvailable(the.getMediaAvailable());
+								res.setStatus(the.getStatus());
+								res.setRemarks(the.getRemarks());
+								result.add(res);
+							}
+						}
+						else
+						{
+							if(guide.contains(keyw))
+							{
+								ThesisResponse res = new ThesisResponse();
+								res.setId(the.getId());
+								res.setSerialNo(the.getSerialNo());
+								res.setTitle(the.getTitle());
+								res.setYear(the.getYear());
+								res.setSession(the.getSession());
+								res.setSubmittedBy(the.getSubmittedBy());
+								res.setGuide(the.getGuide());
+								res.setGuide2(the.getGuide2());
+								res.setGuide3(the.getGuide3());
+								res.setMediaAvailable(the.getMediaAvailable());
+								res.setStatus(the.getStatus());
+								res.setRemarks(the.getRemarks());
+								result.add(res);
+							}
+						}
+					}
+				}
+				else
+				{
+					if(the.getGuide2()!=null)
+					{
+						String guide2=the.getGuide2().toLowerCase();
+						if(the.getGuide3()!=null)
+						{
+							String guide3=the.getGuide3().toLowerCase();
+							if(guide2.contains(keyw)||guide3.contains(keyw))
+							{
+								ThesisResponse res = new ThesisResponse();
+								res.setId(the.getId());
+								res.setSerialNo(the.getSerialNo());
+								res.setTitle(the.getTitle());
+								res.setYear(the.getYear());
+								res.setSession(the.getSession());
+								res.setSubmittedBy(the.getSubmittedBy());
+								res.setGuide(the.getGuide());
+								res.setGuide2(the.getGuide2());
+								res.setGuide3(the.getGuide3());
+								res.setMediaAvailable(the.getMediaAvailable());
+								res.setStatus(the.getStatus());
+								res.setRemarks(the.getRemarks());
+								result.add(res);
+							}
+						}
+						else
+						{
+							if(guide2.contains(keyw))
+							{
+								ThesisResponse res = new ThesisResponse();
+								res.setId(the.getId());
+								res.setSerialNo(the.getSerialNo());
+								res.setTitle(the.getTitle());
+								res.setYear(the.getYear());
+								res.setSession(the.getSession());
+								res.setSubmittedBy(the.getSubmittedBy());
+								res.setGuide(the.getGuide());
+								res.setGuide2(the.getGuide2());
+								res.setGuide3(the.getGuide3());
+								res.setMediaAvailable(the.getMediaAvailable());
+								res.setStatus(the.getStatus());
+								res.setRemarks(the.getRemarks());
+								result.add(res);
+							}
+						}
+						
+					}
+					else
+					{
+						if(the.getGuide3()!=null)
+						{
+							String guide3=the.getGuide3().toLowerCase();
+							if(guide3.contains(keyw))
+							{
+								ThesisResponse res = new ThesisResponse();
+								res.setId(the.getId());
+								res.setSerialNo(the.getSerialNo());
+								res.setTitle(the.getTitle());
+								res.setYear(the.getYear());
+								res.setSession(the.getSession());
+								res.setSubmittedBy(the.getSubmittedBy());
+								res.setGuide(the.getGuide());
+								res.setGuide2(the.getGuide2());
+								res.setGuide3(the.getGuide3());
+								res.setMediaAvailable(the.getMediaAvailable());
+								res.setStatus(the.getStatus());
+								res.setRemarks(the.getRemarks());
+								result.add(res);
+							}
+						}
+					}
+				}
+			}
+			
+			return result;
+		}
+		return null;
+	}
+	
 	
 	@ApiOperation(value = "Get ME Thesis Count", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/getThesisMECount", method = RequestMethod.GET)
@@ -330,8 +662,8 @@ public class LibraryController {
 				res.setSession(the.getSession());
 				res.setSubmittedBy(the.getSubmittedBy());
 				res.setGuide(the.getGuide());
-				res.setCoguide(the.getGuide2());
-				res.setCoguide(the.getGuide3());
+				res.setGuide2(the.getGuide2());
+				res.setGuide3(the.getGuide3());
 				res.setMediaAvailable(the.getMediaAvailable());
 				res.setStatus(the.getStatus());
 				res.setRemarks(the.getRemarks());
@@ -426,6 +758,258 @@ public ResponseEntity<?> editThesisME(@RequestBody ThesisForm thesisForm, HttpSe
 	}
 	else
 		return new ResponseEntity<>(new ResponseMessage("You will need to provide administrator permission to update this ME Thesis!"),HttpStatus.BAD_REQUEST);
+}
+
+@ApiOperation(value = "Search ME Thesis (by Title)", response = Object.class, httpMethod = "GET", produces = "application/json")
+@RequestMapping(value = "/searchMEThesis/byTitle/{keyword}", method = RequestMethod.GET)
+public List<ThesisResponse> searchMEThesisByTitle(@PathVariable String keyword) {
+	List<ThesisME> thesis = thesisMERepository.findAll();
+	String keyw=keyword.toLowerCase();
+	if (thesis != null) {
+		List<ThesisResponse> result = new ArrayList<>();
+		for (ThesisME the : thesis) {
+			if(the.getTitle()!=null)
+			{
+				String title=the.getTitle().toLowerCase();
+				if(title.contains(keyw))
+				{
+					ThesisResponse res = new ThesisResponse();
+					res.setId(the.getId());
+					res.setSerialNo(the.getSerialNo());
+					res.setTitle(the.getTitle());
+					res.setYear(the.getYear());
+					res.setSession(the.getSession());
+					res.setSubmittedBy(the.getSubmittedBy());
+					res.setGuide(the.getGuide());
+					res.setGuide2(the.getGuide2());
+					res.setGuide3(the.getGuide3());
+					res.setMediaAvailable(the.getMediaAvailable());
+					res.setStatus(the.getStatus());
+					res.setRemarks(the.getRemarks());
+					result.add(res);
+				}
+			}
+		}
+		return result;
+	}
+	return null;
+}
+
+@ApiOperation(value = "Search ME Thesis (by SubmittedBy)", response = Object.class, httpMethod = "GET", produces = "application/json")
+@RequestMapping(value = "/searchMEThesis/bySubmittedBy/{keyword}", method = RequestMethod.GET)
+public List<ThesisResponse> searchMEThesisBySubmittedBy(@PathVariable String keyword) {
+	List<ThesisME> thesis = thesisMERepository.findAll();
+	String keyw=keyword.toLowerCase();
+	if (thesis != null) {
+		List<ThesisResponse> result = new ArrayList<>();
+		for (ThesisME the : thesis) {
+			if(the.getSubmittedBy()!=null)
+			{
+				String submittedBy=the.getSubmittedBy().toLowerCase();
+				if(submittedBy.contains(keyw))
+				{
+					ThesisResponse res = new ThesisResponse();
+					res.setId(the.getId());
+					res.setSerialNo(the.getSerialNo());
+					res.setTitle(the.getTitle());
+					res.setYear(the.getYear());
+					res.setSession(the.getSession());
+					res.setSubmittedBy(the.getSubmittedBy());
+					res.setGuide(the.getGuide());
+					res.setGuide2(the.getGuide2());
+					res.setGuide3(the.getGuide3());
+					res.setMediaAvailable(the.getMediaAvailable());
+					res.setStatus(the.getStatus());
+					res.setRemarks(the.getRemarks());
+					result.add(res);
+				}
+			}
+		}
+		return result;
+	}
+	return null;
+}
+
+@ApiOperation(value = "Search ME Thesis (by Guide)", response = Object.class, httpMethod = "GET", produces = "application/json")
+@RequestMapping(value = "/searchMEThesis/byGuide/{keyword}", method = RequestMethod.GET)
+public List<ThesisResponse> searchMEThesisByGuide(@PathVariable String keyword) {
+	List<ThesisME> thesis = thesisMERepository.findAll();
+	String keyw=keyword.toLowerCase();
+	if (thesis != null) {
+		List<ThesisResponse> result = new ArrayList<>();
+		for (ThesisME the : thesis) {
+			if(the.getGuide()!=null)
+			{
+				String guide=the.getGuide().toLowerCase();
+				if(the.getGuide2()!=null)
+				{
+					String guide2=the.getGuide2().toLowerCase();
+					if(the.getGuide3()!=null)
+					{
+						String guide3=the.getGuide3().toLowerCase();
+						if(guide.contains(keyw)||guide2.contains(keyw)||guide3.contains(keyw))
+						{
+							ThesisResponse res = new ThesisResponse();
+							res.setId(the.getId());
+							res.setSerialNo(the.getSerialNo());
+							res.setTitle(the.getTitle());
+							res.setYear(the.getYear());
+							res.setSession(the.getSession());
+							res.setSubmittedBy(the.getSubmittedBy());
+							res.setGuide(the.getGuide());
+							res.setGuide2(the.getGuide2());
+							res.setGuide3(the.getGuide3());
+							res.setMediaAvailable(the.getMediaAvailable());
+							res.setStatus(the.getStatus());
+							res.setRemarks(the.getRemarks());
+							result.add(res);
+						}
+					}
+					else
+					{
+						if(guide.contains(keyw)||guide2.contains(keyw))
+						{
+							ThesisResponse res = new ThesisResponse();
+							res.setId(the.getId());
+							res.setSerialNo(the.getSerialNo());
+							res.setTitle(the.getTitle());
+							res.setYear(the.getYear());
+							res.setSession(the.getSession());
+							res.setSubmittedBy(the.getSubmittedBy());
+							res.setGuide(the.getGuide());
+							res.setGuide2(the.getGuide2());
+							res.setGuide3(the.getGuide3());
+							res.setMediaAvailable(the.getMediaAvailable());
+							res.setStatus(the.getStatus());
+							res.setRemarks(the.getRemarks());
+							result.add(res);
+						}
+					}
+					
+				}
+				else
+				{
+					if(the.getGuide3()!=null)
+					{
+						String guide3=the.getGuide3().toLowerCase();
+						if(guide.contains(keyw)||guide3.contains(keyw))
+						{
+							ThesisResponse res = new ThesisResponse();
+							res.setId(the.getId());
+							res.setSerialNo(the.getSerialNo());
+							res.setTitle(the.getTitle());
+							res.setYear(the.getYear());
+							res.setSession(the.getSession());
+							res.setSubmittedBy(the.getSubmittedBy());
+							res.setGuide(the.getGuide());
+							res.setGuide2(the.getGuide2());
+							res.setGuide3(the.getGuide3());
+							res.setMediaAvailable(the.getMediaAvailable());
+							res.setStatus(the.getStatus());
+							res.setRemarks(the.getRemarks());
+							result.add(res);
+						}
+					}
+					else
+					{
+						if(guide.contains(keyw))
+						{
+							ThesisResponse res = new ThesisResponse();
+							res.setId(the.getId());
+							res.setSerialNo(the.getSerialNo());
+							res.setTitle(the.getTitle());
+							res.setYear(the.getYear());
+							res.setSession(the.getSession());
+							res.setSubmittedBy(the.getSubmittedBy());
+							res.setGuide(the.getGuide());
+							res.setGuide2(the.getGuide2());
+							res.setGuide3(the.getGuide3());
+							res.setMediaAvailable(the.getMediaAvailable());
+							res.setStatus(the.getStatus());
+							res.setRemarks(the.getRemarks());
+							result.add(res);
+						}
+					}
+				}
+			}
+			else
+			{
+				if(the.getGuide2()!=null)
+				{
+					String guide2=the.getGuide2().toLowerCase();
+					if(the.getGuide3()!=null)
+					{
+						String guide3=the.getGuide3().toLowerCase();
+						if(guide2.contains(keyw)||guide3.contains(keyw))
+						{
+							ThesisResponse res = new ThesisResponse();
+							res.setId(the.getId());
+							res.setSerialNo(the.getSerialNo());
+							res.setTitle(the.getTitle());
+							res.setYear(the.getYear());
+							res.setSession(the.getSession());
+							res.setSubmittedBy(the.getSubmittedBy());
+							res.setGuide(the.getGuide());
+							res.setGuide2(the.getGuide2());
+							res.setGuide3(the.getGuide3());
+							res.setMediaAvailable(the.getMediaAvailable());
+							res.setStatus(the.getStatus());
+							res.setRemarks(the.getRemarks());
+							result.add(res);
+						}
+					}
+					else
+					{
+						if(guide2.contains(keyw))
+						{
+							ThesisResponse res = new ThesisResponse();
+							res.setId(the.getId());
+							res.setSerialNo(the.getSerialNo());
+							res.setTitle(the.getTitle());
+							res.setYear(the.getYear());
+							res.setSession(the.getSession());
+							res.setSubmittedBy(the.getSubmittedBy());
+							res.setGuide(the.getGuide());
+							res.setGuide2(the.getGuide2());
+							res.setGuide3(the.getGuide3());
+							res.setMediaAvailable(the.getMediaAvailable());
+							res.setStatus(the.getStatus());
+							res.setRemarks(the.getRemarks());
+							result.add(res);
+						}
+					}
+					
+				}
+				else
+				{
+					if(the.getGuide3()!=null)
+					{
+						String guide3=the.getGuide3().toLowerCase();
+						if(guide3.contains(keyw))
+						{
+							ThesisResponse res = new ThesisResponse();
+							res.setId(the.getId());
+							res.setSerialNo(the.getSerialNo());
+							res.setTitle(the.getTitle());
+							res.setYear(the.getYear());
+							res.setSession(the.getSession());
+							res.setSubmittedBy(the.getSubmittedBy());
+							res.setGuide(the.getGuide());
+							res.setGuide2(the.getGuide2());
+							res.setGuide3(the.getGuide3());
+							res.setMediaAvailable(the.getMediaAvailable());
+							res.setStatus(the.getStatus());
+							res.setRemarks(the.getRemarks());
+							result.add(res);
+						}
+					}
+				}
+			}
+		}
+		
+		return result;
+	}
+	return null;
 }
 
 

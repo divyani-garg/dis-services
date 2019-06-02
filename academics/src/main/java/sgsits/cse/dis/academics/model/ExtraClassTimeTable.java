@@ -43,10 +43,10 @@ public class ExtraClassTimeTable {
 	@Column(name = "subject_code", nullable = false)
 	private String subjectCode;
 
-	@Column(name = "from", nullable = false)
+	@Column(name = "from_time", nullable = false)
 	private String from;
 
-	@Column(name = "to", nullable = false)
+	@Column(name = "to_time", nullable = false)
 	private String to;
 	
 	@Column(name = "day", nullable = false)
