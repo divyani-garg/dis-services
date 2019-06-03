@@ -381,7 +381,7 @@ public class ProfileController {
 		return null;
 	}
 	
-	@ApiOperation(value = "Search Research Paper By Keyword", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@ApiOperation(value = "Search Research Paper By Title", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/searchResearchPaper/byTitle/{keyword}", method = RequestMethod.GET) //From Library
 	public List<UserResearchWorkResponse> searchResearchPaperByTitle(@PathVariable String keyword) {
 		List<UserResearchWork> researchWorks = userResearchWorkRepository.findAll();

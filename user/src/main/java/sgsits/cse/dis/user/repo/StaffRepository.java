@@ -19,5 +19,6 @@ public interface StaffRepository extends JpaRepository<StaffProfile, Long>{
 	boolean existsByEmailAndMobileNoAndDob(String email, long mobileNo, String dob);
 	Optional<StaffProfile> findByEmailAndMobileNoAndDob(String email, long mobileNo, String dob);
 	Optional<StaffProfile> findByMobileNo(Long mobileNo);
+	List<StaffProfile> findByName(String keyw);
 
 }
