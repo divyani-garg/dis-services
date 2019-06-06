@@ -43,6 +43,7 @@ import sgsits.cse.dis.user.model.UserAddress;
 import sgsits.cse.dis.user.model.UserCompetitiveExams;
 import sgsits.cse.dis.user.model.UserCulturalActivityAchievements;
 import sgsits.cse.dis.user.model.UserInternship;
+import sgsits.cse.dis.user.model.UserPlacement;
 import sgsits.cse.dis.user.model.UserProjects;
 import sgsits.cse.dis.user.model.UserQualification;
 import sgsits.cse.dis.user.model.UserResearchWork;
@@ -1289,8 +1290,19 @@ public class ProfileController {
 			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update!"), HttpStatus.BAD_REQUEST);
 	}
 
-	public void getStudentPlacement(HttpServletRequest request) {
-
+	@ApiOperation(value = "User Placements", response = Object.class, httpMethod = "GET", produces = "application/json") //only for students
+	@RequestMapping(value = "/userPlacements", method = RequestMethod.GET)
+	public List<UserPlacement> getUserPlacements(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
+		
+		long id;
+		if(profileForm.getId()==null) {
+			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		}
+		else {
+			id=profileForm.getId();
+		} 
+		List<UserProjects> projects = userProjectsRepository.findByUserId(id);
+		return projects;
 	}
 
 	public void getUGProject(HttpServletRequest request) {
