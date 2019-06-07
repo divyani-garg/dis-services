@@ -55,6 +55,8 @@ public class RestAPI {
 	
 	public static final String EDIT_COMPLAINTS = "/editComplaint";
 	
+	public static final String ADD_COMPLAINT_PERMISSION = "/addComplaintPermission";
+	
 	public static final String GET_DOCUMENT_STRUCTURE = "/getStructure";
 	public static final String GET_FILES = "/getFiles";
 	public static final String ADD_NEW_FOLDER = "/addFolder";

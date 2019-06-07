@@ -57,7 +57,7 @@ public class QuizService {
 					
 					String course = rs.getString(3);
 					for(String sub : subjects) {
-						if(course.contains(sub)) {
+						//if(course.contains(sub)) {
 							quiz.setCreatedBy((long) 0);
 							quiz.setCreatedDate(formatter.format(new Date()));
 							quiz.setCourseName(sub);
@@ -65,8 +65,8 @@ public class QuizService {
 							quiz.setGrade(rs.getBigDecimal(2));
 							quiz.setUsername(rs.getString(4));
 							quiz.setTime(rs.getString(5));
-							break;
-						}
+					//		break;
+						//}
 					}
 					
 					if (quiz != null)

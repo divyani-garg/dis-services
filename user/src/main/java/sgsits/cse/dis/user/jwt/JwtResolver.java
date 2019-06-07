@@ -27,7 +27,7 @@ public class JwtResolver {
 		}
 		return null;
 	}
-
+	
 	public String getUserTypeFromJwtToken(String token)
 	{
 		token = getJwt(token);

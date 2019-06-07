@@ -23,6 +23,7 @@ import sgsits.cse.dis.administration.constants.RestAPI;
 import sgsits.cse.dis.administration.feign.InfrastructureClient;
 import sgsits.cse.dis.administration.feign.UserClient;
 import sgsits.cse.dis.administration.jwt.JwtResolver;
+import sgsits.cse.dis.administration.model.AddComplaintPermission;
 import sgsits.cse.dis.administration.model.CWNComplaints;
 import sgsits.cse.dis.administration.model.CleanlinessComplaints;
 import sgsits.cse.dis.administration.model.ECCWComplaints;
@@ -32,6 +33,7 @@ import sgsits.cse.dis.administration.model.LEComplaints;
 import sgsits.cse.dis.administration.model.OtherComplaints;
 import sgsits.cse.dis.administration.model.StudentComplaints;
 import sgsits.cse.dis.administration.model.TelephoneComplaints;
+import sgsits.cse.dis.administration.repo.AddComplaintPermissionRepository;
 import sgsits.cse.dis.administration.repo.CWNComplaintRepository;
 import sgsits.cse.dis.administration.repo.CleanlinessComplaintRepository;
 import sgsits.cse.dis.administration.repo.ECCWComplaintRepository;
@@ -80,6 +82,8 @@ public class ComplaintsController {
 	UserClient userClient;
 	@Autowired
 	InfrastructureClient infrastructureClient;
+	@Autowired
+	AddComplaintPermissionRepository addComplaintPermissionRepository;
 
 	JwtResolver jwtResolver = new JwtResolver();
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -527,6 +531,20 @@ public class ComplaintsController {
 		return count;
 	}
 
+	// Add Complaint Permission
+	
+	@ApiOperation(value = "Add Complaint Permission", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = RestAPI.ADD_COMPLAINT_PERMISSION, method = RequestMethod.GET)
+	public List<String> addComplaintPermission(HttpServletRequest request) {
+		String user = jwtResolver.getUserTypeFromJwtToken(request.getHeader("Authorization"));
+		List<AddComplaintPermission> permissions = addComplaintPermissionRepository.findByUser(user);
+		List<String> result = new ArrayList<>();
+		for(AddComplaintPermission permission : permissions) {
+			result.add(permission.getPermission());
+		}
+		return result;
+	}
+	
 	// Add Complaints //create notification for all
 
 	@ApiOperation(value = "Add Cleanliness Complaint", response = Object.class, httpMethod = "POST", produces = "application/json")
@@ -717,6 +735,7 @@ public class ComplaintsController {
 			if (count == size) {
 				List<CWNComplaints> test = cwnComplaintRepository.saveAll(complaintList);
 				if (test != null)
+					
 					return new ResponseEntity<>(new ResponseMessage("Your Complaint has been registered successfully!"),
 							HttpStatus.OK);
 				else

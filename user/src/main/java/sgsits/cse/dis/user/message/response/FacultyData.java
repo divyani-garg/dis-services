@@ -1,20 +1,27 @@
 package sgsits.cse.dis.user.message.response;
 
 public class FacultyData {
-	private Long id;
+	private Long userId;
+	private String userType;
 	private String name;
 	private String nameAcronym;
-	private String profilePicture;
+	private byte[] profilePicture;
 	private String currentDesignation;
 	private String email;
 	private Long mobileNo;
 	private Long alternateMobileNo;
 	
-	public Long getId() {
-		return id;
+	public Long getUserId() {
+		return userId;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	public String getUserType() {
+		return userType;
+	}
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 	public String getName() {
 		return name;
@@ -28,10 +35,10 @@ public class FacultyData {
 	public void setNameAcronym(String nameAcronym) {
 		this.nameAcronym = nameAcronym;
 	}
-	public String getProfilePicture() {
+	public byte[] getProfilePicture() {
 		return profilePicture;
 	}
-	public void setProfilePicture(String profilePicture) {
+	public void setProfilePicture(byte[] profilePicture) {
 		this.profilePicture = profilePicture;
 	}
 	public String getCurrentDesignation() {

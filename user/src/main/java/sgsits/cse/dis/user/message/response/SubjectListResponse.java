@@ -1,4 +1,4 @@
-package sgsits.cse.dis.user.feign;
+package sgsits.cse.dis.user.message.response;
 
 public class SubjectListResponse {
 	

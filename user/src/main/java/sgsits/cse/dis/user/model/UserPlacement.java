@@ -41,10 +41,17 @@ public class UserPlacement {
 	private String joiningStatus;
 
 	@Column(name = "package")
-	private long joiningPackage;
+	private double joiningPackage;
 	
 	@Column(name = "campus_type")
 	private String campusType;
+
+	@Column(name = "user_id")
+	private long userId;
+	
+	public long getUserId() {
+		return userId;
+	}
 
 	public long getId() {
 		return id;
@@ -82,7 +89,7 @@ public class UserPlacement {
 		return joiningStatus;
 	}
 
-	public long getJoiningPackage() {
+	public double getJoiningPackage() {
 		return joiningPackage;
 	}
 
@@ -126,12 +133,16 @@ public class UserPlacement {
 		this.joiningStatus = joiningStatus;
 	}
 
-	public void setJoiningPackage(long joiningPackage) {
+	public void setJoiningPackage(double joiningPackage) {
 		this.joiningPackage = joiningPackage;
 	}
 
 	public void setCampusType(String campusType) {
 		this.campusType = campusType;
 	}
-	
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
 }

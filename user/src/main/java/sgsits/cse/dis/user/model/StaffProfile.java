@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -84,6 +85,10 @@ public class StaffProfile {
 	
 	@Column(name = "area_of_specialization")
 	private String areaOfSpecialization;
+	
+	@Lob
+	@Column(name = "profile_picture")
+	private byte[] profilePicture;
 
 	public long getId() {
 		return id;
@@ -276,4 +281,13 @@ public class StaffProfile {
 	public void setAreaOfSpecialization(String areaOfSpecialization) {
 		this.areaOfSpecialization = areaOfSpecialization;
 	}
+
+	public byte[] getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
+	}
+	
 }

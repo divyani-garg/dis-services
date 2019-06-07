@@ -17,26 +17,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-//import sgsits.cse.dis.administration.model.Books;
-//import sgsits.cse.dis.administration.response.BookResponse;
 import sgsits.cse.dis.user.feign.AcademicsClient;
 import sgsits.cse.dis.user.jwt.JwtResolver;
-import sgsits.cse.dis.user.message.request.ProfileForm;
 import sgsits.cse.dis.user.message.request.StaffBasicProfileForm;
+import sgsits.cse.dis.user.message.request.StaffDutyForm;
 import sgsits.cse.dis.user.message.request.StudentBasicProfileForm;
 import sgsits.cse.dis.user.message.request.UserAddressForm;
 import sgsits.cse.dis.user.message.request.UserCompetitiveExamsForm;
 import sgsits.cse.dis.user.message.request.UserCulturalActivityAchievementsForm;
 import sgsits.cse.dis.user.message.request.UserInternshipForm;
+import sgsits.cse.dis.user.message.request.UserPlacementForm;
 import sgsits.cse.dis.user.message.request.UserProjectForm;
+import sgsits.cse.dis.user.message.request.UserQualificationForm;
+import sgsits.cse.dis.user.message.request.UserResearchWorkForm;
+import sgsits.cse.dis.user.message.request.UserTechnicalActivityForm;
+import sgsits.cse.dis.user.message.request.UserWorkExperienceForm;
 import sgsits.cse.dis.user.message.response.ResponseMessage;
 import sgsits.cse.dis.user.message.response.StaffBasicProfileResponse;
 import sgsits.cse.dis.user.message.response.StudentBasicProfileResponse;
 import sgsits.cse.dis.user.message.response.UserResearchWorkResponse;
+import sgsits.cse.dis.user.model.StaffDuty;
 import sgsits.cse.dis.user.model.StaffProfile;
 import sgsits.cse.dis.user.model.StudentProfile;
 import sgsits.cse.dis.user.model.UserAddress;
@@ -49,21 +54,19 @@ import sgsits.cse.dis.user.model.UserQualification;
 import sgsits.cse.dis.user.model.UserResearchWork;
 import sgsits.cse.dis.user.model.UserTechnicalActivity;
 import sgsits.cse.dis.user.model.UserWorkExperience;
+import sgsits.cse.dis.user.repo.StaffDutyRepository;
 import sgsits.cse.dis.user.repo.StaffRepository;
 import sgsits.cse.dis.user.repo.StudentRepository;
 import sgsits.cse.dis.user.repo.UserAddressRepository;
 import sgsits.cse.dis.user.repo.UserCompetitiveExamsRepository;
 import sgsits.cse.dis.user.repo.UserCulturalActivityAchievementsRepository;
 import sgsits.cse.dis.user.repo.UserInternshipRepository;
+import sgsits.cse.dis.user.repo.UserPlacementRepository;
 import sgsits.cse.dis.user.repo.UserProjectsRepository;
 import sgsits.cse.dis.user.repo.UserQualificationRepository;
 import sgsits.cse.dis.user.repo.UserResearchWorkRepository;
 import sgsits.cse.dis.user.repo.UserTechnicalActivityRepository;
 import sgsits.cse.dis.user.repo.UserWorkExperienceRepository;
-import sgsits.cse.dis.user.message.request.UserQualificationForm;
-import sgsits.cse.dis.user.message.request.UserResearchWorkForm;
-import sgsits.cse.dis.user.message.request.UserTechnicalActivityForm;
-import sgsits.cse.dis.user.message.request.UserWorkExperienceForm;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -93,110 +96,97 @@ public class ProfileController {
 	@Autowired
 	StudentRepository studentRepository;
 	@Autowired
+	UserPlacementRepository userPlacementRepository;
+	@Autowired
+	StaffDutyRepository staffDutyRepository;
+	@Autowired
 	AcademicsClient academicsClient;
 
 	JwtResolver jwtResolver = new JwtResolver();
-	
+
 	@ApiOperation(value = "User Address", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userAddress", method = RequestMethod.GET)
-	public List<UserAddress> getUserAddress(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
-			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));	
-		}
-		else
-		{
-			id=profileForm.getId();
-		}
+	public List<UserAddress> getUserAddress(@RequestParam(required=false) Long id, HttpServletRequest request) {
+		if (id == null) {
+			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		} 
 		List<UserAddress> address = userAddressRepository.findByUserId(id);
 		return address;
-		
 	}
 
-	
-	  @ApiOperation(value = "Edit User Address", response = Object.class, httpMethod = "PUT", produces = "application/json") 
-	  @RequestMapping(value = "/editUserAddress", method = RequestMethod.PUT)
-	  public ResponseEntity<?> editUserAddress(@RequestBody List<UserAddressForm> userAddressForm, HttpServletRequest request) { 
-	  long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-	  if(userAddressForm.get(0).getUserId() == id) { 
-		 List<UserAddress> address = userAddressRepository.findByUserId(id);
-		 int flag=0;
-		 for(UserAddress userAddress : address)
-		 {
-			 for(UserAddressForm form : userAddressForm)
-			 {
-				 if(userAddress.getType().equals(form.getType()))
-				 {
-					 Optional<UserAddress> optional = userAddressRepository.findByUserIdAndType(id,userAddress.getType());
-					 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-					 optional.get().setModifiedDate(simpleDateFormat.format(new Date()));
-					 optional.get().setModifiedBy(id);
-					 optional.get().setAddressLine1(form.getAddressLine1());
-					 optional.get().setAddressLine2(form.getAddressLine2());
-					 optional.get().setState(form.getCity());
-					 optional.get().setCity(form.getCity());
-					 optional.get().setCountry(form.getCountry());
-					 optional.get().setPincode(form.getPincode());
-					 UserAddress test = userAddressRepository.save(optional.get());
-					 if(test!=null)
-						 flag=1;
-					 
-				 }
-				 if(!userAddressRepository.existsByUserIdAndType(id, form.getType()))
-				 {
-					 UserAddress newAddress = new UserAddress();
-					 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-					 newAddress.setCreatedDate(simpleDateFormat.format(new Date()));
-					 newAddress.setCreatedBy(id);
-					 newAddress.setUserId(id);
-					 newAddress.setAddressLine1(form.getAddressLine1());
-					 newAddress.setAddressLine2(form.getAddressLine2());
-					 newAddress.setState(form.getState());
-					 newAddress.setCity(form.getCity());
-					 newAddress.setCountry(form.getCountry());
-					 newAddress.setPincode(form.getPincode());
-					 newAddress.setType(form.getType());
-					 UserAddress test = userAddressRepository.save(newAddress);
-					 if(test!=null)
-						 flag=1;
-				 }
-			 }
-		 }
-		 if(flag==1)
-			 return new ResponseEntity<>(new ResponseMessage("Address Updated Successfully!"), HttpStatus.OK); 
-		 else
-			 return new ResponseEntity<>(new ResponseMessage("Unable to update Address, please try again later!"), HttpStatus.BAD_REQUEST); 
-	  } 
-	  else
-	   return new ResponseEntity<>(new ResponseMessage("You are not allowed to update!"), HttpStatus.BAD_REQUEST); 
-	 }
-	 
+	@ApiOperation(value = "Edit User Address", response = Object.class, httpMethod = "PUT", produces = "application/json")
+	@RequestMapping(value = "/editUserAddress", method = RequestMethod.PUT)
+	public ResponseEntity<?> editUserAddress(@RequestBody List<UserAddressForm> userAddressForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userAddressForm.get(0).getUserId() == id) {
+			List<UserAddress> address = userAddressRepository.findByUserId(id);
+			int flag = 0;
+			for (UserAddress userAddress : address) {
+				for (UserAddressForm form : userAddressForm) {
+					if (userAddress.getType().equals(form.getType())) {
+						Optional<UserAddress> optional = userAddressRepository.findByUserIdAndType(id,
+								userAddress.getType());
+						SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+						optional.get().setModifiedDate(simpleDateFormat.format(new Date()));
+						optional.get().setModifiedBy(id);
+						optional.get().setAddressLine1(form.getAddressLine1());
+						optional.get().setAddressLine2(form.getAddressLine2());
+						optional.get().setState(form.getCity());
+						optional.get().setCity(form.getCity());
+						optional.get().setCountry(form.getCountry());
+						optional.get().setPincode(form.getPincode());
+						UserAddress test = userAddressRepository.save(optional.get());
+						if (test != null)
+							flag = 1;
+
+					}
+					if (!userAddressRepository.existsByUserIdAndType(id, form.getType())) {
+						UserAddress newAddress = new UserAddress();
+						SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+						newAddress.setCreatedDate(simpleDateFormat.format(new Date()));
+						newAddress.setCreatedBy(id);
+						newAddress.setUserId(id);
+						newAddress.setAddressLine1(form.getAddressLine1());
+						newAddress.setAddressLine2(form.getAddressLine2());
+						newAddress.setState(form.getState());
+						newAddress.setCity(form.getCity());
+						newAddress.setCountry(form.getCountry());
+						newAddress.setPincode(form.getPincode());
+						newAddress.setType(form.getType());
+						UserAddress test = userAddressRepository.save(newAddress);
+						if (test != null)
+							flag = 1;
+					}
+				}
+			}
+			if (flag == 1)
+				return new ResponseEntity<>(new ResponseMessage("Address Updated Successfully!"), HttpStatus.OK);
+			else
+				return new ResponseEntity<>(new ResponseMessage("Unable to update Address, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update!"), HttpStatus.BAD_REQUEST);
+	}
 
 	@ApiOperation(value = "User Qualification", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userQualification", method = RequestMethod.GET)
-	public List<UserQualification> getUserQualification(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
+	public List<UserQualification> getUserQualification(@RequestParam(required=false) Long id,
+			HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		}
-		else
-		{
-			id=profileForm.getId();
-		}
+		} 
 		List<UserQualification> qualification = userQualificationRepository.findByUserId(id);
 		// marksheet
 		return qualification;
 	}
-	
+
 	@ApiOperation(value = "Add User Qualification", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addUserQualification", method = RequestMethod.POST)
-	public ResponseEntity<?> addUserQualification(@RequestBody UserQualificationForm userQualificationForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userQualificationForm.getUserId()==id)
-		{
+	public ResponseEntity<?> addUserQualification(@RequestBody UserQualificationForm userQualificationForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userQualificationForm.getUserId() == id) {
 			UserQualification userQualification = new UserQualification();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			userQualification.setCreatedDate(simpleDateFormat.format(new Date()));
@@ -208,27 +198,30 @@ public class ProfileController {
 			userQualification.setUniversityBoard(userQualificationForm.getUniversityBoard());
 			userQualification.setPercentageCgpa(userQualificationForm.getPercentageCgpa());
 			userQualification.setSpecialization(userQualificationForm.getSpecialization());
-			//marksheet
+			// marksheet
 			UserQualification test = userQualificationRepository.save(userQualification);
-			if(test!=null)
-				return new ResponseEntity<>(new ResponseMessage("User Qualification added successfully!"), HttpStatus.OK);
+			if (test != null)
+				return new ResponseEntity<>(new ResponseMessage("User Qualification added successfully!"),
+						HttpStatus.OK);
 			else
-				return new ResponseEntity<>(new ResponseMessage("Unable to add User Qualification, please try again later!"), HttpStatus.BAD_REQUEST);
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Qualification!"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(
+						new ResponseMessage("Unable to add User Qualification, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Qualification!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ApiOperation(value = "Edit User Qualification", response = Object.class, httpMethod = "PUT", produces = "application/json")
 	@RequestMapping(value = "/editUserQualification", method = RequestMethod.PUT)
-	public ResponseEntity<?> editUserQualification(@RequestBody UserQualificationForm userQualificationForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userQualificationForm.getUserId()==id)
-		{
-			if(userQualificationRepository.existsByUserIdAndDegreeCertificate(id,userQualificationForm.getDegreeCertificate()))
-			{
-				Optional<UserQualification> userQualification = userQualificationRepository.findByUserIdAndDegreeCertificate(id,userQualificationForm.getDegreeCertificate());
+	public ResponseEntity<?> editUserQualification(@RequestBody UserQualificationForm userQualificationForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userQualificationForm.getUserId() == id) {
+			if (userQualificationRepository.existsByUserIdAndDegreeCertificate(id,
+					userQualificationForm.getDegreeCertificate())) {
+				Optional<UserQualification> userQualification = userQualificationRepository
+						.findByUserIdAndDegreeCertificate(id, userQualificationForm.getDegreeCertificate());
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				userQualification.get().setModifiedDate(simpleDateFormat.format(new Date()));
 				userQualification.get().setUserId(id);
@@ -239,44 +232,41 @@ public class ProfileController {
 				userQualification.get().setUniversityBoard(userQualificationForm.getUniversityBoard());
 				userQualification.get().setPercentageCgpa(userQualificationForm.getPercentageCgpa());
 				userQualification.get().setSpecialization(userQualificationForm.getSpecialization());
-				//marksheet
+				// marksheet
 				UserQualification test = userQualificationRepository.save(userQualification.get());
-				if(test!=null)
-					return new ResponseEntity<>(new ResponseMessage("User Qualification updated successfully!"), HttpStatus.OK);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("User Qualification updated successfully!"),
+							HttpStatus.OK);
 				else
-					return new ResponseEntity<>(new ResponseMessage("Unable to update User Qualification, please try again later!"), HttpStatus.BAD_REQUEST);
-			}
-			else
-				return new ResponseEntity<>(new ResponseMessage("User Qualification not found, you need to add it first!"), HttpStatus.BAD_REQUEST);
-				
-			
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Qualification!"), HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to update User Qualification, please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(
+						new ResponseMessage("User Qualification not found, you need to add it first!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Qualification!"),
+					HttpStatus.BAD_REQUEST);
 	}
 
 	@ApiOperation(value = "User Work Experience", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userWorkExperience", method = RequestMethod.GET)
-	public List<UserWorkExperience> getUserWorkExperience(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
-			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));	
-		}
-		else {
-			id=profileForm.getId();
-		}
+	public List<UserWorkExperience> getUserWorkExperience(@RequestParam(required=false) Long id,
+			HttpServletRequest request) {
+		if (id == null) {
+			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		} 
 		List<UserWorkExperience> experience = userWorkExperienceRepository.findByUserId(id);
 		return experience;
 	}
-	
+
 	@ApiOperation(value = "Add User Work Experience", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addUserWorkExperience", method = RequestMethod.POST)
-	public ResponseEntity<?> addUserWorkExperience(@RequestBody UserWorkExperienceForm userWorkExperienceForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userWorkExperienceForm.getUserId()==id)
-		{
+	public ResponseEntity<?> addUserWorkExperience(@RequestBody UserWorkExperienceForm userWorkExperienceForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userWorkExperienceForm.getUserId() == id) {
 			UserWorkExperience userWorkExperience = new UserWorkExperience();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			userWorkExperience.setCreatedDate(simpleDateFormat.format(new Date()));
@@ -284,7 +274,7 @@ public class ProfileController {
 			userWorkExperience.setCreatedBy(id);
 			userWorkExperience.setOrganizationName(userWorkExperienceForm.getOrganizationName());
 			userWorkExperience.setDesignation(userWorkExperienceForm.getDesignation());
-			//to be reviewed
+			// to be reviewed
 			userWorkExperience.setDateOfJoining(userWorkExperienceForm.getDateOfJoining());
 			userWorkExperience.setDateOfLeaving(userWorkExperienceForm.getDateOfLeaving());
 			userWorkExperience.setPayscale(userWorkExperienceForm.getPayscale());
@@ -292,65 +282,68 @@ public class ProfileController {
 			userWorkExperience.setState(userWorkExperienceForm.getState());
 			userWorkExperience.setCity(userWorkExperienceForm.getCity());
 			UserWorkExperience test = userWorkExperienceRepository.save(userWorkExperience);
-			if(test!=null)
-				return new ResponseEntity<>(new ResponseMessage("User Work Experience added successfully!"), HttpStatus.OK);
+			if (test != null)
+				return new ResponseEntity<>(new ResponseMessage("User Work Experience added successfully!"),
+						HttpStatus.OK);
 			else
-				return new ResponseEntity<>(new ResponseMessage("Unable to add User Work Experience, please try again later!"), HttpStatus.BAD_REQUEST);
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Work Experience!"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(
+						new ResponseMessage("Unable to add User Work Experience, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Work Experience!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ApiOperation(value = "Edit User Work Experience", response = Object.class, httpMethod = "PUT", produces = "application/json")
 	@RequestMapping(value = "/editUserWorkExperience", method = RequestMethod.PUT)
-	public ResponseEntity<?> editUserWorkExperience(@RequestBody UserWorkExperienceForm userWorkExperienceForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userWorkExperienceForm.getUserId()==id)
+	public ResponseEntity<?> editUserWorkExperience(@RequestBody List<UserWorkExperienceForm> userWorkExperienceForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		for(UserWorkExperienceForm uwef : userWorkExperienceForm)
 		{
-			if(userWorkExperienceRepository.existsByUserIdAndOrganizationName(id,userWorkExperienceForm.getOrganizationName()))
-			{
-				Optional<UserWorkExperience> userWorkExperience = userWorkExperienceRepository.findByUserIdAndOrganizationName(id,userWorkExperienceForm.getOrganizationName());
+		if (uwef.getUserId() == id) {
+			if (userWorkExperienceRepository.existsByUserIdAndOrganizationName(id,
+					uwef.getOrganizationName())) {
+				Optional<UserWorkExperience> userWorkExperience = userWorkExperienceRepository
+						.findByUserIdAndOrganizationName(id, uwef.getOrganizationName());
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				userWorkExperience.get().setModifiedDate(simpleDateFormat.format(new Date()));
 				userWorkExperience.get().setUserId(id);
 				userWorkExperience.get().setModifiedBy(id);
-				userWorkExperience.get().setOrganizationName(userWorkExperienceForm.getOrganizationName());
-				userWorkExperience.get().setDesignation(userWorkExperienceForm.getDesignation());
-				userWorkExperience.get().setDateOfJoining(userWorkExperienceForm.getDateOfJoining());
-				userWorkExperience.get().setDateOfLeaving(userWorkExperienceForm.getDateOfLeaving());
-				userWorkExperience.get().setPayscale(userWorkExperienceForm.getPayscale());
-				userWorkExperience.get().setCountry(userWorkExperienceForm.getCountry());
-				userWorkExperience.get().setState(userWorkExperienceForm.getState());
-				userWorkExperience.get().setCity(userWorkExperienceForm.getCity());
+				userWorkExperience.get().setOrganizationName(uwef.getOrganizationName());
+				userWorkExperience.get().setDesignation(uwef.getDesignation());
+				userWorkExperience.get().setDateOfJoining(uwef.getDateOfJoining());
+				userWorkExperience.get().setDateOfLeaving(uwef.getDateOfLeaving());
+				userWorkExperience.get().setPayscale(uwef.getPayscale());
+				userWorkExperience.get().setCountry(uwef.getCountry());
+				userWorkExperience.get().setState(uwef.getState());
+				userWorkExperience.get().setCity(uwef.getCity());
 				UserWorkExperience test = userWorkExperienceRepository.save(userWorkExperience.get());
-				if(test!=null)
-					return new ResponseEntity<>(new ResponseMessage("User Work Experience updated successfully!"), HttpStatus.OK);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("User Work Experience updated successfully!"),
+							HttpStatus.OK);
 				else
-					return new ResponseEntity<>(new ResponseMessage("Unable to update User Work Experience, please try again later!"), HttpStatus.BAD_REQUEST);
-			}
-			else
-				return new ResponseEntity<>(new ResponseMessage("User Work Experience not found, you need to add it first!"), HttpStatus.BAD_REQUEST);
-				
-			
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to update User Work Experience, please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(
+						new ResponseMessage("User Work Experience not found, you need to add it first!"),
+						HttpStatus.BAD_REQUEST);
+
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Work Experience!"),
+					HttpStatus.BAD_REQUEST);
 		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Work Experience!"), HttpStatus.BAD_REQUEST);
+		return null;
 	}
-	
-	
 
 	@ApiOperation(value = "User Research Work", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userResearchWork", method = RequestMethod.GET)
-	public List<UserResearchWork> geUserResearchWork(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
+	public List<UserResearchWork> geUserResearchWork(@RequestParam(required=false) Long id, HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		}
-		else {
-			id=profileForm.getId();
-		}
+		} 
 		List<UserResearchWork> research = userResearchWorkRepository.findByUserId(id);
 		// pdf
 		return research;
@@ -380,6 +373,14 @@ public class ProfileController {
 			return result;
 		}
 		return null;
+	}
+	
+	
+	@ApiOperation(value = "Get Research Paper Count", response = Object.class, httpMethod = "GET", produces = "application/json")
+	@RequestMapping(value = "/getResearchPaperCount", method = RequestMethod.GET)
+	public long getBookCount() {
+		long count = userResearchWorkRepository.count();
+		return count;
 	}
 	
 	@ApiOperation(value = "Search Research Paper By Title", response = Object.class, httpMethod = "GET", produces = "application/json")
@@ -687,11 +688,10 @@ public class ProfileController {
 	
 	@ApiOperation(value = "Add User Research Work", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addUserResearchWork", method = RequestMethod.POST)
-	public ResponseEntity<?> addUserResearchWork(@RequestBody UserResearchWorkForm userResearchWorkForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userResearchWorkForm.getUserId()==id)
-		{
+	public ResponseEntity<?> addUserResearchWork(@RequestBody UserResearchWorkForm userResearchWorkForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userResearchWorkForm.getUserId() == id) {
 			UserResearchWork userResearchWork = new UserResearchWork();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			userResearchWork.setCreatedDate(simpleDateFormat.format(new Date()));
@@ -708,25 +708,27 @@ public class ProfileController {
 			userResearchWork.setOtherAuthors(userResearchWorkForm.getOtherAuthors());
 			userResearchWork.setYearOfPublication(userResearchWorkForm.getYearOfPublication());
 			UserResearchWork test = userResearchWorkRepository.save(userResearchWork);
-			if(test!=null)
-				return new ResponseEntity<>(new ResponseMessage("User research Work added successfully!"), HttpStatus.OK);
+			if (test != null)
+				return new ResponseEntity<>(new ResponseMessage("User research Work added successfully!"),
+						HttpStatus.OK);
 			else
-				return new ResponseEntity<>(new ResponseMessage("Unable to add User Research Work, please try again later!"), HttpStatus.BAD_REQUEST);
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Research Work!"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(
+						new ResponseMessage("Unable to add User Research Work, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Research Work!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ApiOperation(value = "Edit User Research Work", response = Object.class, httpMethod = "PUT", produces = "application/json")
 	@RequestMapping(value = "/editUserResearchWork", method = RequestMethod.PUT)
-	public ResponseEntity<?> editUserResearchWork(@RequestBody UserResearchWorkForm userResearchWorkForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userResearchWorkForm.getUserId()==id)
-		{
-			if(userResearchWorkRepository.existsByUserIdAndTitle(id,userResearchWorkForm.getTitle()))
-			{
-				Optional<UserResearchWork> userResearchWork = userResearchWorkRepository.findByUserIdAndTitle(id,userResearchWorkForm.getTitle());
+	public ResponseEntity<?> editUserResearchWork(@RequestBody UserResearchWorkForm userResearchWorkForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userResearchWorkForm.getUserId() == id) {
+			if (userResearchWorkRepository.existsByUserIdAndTitle(id, userResearchWorkForm.getTitle())) {
+				Optional<UserResearchWork> userResearchWork = userResearchWorkRepository.findByUserIdAndTitle(id,
+						userResearchWorkForm.getTitle());
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				userResearchWork.get().setModifiedDate(simpleDateFormat.format(new Date()));
 				userResearchWork.get().setUserId(id);
@@ -742,43 +744,40 @@ public class ProfileController {
 				userResearchWork.get().setOtherAuthors(userResearchWorkForm.getOtherAuthors());
 				userResearchWork.get().setYearOfPublication(userResearchWorkForm.getYearOfPublication());
 				UserResearchWork test = userResearchWorkRepository.save(userResearchWork.get());
-				if(test!=null)
-					return new ResponseEntity<>(new ResponseMessage("User Research Work updated successfully!"), HttpStatus.OK);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("User Research Work updated successfully!"),
+							HttpStatus.OK);
 				else
-					return new ResponseEntity<>(new ResponseMessage("Unable to update User Research Work, please try again later!"), HttpStatus.BAD_REQUEST);
-			}
-			else
-				return new ResponseEntity<>(new ResponseMessage("User Research Work not found, you need to add it first!"), HttpStatus.BAD_REQUEST);
-				
-			
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Research Work!"), HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to update User Research Work, please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(
+						new ResponseMessage("User Research Work not found, you need to add it first!"),
+						HttpStatus.BAD_REQUEST);
+
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Research Work!"),
+					HttpStatus.BAD_REQUEST);
 	}
 
 	@ApiOperation(value = "User Internship", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userInternship", method = RequestMethod.GET)
-	public List<UserInternship> getUserInternship(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
+	public List<UserInternship> getUserInternship(@RequestParam(required=false) Long id, HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		}
-		else {
-			id=profileForm.getId();
-		}
+		} 
 		List<UserInternship> internship = userInternshipRepository.findByUserId(id);
 		// certificate
 		return internship;
 	}
-	
+
 	@ApiOperation(value = "Add User Internship", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addUserInternship", method = RequestMethod.POST)
-	public ResponseEntity<?> addUserInternship(@RequestBody UserInternshipForm userInternshipForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userInternshipForm.getUserId()==id)
-		{
+	public ResponseEntity<?> addUserInternship(@RequestBody UserInternshipForm userInternshipForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userInternshipForm.getUserId() == id) {
 			UserInternship userInternship = new UserInternship();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			userInternship.setCreatedDate(simpleDateFormat.format(new Date()));
@@ -792,25 +791,26 @@ public class ProfileController {
 			userInternship.setStartDate(userInternshipForm.getStartDate());
 			userInternship.setEndDate(userInternshipForm.getEndDate());
 			UserInternship test = userInternshipRepository.save(userInternship);
-			if(test!=null)
+			if (test != null)
 				return new ResponseEntity<>(new ResponseMessage("User Internship added successfully!"), HttpStatus.OK);
 			else
-				return new ResponseEntity<>(new ResponseMessage("Unable to add User Internship, please try again later!"), HttpStatus.BAD_REQUEST);
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Internship!"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(
+						new ResponseMessage("Unable to add User Internship, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Internship!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ApiOperation(value = "Edit User Internship", response = Object.class, httpMethod = "PUT", produces = "application/json")
 	@RequestMapping(value = "/editUserInternship", method = RequestMethod.PUT)
-	public ResponseEntity<?> editUserInternship(@RequestBody UserInternshipForm userInternshipForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userInternshipForm.getUserId()==id)
-		{
-			if(userInternshipRepository.existsByUserIdAndCompanyName(id,userInternshipForm.getCompanyName()))
-			{
-				Optional<UserInternship> userInternship = userInternshipRepository.findByUserIdAndCompanyName(id,userInternshipForm.getCompanyName());
+	public ResponseEntity<?> editUserInternship(@RequestBody UserInternshipForm userInternshipForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userInternshipForm.getUserId() == id) {
+			if (userInternshipRepository.existsByUserIdAndCompanyName(id, userInternshipForm.getCompanyName())) {
+				Optional<UserInternship> userInternship = userInternshipRepository.findByUserIdAndCompanyName(id,
+						userInternshipForm.getCompanyName());
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				userInternship.get().setModifiedDate(simpleDateFormat.format(new Date()));
 				userInternship.get().setUserId(id);
@@ -823,43 +823,39 @@ public class ProfileController {
 				userInternship.get().setStartDate(userInternshipForm.getStartDate());
 				userInternship.get().setEndDate(userInternshipForm.getEndDate());
 				UserInternship test = userInternshipRepository.save(userInternship.get());
-				if(test!=null)
-					return new ResponseEntity<>(new ResponseMessage("User Internship updated successfully!"), HttpStatus.OK);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("User Internship updated successfully!"),
+							HttpStatus.OK);
 				else
-					return new ResponseEntity<>(new ResponseMessage("Unable to update User Internship, please try again later!"), HttpStatus.BAD_REQUEST);
-			}
-			else
-				return new ResponseEntity<>(new ResponseMessage("User Internship not found, you need to add it first!"), HttpStatus.BAD_REQUEST);
-				
-			
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Internship!"), HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to update User Internship, please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(new ResponseMessage("User Internship not found, you need to add it first!"),
+						HttpStatus.BAD_REQUEST);
+
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Internship!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
 
 	@ApiOperation(value = "User Technical Acitvity", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userTechnicalActivity", method = RequestMethod.GET)
-	public List<UserTechnicalActivity> getUserTechnicalActivity(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
+	public List<UserTechnicalActivity> getUserTechnicalActivity(@RequestParam(required=false) Long id,
+			HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		}
-		else {
-			id=profileForm.getId();
 		}
 		List<UserTechnicalActivity> technical = userTechnicalActivityRepository.findByUserId(id);
 		return technical;
 	}
-	
+
 	@ApiOperation(value = "Add User Technical Activity", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addUserTechnicalActivity", method = RequestMethod.POST)
-	public ResponseEntity<?> addUserTechnicalActivity(@RequestBody UserTechnicalActivityForm userTechnicalActivityForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userTechnicalActivityForm.getUserId()==id)
-		{
+	public ResponseEntity<?> addUserTechnicalActivity(@RequestBody UserTechnicalActivityForm userTechnicalActivityForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userTechnicalActivityForm.getUserId() == id) {
 			UserTechnicalActivity userTechnicalActivity = new UserTechnicalActivity();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			userTechnicalActivity.setCreatedDate(simpleDateFormat.format(new Date()));
@@ -873,25 +869,27 @@ public class ProfileController {
 			userTechnicalActivity.setAttendedOrganized(userTechnicalActivityForm.getAttendedOrganized());
 			userTechnicalActivity.setPlace(userTechnicalActivityForm.getPlace());
 			UserTechnicalActivity test = userTechnicalActivityRepository.save(userTechnicalActivity);
-			if(test!=null)
-				return new ResponseEntity<>(new ResponseMessage("User Technical Activity added successfully!"), HttpStatus.OK);
+			if (test != null)
+				return new ResponseEntity<>(new ResponseMessage("User Technical Activity added successfully!"),
+						HttpStatus.OK);
 			else
-				return new ResponseEntity<>(new ResponseMessage("Unable to add User Technical Activity, please try again later!"), HttpStatus.BAD_REQUEST);
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Technical Activity!"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(
+						new ResponseMessage("Unable to add User Technical Activity, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Technical Activity!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ApiOperation(value = "Edit User Technical Activity", response = Object.class, httpMethod = "PUT", produces = "application/json")
 	@RequestMapping(value = "/editUserTechnicalActivity", method = RequestMethod.PUT)
-	public ResponseEntity<?> editUserTechnicalActivity(@RequestBody UserTechnicalActivityForm userTechnicalActivityForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userTechnicalActivityForm.getUserId()==id)
-		{
-			if(userTechnicalActivityRepository.existsByUserIdAndSubject(id,userTechnicalActivityForm.getSubject()))
-			{
-				Optional<UserTechnicalActivity> userTechnicalActivity = userTechnicalActivityRepository.findByUserIdAndSubject(id,userTechnicalActivityForm.getSubject());
+	public ResponseEntity<?> editUserTechnicalActivity(@RequestBody UserTechnicalActivityForm userTechnicalActivityForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userTechnicalActivityForm.getUserId() == id) {
+			if (userTechnicalActivityRepository.existsByUserIdAndSubject(id, userTechnicalActivityForm.getSubject())) {
+				Optional<UserTechnicalActivity> userTechnicalActivity = userTechnicalActivityRepository
+						.findByUserIdAndSubject(id, userTechnicalActivityForm.getSubject());
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				userTechnicalActivity.get().setModifiedDate(simpleDateFormat.format(new Date()));
 				userTechnicalActivity.get().setUserId(id);
@@ -904,125 +902,130 @@ public class ProfileController {
 				userTechnicalActivity.get().setAttendedOrganized(userTechnicalActivityForm.getAttendedOrganized());
 				userTechnicalActivity.get().setPlace(userTechnicalActivityForm.getPlace());
 				UserTechnicalActivity test = userTechnicalActivityRepository.save(userTechnicalActivity.get());
-				if(test!=null)
-					return new ResponseEntity<>(new ResponseMessage("User Technical Activity updated successfully!"), HttpStatus.OK);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("User Technical Activity updated successfully!"),
+							HttpStatus.OK);
 				else
-					return new ResponseEntity<>(new ResponseMessage("Unable to update User Technical Activity, please try again later!"), HttpStatus.BAD_REQUEST);
-			}
-			else
-				return new ResponseEntity<>(new ResponseMessage("User Technical Activity not found, you need to add it first!"), HttpStatus.BAD_REQUEST);
-				
-			
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Technical Activity!"), HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to update User Technical Activity, please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(
+						new ResponseMessage("User Technical Activity not found, you need to add it first!"),
+						HttpStatus.BAD_REQUEST);
+
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Technical Activity!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
-	
-	
 
 	@ApiOperation(value = "User Cultural Activity Achievements", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userCulturalActivityAchievements", method = RequestMethod.GET)
-	public List<UserCulturalActivityAchievements> getUserCulturalActivityAchievements(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
+	public List<UserCulturalActivityAchievements> getUserCulturalActivityAchievements(@RequestParam(required=false) Long id, HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		}
-		else {
-			id=profileForm.getId();
-		}
+		} 
 		List<UserCulturalActivityAchievements> cultural = userCulturalActivityAchievementsRepository.findByUserId(id);
 		// certificate
 		return cultural;
 	}
-	
+
 	@ApiOperation(value = "Add User Cultural Activity Achievements", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addUserCulturalActivityAchievements", method = RequestMethod.POST)
-	public ResponseEntity<?> addUserCulturalActivityAchievements(@RequestBody UserCulturalActivityAchievementsForm userCulturalActivityAchievementsForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userCulturalActivityAchievementsForm.getUserId()==id)
-		{
+	public ResponseEntity<?> addUserCulturalActivityAchievements(
+			@RequestBody UserCulturalActivityAchievementsForm userCulturalActivityAchievementsForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userCulturalActivityAchievementsForm.getUserId() == id) {
 			UserCulturalActivityAchievements userCulturalActivityAchievements = new UserCulturalActivityAchievements();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			userCulturalActivityAchievements.setCreatedDate(simpleDateFormat.format(new Date()));
 			userCulturalActivityAchievements.setUserId(id);
 			userCulturalActivityAchievements.setCreatedBy(id);
 			userCulturalActivityAchievements.setType(userCulturalActivityAchievementsForm.getType());
-			userCulturalActivityAchievements.setNameOfActivity(userCulturalActivityAchievementsForm.getNameOfActivity());
+			userCulturalActivityAchievements
+					.setNameOfActivity(userCulturalActivityAchievementsForm.getNameOfActivity());
 			userCulturalActivityAchievements.setAchievement(userCulturalActivityAchievementsForm.getAchievement());
 			userCulturalActivityAchievements.setDate(userCulturalActivityAchievementsForm.getDate());
 			userCulturalActivityAchievements.setPlace(userCulturalActivityAchievementsForm.getPlace());
-			UserCulturalActivityAchievements test = userCulturalActivityAchievementsRepository.save(userCulturalActivityAchievements);
-			if(test!=null)
-				return new ResponseEntity<>(new ResponseMessage("User Cultural Activity Achievement added successfully!"), HttpStatus.OK);
+			UserCulturalActivityAchievements test = userCulturalActivityAchievementsRepository
+					.save(userCulturalActivityAchievements);
+			if (test != null)
+				return new ResponseEntity<>(
+						new ResponseMessage("User Cultural Activity Achievement added successfully!"), HttpStatus.OK);
 			else
-				return new ResponseEntity<>(new ResponseMessage("Unable to add User Cultural Activity Achievement, please try again later!"), HttpStatus.BAD_REQUEST);
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Cultural Activity Achievement!"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(
+						new ResponseMessage(
+								"Unable to add User Cultural Activity Achievement, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(
+					new ResponseMessage("You are not allowed to add User Cultural Activity Achievement!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ApiOperation(value = "Edit User Cultural Activity Achievements", response = Object.class, httpMethod = "PUT", produces = "application/json")
 	@RequestMapping(value = "/editUserCulturalActivityAchievements", method = RequestMethod.PUT)
-	public ResponseEntity<?> editUserCulturalActivityAchievements(@RequestBody UserCulturalActivityAchievementsForm userCulturalActivityAchievementsForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userCulturalActivityAchievementsForm.getUserId()==id)
-		{
-			if(userCulturalActivityAchievementsRepository.existsByUserIdAndNameOfActivity(id,userCulturalActivityAchievementsForm.getNameOfActivity()))
-			{
-				Optional<UserCulturalActivityAchievements> userCulturalActivityAchievements = userCulturalActivityAchievementsRepository.findByUserIdAndNameOfActivity(id,userCulturalActivityAchievementsForm.getNameOfActivity());
+	public ResponseEntity<?> editUserCulturalActivityAchievements(
+			@RequestBody UserCulturalActivityAchievementsForm userCulturalActivityAchievementsForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userCulturalActivityAchievementsForm.getUserId() == id) {
+			if (userCulturalActivityAchievementsRepository.existsByUserIdAndNameOfActivity(id,
+					userCulturalActivityAchievementsForm.getNameOfActivity())) {
+				Optional<UserCulturalActivityAchievements> userCulturalActivityAchievements = userCulturalActivityAchievementsRepository
+						.findByUserIdAndNameOfActivity(id, userCulturalActivityAchievementsForm.getNameOfActivity());
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				userCulturalActivityAchievements.get().setModifiedDate(simpleDateFormat.format(new Date()));
 				userCulturalActivityAchievements.get().setUserId(id);
 				userCulturalActivityAchievements.get().setModifiedBy(id);
 				userCulturalActivityAchievements.get().setType(userCulturalActivityAchievementsForm.getType());
-				userCulturalActivityAchievements.get().setNameOfActivity(userCulturalActivityAchievementsForm.getNameOfActivity());
-				userCulturalActivityAchievements.get().setAchievement(userCulturalActivityAchievementsForm.getAchievement());
+				userCulturalActivityAchievements.get()
+						.setNameOfActivity(userCulturalActivityAchievementsForm.getNameOfActivity());
+				userCulturalActivityAchievements.get()
+						.setAchievement(userCulturalActivityAchievementsForm.getAchievement());
 				userCulturalActivityAchievements.get().setDate(userCulturalActivityAchievementsForm.getDate());
 				userCulturalActivityAchievements.get().setPlace(userCulturalActivityAchievementsForm.getPlace());
-				UserCulturalActivityAchievements test = userCulturalActivityAchievementsRepository.save(userCulturalActivityAchievements.get());
-				if(test!=null)
-					return new ResponseEntity<>(new ResponseMessage("User Cultural Activity Achievement updated successfully!"), HttpStatus.OK);
+				UserCulturalActivityAchievements test = userCulturalActivityAchievementsRepository
+						.save(userCulturalActivityAchievements.get());
+				if (test != null)
+					return new ResponseEntity<>(
+							new ResponseMessage("User Cultural Activity Achievement updated successfully!"),
+							HttpStatus.OK);
 				else
-					return new ResponseEntity<>(new ResponseMessage("Unable to update User Cultural Activity Achievement, please try again later!"), HttpStatus.BAD_REQUEST);
-			}
-			else
-				return new ResponseEntity<>(new ResponseMessage("User Cultural Activity Achievement not found, you need to add it first!"), HttpStatus.BAD_REQUEST);
-				
-			
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Cultural Activity Achievement!"), HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>(
+							new ResponseMessage(
+									"Unable to update User Cultural Activity Achievement, please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(
+						new ResponseMessage("User Cultural Activity Achievement not found, you need to add it first!"),
+						HttpStatus.BAD_REQUEST);
+
+		} else
+			return new ResponseEntity<>(
+					new ResponseMessage("You are not allowed to update User Cultural Activity Achievement!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
-	
 
 	@ApiOperation(value = "User Competitive Exams", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userCompetitiveExams", method = RequestMethod.GET)
-	public List<UserCompetitiveExams> getUserCompetitiveExams(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
+	public List<UserCompetitiveExams> getUserCompetitiveExams(@RequestParam(required=false) Long id,
+			HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		}
-		else {
-			id=profileForm.getId();
 		} 
 		List<UserCompetitiveExams> exams = userCompetitiveExamsRepository.findByUserId(id);
 		// score card
 		return exams;
 	}
-	
+
 	@ApiOperation(value = "Add User Competitive Exams", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addUserCompetitiveExams", method = RequestMethod.POST)
-	public ResponseEntity<?> addUserCompetitiveExams(@RequestBody UserCompetitiveExamsForm userCompetitiveExamsForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userCompetitiveExamsForm.getUserId()==id)
-		{
+	public ResponseEntity<?> addUserCompetitiveExams(@RequestBody UserCompetitiveExamsForm userCompetitiveExamsForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userCompetitiveExamsForm.getUserId() == id) {
 			UserCompetitiveExams userCompetitiveExams = new UserCompetitiveExams();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			userCompetitiveExams.setCreatedDate(simpleDateFormat.format(new Date()));
@@ -1034,25 +1037,28 @@ public class ProfileController {
 			userCompetitiveExams.setRegistrationNo(userCompetitiveExamsForm.getRegisterationNo());
 			userCompetitiveExams.setYear(userCompetitiveExamsForm.getYear());
 			UserCompetitiveExams test = userCompetitiveExamsRepository.save(userCompetitiveExams);
-			if(test!=null)
-				return new ResponseEntity<>(new ResponseMessage("User Competitive Exam added successfully!"), HttpStatus.OK);
+			if (test != null)
+				return new ResponseEntity<>(new ResponseMessage("User Competitive Exam added successfully!"),
+						HttpStatus.OK);
 			else
-				return new ResponseEntity<>(new ResponseMessage("Unable to add User Competitive Exam, please try again later!"), HttpStatus.BAD_REQUEST);
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Competitive Exam!"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(
+						new ResponseMessage("Unable to add User Competitive Exam, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Competitive Exam!"),
+					HttpStatus.BAD_REQUEST);
 	}
 
 	@ApiOperation(value = "Edit User Competitive Exams", response = Object.class, httpMethod = "PUT", produces = "application/json")
 	@RequestMapping(value = "/editUserCompetitiveExams", method = RequestMethod.PUT)
-	public ResponseEntity<?> editUserCompetitiveExams(@RequestBody UserCompetitiveExamsForm userCompetitiveExamsForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userCompetitiveExamsForm.getUserId()==id)
-		{
-			if(userCompetitiveExamsRepository.existsByUserIdAndNameOfExam(id,userCompetitiveExamsForm.getNameOfExam()))
-			{
-				Optional<UserCompetitiveExams> userCompetitiveExams = userCompetitiveExamsRepository.findByUserIdAndNameOfExam(id,userCompetitiveExamsForm.getNameOfExam());
+	public ResponseEntity<?> editUserCompetitiveExams(@RequestBody UserCompetitiveExamsForm userCompetitiveExamsForm,
+			HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userCompetitiveExamsForm.getUserId() == id) {
+			if (userCompetitiveExamsRepository.existsByUserIdAndNameOfExam(id,
+					userCompetitiveExamsForm.getNameOfExam())) {
+				Optional<UserCompetitiveExams> userCompetitiveExams = userCompetitiveExamsRepository
+						.findByUserIdAndNameOfExam(id, userCompetitiveExamsForm.getNameOfExam());
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				userCompetitiveExams.get().setModifiedDate(simpleDateFormat.format(new Date()));
 				userCompetitiveExams.get().setUserId(id);
@@ -1063,43 +1069,40 @@ public class ProfileController {
 				userCompetitiveExams.get().setRegistrationNo(userCompetitiveExamsForm.getRegisterationNo());
 				userCompetitiveExams.get().setYear(userCompetitiveExamsForm.getYear());
 				UserCompetitiveExams test = userCompetitiveExamsRepository.save(userCompetitiveExams.get());
-				if(test!=null)
-					return new ResponseEntity<>(new ResponseMessage("User Competitive Exam details updated successfully!"), HttpStatus.OK);
+				if (test != null)
+					return new ResponseEntity<>(
+							new ResponseMessage("User Competitive Exam details updated successfully!"), HttpStatus.OK);
 				else
-					return new ResponseEntity<>(new ResponseMessage("Unable to update User Competitive Exam details, please try again later!"), HttpStatus.BAD_REQUEST);
-			}
-			else
-				return new ResponseEntity<>(new ResponseMessage("User Competitive Exam not found, you need to add it first!"), HttpStatus.BAD_REQUEST);
-				
-			
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Competitive Exam details!"), HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>(
+							new ResponseMessage(
+									"Unable to update User Competitive Exam details, please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(
+						new ResponseMessage("User Competitive Exam not found, you need to add it first!"),
+						HttpStatus.BAD_REQUEST);
+
+		} else
+			return new ResponseEntity<>(
+					new ResponseMessage("You are not allowed to update User Competitive Exam details!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
-	
+
 	@ApiOperation(value = "User Project", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/userProject", method = RequestMethod.GET)
-	public List<UserProjects> getUserProject(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
+	public List<UserProjects> getUserProject(@RequestParam(required=false) Long id, HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		}
-		else {
-			id=profileForm.getId();
 		} 
 		List<UserProjects> projects = userProjectsRepository.findByUserId(id);
 		return projects;
 	}
-	
+
 	@ApiOperation(value = "Add User Project", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/addUserProject", method = RequestMethod.POST)
-	public ResponseEntity<?> addUserProject(@RequestBody UserProjectForm userProjectForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userProjectForm.getUserId()==id)
-		{
+	public ResponseEntity<?> addUserProject(@RequestBody UserProjectForm userProjectForm, HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userProjectForm.getUserId() == id) {
 			UserProjects userProject = new UserProjects();
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			userProject.setCreatedDate(simpleDateFormat.format(new Date()));
@@ -1113,25 +1116,24 @@ public class ProfileController {
 			userProject.setRole(userProjectForm.getRole());
 			userProject.setGuide(userProjectForm.getGuide());
 			UserProjects test = userProjectsRepository.save(userProject);
-			if(test!=null)
+			if (test != null)
 				return new ResponseEntity<>(new ResponseMessage("User Project added successfully!"), HttpStatus.OK);
 			else
-				return new ResponseEntity<>(new ResponseMessage("Unable to add User Project, please try again later!"), HttpStatus.BAD_REQUEST);
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Project!"), HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(new ResponseMessage("Unable to add User Project, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Project!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
+
 	@ApiOperation(value = "Edit User Project", response = Object.class, httpMethod = "PUT", produces = "application/json")
 	@RequestMapping(value = "/editUserProject", method = RequestMethod.PUT)
-	public ResponseEntity<?> editUserProject(@RequestBody UserProjectForm userProjectForm, HttpServletRequest request)
-	{
-		long id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		if(userProjectForm.getUserId()==id)
-		{
-			if(userProjectsRepository.existsByUserIdAndTitle(id,userProjectForm.getTitle()))
-			{
-				Optional<UserProjects> userProject = userProjectsRepository.findByUserIdAndTitle(id,userProjectForm.getTitle());
+	public ResponseEntity<?> editUserProject(@RequestBody UserProjectForm userProjectForm, HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userProjectForm.getUserId() == id) {
+			if (userProjectsRepository.existsByUserIdAndTitle(id, userProjectForm.getTitle())) {
+				Optional<UserProjects> userProject = userProjectsRepository.findByUserIdAndTitle(id,
+						userProjectForm.getTitle());
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				userProject.get().setModifiedDate(simpleDateFormat.format(new Date()));
 				userProject.get().setUserId(id);
@@ -1144,52 +1146,48 @@ public class ProfileController {
 				userProject.get().setRole(userProjectForm.getRole());
 				userProject.get().setGuide(userProjectForm.getGuide());
 				UserProjects test = userProjectsRepository.save(userProject.get());
-				if(test!=null)
-					return new ResponseEntity<>(new ResponseMessage("User Project details updated successfully!"), HttpStatus.OK);
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("User Project details updated successfully!"),
+							HttpStatus.OK);
 				else
-					return new ResponseEntity<>(new ResponseMessage("Unable to update User Project details, please try again later!"), HttpStatus.BAD_REQUEST);
-			}
-			else
-				return new ResponseEntity<>(new ResponseMessage("User Project not found, you need to add it first!"), HttpStatus.BAD_REQUEST);
-				
-			
-		}
-		else
-			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Project details!"), HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to update User Project details, please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(new ResponseMessage("User Project not found, you need to add it first!"),
+						HttpStatus.BAD_REQUEST);
+
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Project details!"),
+					HttpStatus.BAD_REQUEST);
 	}
-	
 
 	@ApiOperation(value = "Staff Basic Profile Data", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/staffBasicProfile", method = RequestMethod.GET)
-	public StaffBasicProfileResponse getStaffBasicProfile(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
+	public StaffBasicProfileResponse getStaffBasicProfile(@RequestParam(required=false) Long id,
+			HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		}
-		else {
-			id=profileForm.getId();
 		} 
 		Optional<StaffProfile> staffProfile = staffRepository.findByUserId(id);
-		if(staffProfile.isPresent()) {
-		StaffBasicProfileResponse sbpr = new StaffBasicProfileResponse();
-		sbpr.setUserId(staffProfile.get().getUserId());
-		sbpr.setEmployeeId(staffProfile.get().getEmployeeId());
-		sbpr.setName(staffProfile.get().getName());
-		sbpr.setNameAcronym(staffProfile.get().getNameAcronym());
-		sbpr.setCurrentDesignation(staffProfile.get().getCurrentDesignation());
-		sbpr.setEmail(staffProfile.get().getEmail());
-		sbpr.setDob(staffProfile.get().getDob());
-		sbpr.setBloodGroup(staffProfile.get().getBloodGroup());
-		sbpr.setGender(staffProfile.get().getGender());
-		sbpr.setMotherName(staffProfile.get().getMotherName());
-		sbpr.setFatherName(staffProfile.get().getFatherName());
-		sbpr.setMobileNo(staffProfile.get().getMobileNo());
-		sbpr.setAlternateMobileNo(staffProfile.get().getAlternateMobileNo());
-		sbpr.setAreaOfSpecialization(staffProfile.get().getAreaOfSpecialization());
-		return sbpr;
-		}
-		else
+		if (staffProfile.isPresent()) {
+			StaffBasicProfileResponse sbpr = new StaffBasicProfileResponse();
+			sbpr.setUserId(staffProfile.get().getUserId());
+			sbpr.setEmployeeId(staffProfile.get().getEmployeeId());
+			sbpr.setName(staffProfile.get().getName());
+			sbpr.setNameAcronym(staffProfile.get().getNameAcronym());
+			sbpr.setCurrentDesignation(staffProfile.get().getCurrentDesignation());
+			sbpr.setEmail(staffProfile.get().getEmail());
+			sbpr.setDob(staffProfile.get().getDob());
+			sbpr.setBloodGroup(staffProfile.get().getBloodGroup());
+			sbpr.setGender(staffProfile.get().getGender());
+			sbpr.setMotherName(staffProfile.get().getMotherName());
+			sbpr.setFatherName(staffProfile.get().getFatherName());
+			sbpr.setMobileNo(staffProfile.get().getMobileNo());
+			sbpr.setAlternateMobileNo(staffProfile.get().getAlternateMobileNo());
+			sbpr.setAreaOfSpecialization(staffProfile.get().getAreaOfSpecialization());
+			return sbpr;
+		} else
 			return null;
 	}
 
@@ -1198,6 +1196,7 @@ public class ProfileController {
 	public ResponseEntity<?> editStaffBasicProfile(@Valid @RequestBody StaffBasicProfileForm staffBasicProfileForm,
 			HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		System.out.println(id);
 		if (staffBasicProfileForm.getUserId() == id) {
 			Optional<StaffProfile> staffProfile = staffRepository.findByUserId(id);
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -1216,27 +1215,15 @@ public class ProfileController {
 			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update!"), HttpStatus.BAD_REQUEST);
 	}
 
-	@ApiOperation(value = "Staff Duties", response = Object.class, httpMethod = "GET", produces = "application/json")
-	@RequestMapping(value = "/staffDuties", method = RequestMethod.GET)
-	public void getStaffDuties(HttpServletRequest request) {
-//		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-
-	}
-
 	@ApiOperation(value = "Student Basic Profile Data", response = Object.class, httpMethod = "GET", produces = "application/json")
 	@RequestMapping(value = "/studentBasicProfile", method = RequestMethod.GET)
-	public StudentBasicProfileResponse getStudentBasicProfile(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
-		
-		long id;
-		if(profileForm.getId()==null) {
+	public StudentBasicProfileResponse getStudentBasicProfile(@RequestParam(required=false) Long id,
+			HttpServletRequest request) {
+		if (id == null) {
 			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		}
-		else {
-			id=profileForm.getId();
-		}
-		
+		} 
 		Optional<StudentProfile> studentProfile = studentRepository.findByUserId(id);
-		if(studentProfile.isPresent()) {
+		if (studentProfile.isPresent()) {
 			StudentBasicProfileResponse sbpr = new StudentBasicProfileResponse();
 			sbpr.setUserId(studentProfile.get().getUserId());
 			sbpr.setEnrollmentId(studentProfile.get().getEnrollmentId());
@@ -1253,13 +1240,12 @@ public class ProfileController {
 			sbpr.setCategory(studentProfile.get().getCategory());
 			sbpr.setGender(studentProfile.get().getGender());
 			sbpr.setBloodGroup(studentProfile.get().getBloodGroup());
-			String courseYearSession = academicsClient.getCoursename(studentProfile.get().getCourseId()) + "-"+ studentProfile.get().getAdmissionYear() + " Batch";
+			String courseYearSession = academicsClient.getCoursename(studentProfile.get().getCourseId()) + "-"
+					+ studentProfile.get().getAdmissionYear() + " Batch";
 			sbpr.setCourseYearSession(courseYearSession);
-			return sbpr;	
-		}
-		else
+			return sbpr;
+		} else
 			return null;
-		
 	}
 
 	@ApiOperation(value = "Edit Student Basic Profile Data", response = Object.class, httpMethod = "PUT", produces = "application/json")
@@ -1292,19 +1278,155 @@ public class ProfileController {
 
 	@ApiOperation(value = "User Placements", response = Object.class, httpMethod = "GET", produces = "application/json") //only for students
 	@RequestMapping(value = "/userPlacements", method = RequestMethod.GET)
-	public List<UserPlacement> getUserPlacements(@RequestBody ProfileForm profileForm,HttpServletRequest request) {
+	public List<UserPlacement> getUserPlacements(@RequestParam(required=false) Long id,HttpServletRequest request) {
 		
-		long id;
-		if(profileForm.getId()==null) {
-			id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
-		}
-		else {
-			id=profileForm.getId();
-		} 
-		List<UserProjects> projects = userProjectsRepository.findByUserId(id);
-		return projects;
+		if(id==null)
+		{
+			id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		}	
+		List<UserPlacement> placements = userPlacementRepository.findByUserId(id);
+		return placements;
 	}
 
+	@ApiOperation(value = "Add User Placement", response = Object.class, httpMethod = "POST", produces = "application/json")
+	@RequestMapping(value = "/addUserPlacement", method = RequestMethod.POST)
+	public ResponseEntity<?> addUserPlacement(@RequestBody UserPlacementForm userPlacementForm, HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userPlacementForm.getUserId() == id) {
+			UserPlacement userPlacement = new UserPlacement();
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			userPlacement.setCreatedDate(simpleDateFormat.format(new Date()));
+			userPlacement.setCreatedBy(id);
+			userPlacement.setUserId(id);
+			userPlacement.setEnrollmentId(userPlacementForm.getEnrollmentid());
+			userPlacement.setCompanyName(userPlacementForm.getCompanyName());
+			userPlacement.setJoiningLocation(userPlacementForm.getJoiningLocation());
+			userPlacement.setJoiningStatus(userPlacementForm.getJoiningStatus());
+			userPlacement.setJoiningPackage(userPlacementForm.getJoiningPacakge());
+			userPlacement.setCampusType(userPlacementForm.getCampusType());
+			UserPlacement test = userPlacementRepository.save(userPlacement);
+			if (test != null)
+				return new ResponseEntity<>(new ResponseMessage("User Placement added successfully!"), HttpStatus.OK);
+			else
+				return new ResponseEntity<>(new ResponseMessage("Unable to add User Placement, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add User Placement!"),
+					HttpStatus.BAD_REQUEST);
+	}
+	
+	
+	@ApiOperation(value = "Edit User Placement", response = Object.class, httpMethod = "PUT", produces = "application/json")
+	@RequestMapping(value = "/editUserPlacement", method = RequestMethod.PUT)
+	public ResponseEntity<?> editUserPlacement(@RequestBody UserPlacementForm userPlacementForm, HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (userPlacementForm.getUserId() == id) {
+			if (userPlacementRepository.existsByUserIdAndCompanyName(id, userPlacementForm.getCompanyName())) {
+				Optional<UserPlacement> userPlacement = userPlacementRepository.findByUserIdAndCompanyName(id,
+						userPlacementForm.getCompanyName());
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				userPlacement.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				userPlacement.get().setUserId(id);
+				userPlacement.get().setModifiedBy(id);
+				userPlacement.get().setEnrollmentId(userPlacementForm.getEnrollmentid());
+				userPlacement.get().setCompanyName(userPlacementForm.getCompanyName());
+				userPlacement.get().setJoiningLocation(userPlacementForm.getJoiningLocation());
+				userPlacement.get().setJoiningStatus(userPlacementForm.getJoiningStatus());
+				userPlacement.get().setJoiningPackage(userPlacementForm.getJoiningPacakge());
+				userPlacement.get().setCampusType(userPlacementForm.getCampusType());
+				UserPlacement test = userPlacementRepository.save(userPlacement.get());
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("User Placement details updated successfully!"),
+							HttpStatus.OK);
+				else
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to update User Placement details, please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(new ResponseMessage("User Placement not found, you need to add it first!"),
+						HttpStatus.BAD_REQUEST);
+
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update User Placement details!"),
+					HttpStatus.BAD_REQUEST);
+	}
+	
+	@ApiOperation(value = "Staff Duties", response = Object.class, httpMethod = "GET", produces = "application/json") //for Head, staff, faculty
+	@RequestMapping(value = "/staffDuties", method = RequestMethod.GET)
+	public List<StaffDuty> getStaffDuties(@RequestParam(required=false) Long id,HttpServletRequest request) {
+		
+		if(id==null)
+		{
+			id=jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		}	
+		List<StaffDuty> staffDuties = staffDutyRepository.findByUserId(id);
+		return staffDuties;
+	}
+	
+	
+	@ApiOperation(value = "Add Staff Duty", response = Object.class, httpMethod = "POST", produces = "application/json") //for Head, staff, faculty
+	@RequestMapping(value = "/addStaffDuty", method = RequestMethod.POST)
+	public ResponseEntity<?> addStaffDuty(@RequestBody StaffDutyForm staffDutyForm, HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (staffDutyForm.getUserId() == id) {
+			StaffDuty staffDuty = new StaffDuty();
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			staffDuty.setCreatedDate(simpleDateFormat.format(new Date()));
+			staffDuty.setCreatedBy(id);
+			staffDuty.setUserId(id);
+			staffDuty.setInsideOutside(staffDutyForm.getInsideOutside());
+			staffDuty.setFromDate(staffDutyForm.getFromDate());
+			staffDuty.setToDate(staffDutyForm.getToDate());
+			staffDuty.setDutyDescription(staffDutyForm.getDutyDescription());
+			staffDuty.setPlace(staffDutyForm.getPlace());
+			StaffDuty test = staffDutyRepository.save(staffDuty);
+			if (test != null)
+				return new ResponseEntity<>(new ResponseMessage("Staff Duty added successfully!"), HttpStatus.OK);
+			else
+				return new ResponseEntity<>(new ResponseMessage("Unable to add Staff Duty, please try again later!"),
+						HttpStatus.BAD_REQUEST);
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to add Staff Duty!"),
+					HttpStatus.BAD_REQUEST);
+	}
+	
+	@ApiOperation(value = "Edit Staff Duty", response = Object.class, httpMethod = "PUT", produces = "application/json")//for Head, staff, faculty
+	@RequestMapping(value = "/editStaffDuty", method = RequestMethod.PUT)
+	public ResponseEntity<?> editStaffDuty(@RequestBody StaffDutyForm staffDutyForm, HttpServletRequest request) {
+		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
+		if (staffDutyForm.getUserId() == id) {
+			if (staffDutyRepository.existsByUserIdAndPlace(id, staffDutyForm.getPlace())) {
+				Optional<StaffDuty> staffDuty = staffDutyRepository.findByUserIdAndPlace(id,
+						staffDutyForm.getPlace());
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				staffDuty.get().setModifiedDate(simpleDateFormat.format(new Date()));
+				staffDuty.get().setModifiedBy(id);
+				staffDuty.get().setUserId(id);
+				staffDuty.get().setInsideOutside(staffDutyForm.getInsideOutside());
+				staffDuty.get().setFromDate(staffDutyForm.getFromDate());
+				staffDuty.get().setToDate(staffDutyForm.getToDate());
+				staffDuty.get().setDutyDescription(staffDutyForm.getDutyDescription());
+				staffDuty.get().setPlace(staffDutyForm.getPlace());
+				StaffDuty test = staffDutyRepository.save(staffDuty.get());
+				if (test != null)
+					return new ResponseEntity<>(new ResponseMessage("Staff Duty details updated successfully!"),
+							HttpStatus.OK);
+				else
+					return new ResponseEntity<>(
+							new ResponseMessage("Unable to update Staff Duty details, please try again later!"),
+							HttpStatus.BAD_REQUEST);
+			} else
+				return new ResponseEntity<>(new ResponseMessage("Staff Duty not found, you need to add it first!"),
+						HttpStatus.BAD_REQUEST);
+
+		} else
+			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update Staff Duty details!"),
+					HttpStatus.BAD_REQUEST);
+	}
+	
+	
+	
+	
 	public void getUGProject(HttpServletRequest request) {
 
 	}

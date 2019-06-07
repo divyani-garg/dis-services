@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -34,8 +35,9 @@ public class StudentProfile {
 	@Column(name = "enrollment_id", nullable = false, unique = true)
 	private String enrollmentId;
 	
+	@Lob
 	@Column(name = "profile_picture")
-	private String profilePicture;
+	private byte[] profilePicture;
 
 	@Column(name = "full_name")
 	private String fullName;
@@ -138,11 +140,11 @@ public class StudentProfile {
 		this.enrollmentId = enrollmentId;
 	}
 
-	public String getProfilePicture() {
+	public byte[] getProfilePicture() {
 		return profilePicture;
 	}
 
-	public void setProfilePicture(String profilePicture) {
+	public void setProfilePicture(byte[] profilePicture) {
 		this.profilePicture = profilePicture;
 	}
 

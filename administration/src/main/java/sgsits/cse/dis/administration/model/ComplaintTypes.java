@@ -1,4 +1,4 @@
-package sgsits.cse.dis.user.model;
+package sgsits.cse.dis.administration.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "profile_picture")
-public class ProfilePicture {
+@Table(name = "complaint_types")
+public class ComplaintTypes {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,22 +27,12 @@ public class ProfilePicture {
 
 	@Column(name = "modified_date")
 	private String modifiedDate;
-
-	@Column(name = "file_name")
-	private String fileName;
 	
-	@Column(name = "image_path")
-	private String imagePath;
+	@Column(name = "complaint_name")
+	private String complaintName;
 	
-	@Column(name = "file_type")
-	private String fileType;
-	
-	public ProfilePicture(String fileName, String imagePath, String fileType) {
-		super();
-		this.fileName = fileName;
-		this.imagePath = imagePath;
-		this.fileType = fileType;
-	}
+	@Column(name = "complaint_acronym")
+	private String complaintAcronym;
 
 	public long getId() {
 		return id;
@@ -84,27 +74,20 @@ public class ProfilePicture {
 		this.modifiedDate = modifiedDate;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public String getComplaintName() {
+		return complaintName;
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setComplaintName(String complaintName) {
+		this.complaintName = complaintName;
 	}
 
-	public String getImagePath() {
-		return imagePath;
+	public String getComplaintAcronym() {
+		return complaintAcronym;
 	}
 
-	public void setImagePath(String imagePath) {
-		this.imagePath = imagePath;
+	public void setComplaintAcronym(String complaintAcronym) {
+		this.complaintAcronym = complaintAcronym;
 	}
 
-	public String getFileType() {
-		return fileType;
-	}
-
-	public void setFileType(String fileType) {
-		this.fileType = fileType;
-	}
 }
