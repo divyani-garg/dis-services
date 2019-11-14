@@ -17,6 +17,33 @@ public class StaffBasicProfileResponse {
 	private Long alternateMobileNo;
 	private String areaOfSpecialization;
 	
+
+	
+	public StaffBasicProfileResponse() {
+		super();
+	}
+	
+	
+	
+	public StaffBasicProfileResponse(long userId, String employeeId, String name, String nameAcronym,
+			String currentDesignation, String email, String dob, String bloodGroup, String gender, String motherName,
+			String fatherName, Long mobileNo, Long alternateMobileNo, String areaOfSpecialization) {
+		super();
+		this.userId = userId;
+		this.employeeId = employeeId;
+		this.name = name;
+		this.nameAcronym = nameAcronym;
+		this.currentDesignation = currentDesignation;
+		this.email = email;
+		this.dob = dob;
+		this.bloodGroup = bloodGroup;
+		this.gender = gender;
+		this.motherName = motherName;
+		this.fatherName = fatherName;
+		this.mobileNo = mobileNo;
+		this.alternateMobileNo = alternateMobileNo;
+		this.areaOfSpecialization = areaOfSpecialization;
+	}
 	public long getUserId() {
 		return userId;
 	}

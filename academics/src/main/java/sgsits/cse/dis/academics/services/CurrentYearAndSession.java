@@ -59,5 +59,29 @@ public class CurrentYearAndSession {
 			semester = "A";
 		return semester;
 	}
+	
+	public String getSessionFromYear(String year,int duration)
+	{
+		if(year==null)
+			return null;
+		Calendar cal = Calendar.getInstance();
+		int curYear = cal.get(Calendar.YEAR);
+		int curMonth = (cal.get(Calendar.MONTH)) + 1;
+		String session = null;
+		String semester=null;
+		if (curMonth >= 1 && curMonth <= 6)
+			semester="B";
+		else
+			semester="A";
+		if(semester=="A")
+		{
+			session=curYear-(Integer.parseInt(year)-1)+"-"+(curYear-(Integer.parseInt(year)-1)+duration);
+		}
+		if(semester=="B")
+		{
+			session=curYear-(Integer.parseInt(year))+"-"+(curYear-(Integer.parseInt(year))+duration);
+		}
+		return session;
+	}
 
 }

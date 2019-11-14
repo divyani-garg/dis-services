@@ -66,6 +66,26 @@ public class UserClientController {
 		return staffName;
 	}
 	
+	
+	@ApiOperation(value = "get User Current Designation", response = String.class, httpMethod = "GET", produces = "text/plain")
+	@RequestMapping(value = "/getUserCurrentDesignation", method = RequestMethod.GET)
+	public String getUserCurrentDesignation(@RequestParam("id") long id)
+	{	
+		Optional<StaffProfile> staffDetails = staffRepository.findByUserId(id);
+		String staffDesignation = staffDetails.get().getCurrentDesignation();
+		return staffDesignation;
+	}
+	
+	@ApiOperation(value = "get User Id", response = String.class, httpMethod = "GET", produces = "text/plain")
+	@RequestMapping(value = "/getUserId", method = RequestMethod.GET)
+	public long getUserId(@RequestParam("keyword") String name)
+	{	
+		Optional<StaffProfile> staffDetails = staffRepository.findByNameLike(name);
+		long staffId = staffDetails.get().getUserId();
+		return staffId;
+	}
+	
+	
 	@ApiOperation(value = "get Course", response = String.class, httpMethod = "GET", produces = "text/plain")
 	@RequestMapping(value = "/getCourse", method = RequestMethod.GET)
 	public String getCourse(@RequestParam("id") long id)

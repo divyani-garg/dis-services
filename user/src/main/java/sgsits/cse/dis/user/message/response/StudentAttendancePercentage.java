@@ -9,8 +9,6 @@ public class StudentAttendancePercentage {
 	private float totaltheorylecture;
 	private float totalpracticallecture;
 	
-	public StudentAttendancePercentage()
-	{}
 	
 	public StudentAttendancePercentage(String enrollmentId, String subjectCode, float theoryPercent,
 			float practicalPercent, float totaltheoryPercent, float totalpracticalPercent) {
@@ -21,6 +19,10 @@ public class StudentAttendancePercentage {
 		this.practicalPercent = practicalPercent;
 		this.totaltheorylecture = totaltheoryPercent;
 		this.totalpracticallecture = totalpracticalPercent;
+	}
+
+	public StudentAttendancePercentage() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public String getEnrollmentId() {

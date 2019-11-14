@@ -553,7 +553,7 @@ public class ComplaintsController {
 			HttpServletRequest request) {
 		long id = jwtResolver.getIdFromJwtToken(request.getHeader("Authorization"));
 		if (!cleanlinessComplaintRepository.existsByCreatedByAndLocationAndStatusNot(id,
-				cleanlinessComplaintForm.getLocation(), "Resolved")) {
+				cleanlinessComplaintForm.getLocation(), "Resolved")) { 
 			CleanlinessComplaints cleanlinessComplaints = new CleanlinessComplaints(
 					cleanlinessComplaintForm.getDetails(), cleanlinessComplaintForm.getLevelOfDust(),
 					cleanlinessComplaintForm.getLocation());

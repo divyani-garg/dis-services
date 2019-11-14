@@ -10,5 +10,21 @@ public interface UserClient {
 	
 	@RequestMapping(value = "/getUserType", method = RequestMethod.GET)
 	String getUserType(@RequestParam("id") long id);
+	
+	@RequestMapping(value = "/getUserName", method = RequestMethod.GET)
+	String getUserName(@RequestParam("id") long id);
+	
+	@RequestMapping(value = "/getUserCurrentDesignation", method = RequestMethod.GET)
+	String getUserCurrentDesignation(@RequestParam("id") long id);
 
+	@RequestMapping(value = "/getUserId", method = RequestMethod.GET)
+	long getUserId(@RequestParam("keyword") String name);
+
+	@RequestMapping(value = "/getAdmissionYear", method = RequestMethod.GET)
+	int getAdmissionYear(@RequestParam("id") long id);
+
+	@RequestMapping(value = "/getCourse", method = RequestMethod.GET)
+	String getCourse(@RequestParam("id") long id);
+
+	
 }

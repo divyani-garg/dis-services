@@ -59,5 +59,7 @@ public class CurrentYearAndSession {
 			semester = "A";
 		return semester;
 	}
+	
+
 
 }

@@ -198,6 +198,9 @@ public class ProfileController {
 		return sbpr;
 	}
 
+
+
+	
 	@ApiOperation(value = "Edit Staff Basic Profile Data", response = Object.class, httpMethod = "POST", produces = "application/json")
 	@RequestMapping(value = "/editStaffBasicProfile", method = RequestMethod.POST)
 	public ResponseEntity<?> editStaffBasicProfile(@Valid @RequestBody StaffBasicProfileForm staffBasicProfileForm,
@@ -281,7 +284,8 @@ public class ProfileController {
 		} else
 			return new ResponseEntity<>(new ResponseMessage("You are not allowed to update!"), HttpStatus.BAD_REQUEST);
 	}
-
+	
+ 
 	public void getStudentPlacement(HttpServletRequest request) {
 
 	}

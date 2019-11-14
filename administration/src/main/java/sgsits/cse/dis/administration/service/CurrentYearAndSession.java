@@ -16,4 +16,27 @@ public class CurrentYearAndSession {
 		return session;
 	}
 
+	
+	public String getCurrentSemester() {
+		Calendar cal = Calendar.getInstance();
+		int curMonth = (cal.get(Calendar.MONTH)) + 1;
+		String semester = null;
+		if (curMonth >= 1 && curMonth <= 6)
+			semester = "B";
+		else if (curMonth >= 7 && curMonth <= 12)
+			semester = "A";
+		return semester;
+	}
+	
+	public int getAdmissionYearFromYear(int year) {
+		String semester = getCurrentSemester();
+		Calendar cal = Calendar.getInstance();
+		int curYear = (cal.get(Calendar.YEAR));
+		if (semester=="A") {
+			year-=1;
+		}
+		return curYear - year;		
+	}
+	
+	
 }

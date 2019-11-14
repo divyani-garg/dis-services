@@ -28,8 +28,8 @@ public class FacultyResourceRequest {
 	@Column(name = "modified_date")
 	private String modifiedDate;
 	
-	@Column(name = "resource")
-	private String resource;
+	@Column(name = "resource_category")
+	private String resourceCategory;
 
 	@Column(name = "details")
 	private String details;
@@ -37,19 +37,28 @@ public class FacultyResourceRequest {
 	@Column(name = "status")
 	private String status;
 
+	@Column(name = "priority")
+	private String priority;
+
 	@Column(name = "date_of_resolution")
 	private String dateOfResolution;
 
 	@Column(name = "remarks")
 	private String remarks;
 
-	public FacultyResourceRequest() { }
+	@Column(name = "deadline_to_resolve")
+	private String deadlineToResolve;
 	
-	public FacultyResourceRequest(String resource, String details) {
+
+	public FacultyResourceRequest(String resourceCategory, String details, String priority, String deadlineToResolve) {
 		super();
-		this.resource = resource;
+		this.resourceCategory = resourceCategory;
 		this.details = details;
+		this.priority = priority;
+		this.deadlineToResolve = deadlineToResolve;
 	}
+
+	public FacultyResourceRequest() { }
 
 	public long getId() {
 		return id;
@@ -58,21 +67,13 @@ public class FacultyResourceRequest {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
+
 	public Long getCreatedBy() {
 		return createdBy;
 	}
 
 	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
-	}
-
-	public Long getModifiedBy() {
-		return modifiedBy;
-	}
-
-	public void setModifiedBy(Long modifiedBy) {
-		this.modifiedBy = modifiedBy;
 	}
 
 	public String getCreatedDate() {
@@ -83,6 +84,14 @@ public class FacultyResourceRequest {
 		this.createdDate = createdDate;
 	}
 
+	public Long getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Long modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
 	public String getModifiedDate() {
 		return modifiedDate;
 	}
@@ -91,12 +100,12 @@ public class FacultyResourceRequest {
 		this.modifiedDate = modifiedDate;
 	}
 
-	public String getResource() {
-		return resource;
+	public String getResourceCategory() {
+		return resourceCategory;
 	}
 
-	public void setResource(String resource) {
-		this.resource = resource;
+	public void setResourceCategory(String resourceCategory) {
+		this.resourceCategory = resourceCategory;
 	}
 
 	public String getDetails() {
@@ -115,12 +124,20 @@ public class FacultyResourceRequest {
 		this.status = status;
 	}
 
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
 	public String getDateOfResolution() {
 		return dateOfResolution;
 	}
 
-	public void setDateOfResolution(String date) {
-		this.dateOfResolution = date;
+	public void setDateOfResolution(String dateOfResolution) {
+		this.dateOfResolution = dateOfResolution;
 	}
 
 	public String getRemarks() {
@@ -130,5 +147,14 @@ public class FacultyResourceRequest {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+
+	public String getDeadlineToResolve() {
+		return deadlineToResolve;
+	}
+
+	public void setDeadlineToResolve(String deadlineToResolve) {
+		this.deadlineToResolve = deadlineToResolve;
+	}
+	
 	
 }

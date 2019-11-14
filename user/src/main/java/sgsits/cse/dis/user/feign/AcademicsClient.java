@@ -16,4 +16,5 @@ public interface AcademicsClient {
 	@RequestMapping(value = "/getCourseName", method = RequestMethod.GET)
 	String getCoursename(@RequestParam("id") String id);
 	
+	
 }

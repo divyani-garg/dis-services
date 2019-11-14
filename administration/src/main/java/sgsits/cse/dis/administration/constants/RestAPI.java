@@ -67,6 +67,15 @@ public class RestAPI {
 	public static final String EDIT_OVERVIEW_DETAILS = "/editOverviewDetails";
 	
 	public static final String ADD_FACULTY_RESOURCE_REQUEST = "/addFacultyResourceRequest";
+	public static final String GET_FACULTY_RESOURCE_REQUEST = "/getFacultyResourceRequest/{keyword}";
+	public static final String SEARCH_FACULTY_RESOURCE_REQUEST = "/searchFacultyResourceRequest/{keyword}";
+	
+	public static final String GET_RESOURCE_CATEGORY = "/getResourceCategoryList";	
+	
+	public static final String GET_STAFF_NOTIFICATION ="/getStaffNotification";
+	public static final String GET_STUDENT_NOTIFICATION = "/getStudentNotification";
+	public static final String UPDATE_NOTIFICATION_STATUS = "/updateNotificationStatus";
+	public static final String NOTIFY_STUDENTS = "/notifyStudents";
 	
 	public static final String GET_BOOK_COUNT = "/getBookCount";
 	public static final String GET_BOOK_LIST = "/getBookList";
@@ -84,6 +93,11 @@ public class RestAPI {
 	public static final String GET_ME_THESIS_LIST = "/getThesisMEList";
 	public static final String ADD_ME_THESIS = "";
 	public static final String EDIT_ME_THESIS = "";
-	public static final String SEARCH_ME_THESIS = "";	
+	public static final String SEARCH_ME_THESIS = "";
+	
+	
+
+	
+
 	
 }

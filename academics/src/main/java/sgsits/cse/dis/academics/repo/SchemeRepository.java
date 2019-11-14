@@ -11,4 +11,5 @@ public interface SchemeRepository extends JpaRepository<Scheme, Long>
 {
 	public List<Scheme> findByCourseIdAndSessionAndYearAndSemester(String course, String session, String year,
 			String semester);
+	
 }

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "staff_basic_profile")
 public class StaffProfile {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
@@ -84,6 +84,7 @@ public class StaffProfile {
 	
 	@Column(name = "area_of_specialization")
 	private String areaOfSpecialization;
+
 
 	public long getId() {
 		return id;

@@ -14,6 +14,7 @@ public class RestAPI {
 	
 	public static final String SUBJECT_LIST = "/subjectList";
 	public static final String SUBJECT_LIST_SERVICE = "/subjectListService";
+	public static final String SUBJECT_CODE_YEAR_SERVICE = "/subjectCodeAndYearService";
 	
 	
 

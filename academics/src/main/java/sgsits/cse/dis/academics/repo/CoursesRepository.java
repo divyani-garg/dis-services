@@ -5,9 +5,14 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.google.common.base.Optional;
+
 import sgsits.cse.dis.academics.model.Courses;
 
 @Repository("coursesRepository")
 public interface CoursesRepository extends JpaRepository<Courses, Long>{
 	List<Courses> findByCourseId(String id);
+
+
+	Optional<Courses> findByName(String course);
 }
